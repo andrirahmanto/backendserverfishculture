@@ -1,5 +1,5 @@
 from flask import Response, request
-from database.models import TypeFeed
+from app.database.models import TypeFeed
 from flask_restful import Resource
 import datetime
 

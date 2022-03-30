@@ -1,5 +1,5 @@
 from flask import Response, request
-from database.models import Pond
+from app.database.models import Pond
 from flask_restful import Resource
 import datetime
 

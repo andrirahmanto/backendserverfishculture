@@ -1,0 +1,41 @@
+{% extends "banner.html" %}
+
+{% block title %}
+	Home
+{% endblock title %}
+{% block content %}
+
+
+<div class="container">
+    <div class="divider"></div>
+    <div class="card-panel red lighten-4" align="center">
+		<span class="grey-text text-darken-1 ">
+		<h4>This tool purpose is to assist user to find information about fish species</h4>
+		</span>
+    </div>
+
+    <div class="row">
+        <div class="card-panel grey lighten-5 z-depth-1">
+            <div class="row valign-wrapper">
+                <div class="col s6">
+                    <div class="divider"></div>
+                    <div class="section">
+                        <h5>How to use Fisher</h5>
+                        <p>1. Clik "Start" or "AI Estimate"</p>
+                        <p>2. On the next page, click upload image</p>
+                        <p>3. image size should be 700x400 and not more than 2mb</p>
+                        <p>4. Fish image must be facing left</p>
+                    </div>
+                </div>
+                <div class="col s2"></div>
+                <div class="col s4">
+                    <a href="{{ url_for('route.fish_test') }}">
+                        <img src="{{ url_for("static", filename="img/START.png") }}" alt="" class="circle responsive-img">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%  endblock content %}

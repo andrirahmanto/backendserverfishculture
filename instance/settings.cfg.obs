@@ -1,0 +1,4 @@
+SECRET_KEY='dev'
+DATABASE='semnasdb'
+MONGO_CON='mongodb://localhost:27017/'
+UPLOAD_FOLDER = '/media'
