@@ -10,19 +10,19 @@ class Pond(db.Document):
     updated_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
-class TypeFeed(db.Document):
+class FeedType(db.Document):
     name = db.StringField(required=True)
     desc = db.StringField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
     updated_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
 
-class LogFeeding(db.Document):
+class FeedHistory(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
-    type_feed_id = db.ReferenceField(TypeFeed, required=True)
-    dose_feed = db.IntField(required=True)
-    desc_feed = db.StringField(default="")
-    time_feeding = db.DateTimeField(default=datetime.datetime.utcnow)
+    feed_type_id = db.ReferenceField(FeedType, required=True)
+    feed_dose = db.IntField(required=True)
+    feed_desc = db.StringField(default="")
+    feed_history_time = db.DateTimeField(default=datetime.datetime.utcnow)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
     updated_at = db.DateTimeField(default=datetime.datetime.utcnow)
 
