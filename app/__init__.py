@@ -7,7 +7,7 @@ from .resources.routes import initialize_routes
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     api = Api(app)
-    app.config.from_pyfile('settings.cfg', silent=True)
+    app.config.from_pyfile('settings.cfg', silent=False)
     # app.config['MONGODB_SETTINGS'] = {
     #     'db': 'fishapidb',
     #     'host': '127.0.0.1',
