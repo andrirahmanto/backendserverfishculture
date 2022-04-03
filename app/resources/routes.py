@@ -1,6 +1,6 @@
-from .logfeeding import LogFeedingsApi, LogFeedingApi
-from .pond import PondsApi, PondApi
-from .typefeed import TypeFeedsApi, TypeFeedApi
+from .controller.feedhistory import FeedHistorysApi, FeedHistoryApi
+from .controller.pond import PondsApi, PondApi
+from .controller.feedtype import FeedTypesApi, FeedTypeApi
 
 
 def initialize_routes(api):
@@ -9,10 +9,10 @@ def initialize_routes(api):
     api.add_resource(PondsApi, '/api/ponds')
     api.add_resource(PondApi, '/api/ponds/<id>')
 
-    # typefeed
-    api.add_resource(TypeFeedsApi, '/api/typefeeds')
-    api.add_resource(TypeFeedApi, '/api/typefeeds/<id>')
+    # feedtype
+    api.add_resource(FeedTypesApi, '/api/feedtypes')
+    api.add_resource(FeedTypeApi, '/api/feedtypes/<id>')
 
-    # logfeeding
-    api.add_resource(LogFeedingsApi, '/api/logfeedings')
-    api.add_resource(LogFeedingApi, '/api/logfeedings/<id>')
+    # feedhistory
+    api.add_resource(FeedHistorysApi, '/api/feedhistorys')
+    api.add_resource(FeedHistoryApi, '/api/feedhistorys/<id>')
