@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from .database.db import initialize_db
 from flask_restful import Api
 from app.database.models import FeedHistory
@@ -21,7 +21,6 @@ def create_app(test_config=None):
     initialize_db(app)
     initialize_routes(api)
 
-
     @app.route('/')
     def home():
         # data = FeedHistory.objects().to_json()
@@ -36,7 +35,7 @@ def create_app(test_config=None):
             data_dict = data.to_mongo().to_dict()
             data_dict['created_at'] = data.created_at.isoformat()
             datas_list.append(data_dict)
-        data = datas_list    
-        return render_template('home.html', name = 'Andri', feedhistorys = data)
+        data = datas_list
+        return render_template('home.html', name='Andri', feedhistorys=data)
 
     return app

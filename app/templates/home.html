@@ -15,8 +15,8 @@
     <!-- CSS Libraries -->
 
     <!-- Template CSS -->
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="stylesheet" href="../static/css/components.css">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/components.css')}}">
 </head>
 
 <body>
@@ -35,7 +35,8 @@
                 <ul class="navbar-nav navbar-right">
                     <li class="dropdown"><a href="#" data-toggle="dropdown"
                             class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                            <img alt="image" src="../static/img/avatar/avatar-1.png" class="rounded-circle mr-1">
+                            <img alt="image" src="{{url_for('static', filename='img/avatar/avatar-1.png')}}"
+                                class="rounded-circle mr-1">
                             <div class="d-sm-none d-lg-inline-block">Hi, {{name}}</div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
@@ -141,13 +142,13 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="../static/js/stisla.js"></script>
+    <script src="url_for('static', filename='js/stisla.js')"></script>
 
     <!-- JS Libraies -->
 
     <!-- Template JS File -->
-    <script src="../static/js/scripts.js"></script>
-    <script src="../static/js/custom.js"></script>
+    <script src="{{url_for('static', filename='js/scripts.js')}}"></script>
+    <script src="{{url_for('static', filename='js/custom.js')}}"></script>
 
     <!-- Page Specific JS File -->
 </body>
