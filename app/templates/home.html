@@ -99,16 +99,14 @@
                                             <th>Pond_Id</th>
                                             <th>Feedtype_Id</th>
                                             <th>Feed_dose</th>
-                                            <th>Feed_desc</th>
                                             <th>Feed_time</th>
                                         </tr>
-                                        {% for feedhistory in feedhistorys %}
+                                        {% for index, feedhistory in feedhistorys %}
                                         <tr>
-                                            <td>{{feedhistory["_id"]}}</td>
-                                            <td>{{feedhistory["pond_id"]}}</td>
-                                            <td>{{feedhistory["feed_type_id"]}}</td>
-                                            <td>{{feedhistory["feed_dose"]}}</td>
-                                            <td>{{feedhistory["feed_desc"]}}</td>
+                                            <td>{{index}}</td>
+                                            <td>{{feedhistory["pond"]["alias"]}}</td>
+                                            <td>{{feedhistory["feed_type"]["name"]}}</td>
+                                            <td>{{feedhistory["feed_dose"]}} gram</td>
                                             <td>{{feedhistory["feed_history_time"]}}</td>
                                         </tr>
                                         {% endfor %}

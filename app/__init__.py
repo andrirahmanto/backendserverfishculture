@@ -1,11 +1,10 @@
 from flask import Flask, render_template, url_for
 from .database.db import initialize_db
 from flask_restful import Api
-from app.database.models import FeedHistory
+from app.database.models import FeedHistory, Pond, FeedType
 from .resources.routes import initialize_routes
-from bson.json_util import dumps
 import json
-import datetime
+from datetime import datetime
 
 
 def create_app(test_config=None):
@@ -23,19 +22,36 @@ def create_app(test_config=None):
 
     @app.route('/')
     def home():
-        # data = FeedHistory.objects().to_json()
-        # # feedhistory = feedhistorys[0].to_json()
-        # data = json.loads(data)
-        # date = data[0]["feed_history_time"]["$date"]
-        # date_up = data[0]["feed_history_time"]["$date"]
-        # print (type(date))
-        datas = FeedHistory.objects()
-        datas_list = []
-        for data in datas:
-            data_dict = data.to_mongo().to_dict()
-            data_dict['created_at'] = data.created_at.isoformat()
-            datas_list.append(data_dict)
-        data = datas_list
-        return render_template('home.html', name='Andri', feedhistorys=data)
+        # init FeedHistory objects
+        objects = FeedHistory.objects()
+        # add filter in this section
+
+        # filter section
+        # empty list for response
+        response = []
+        # access one feedhistory in objects
+        for feedhistory in objects:
+            # convert to dict
+            feedhistory = feedhistory.to_mongo()
+            # get pond and convert to dict
+            pond = Pond.objects.get(
+                id=str(feedhistory['pond_id'])).to_mongo()
+            # get feedtype and convert to dict
+            feedtype = FeedType.objects.get(
+                id=str(feedhistory['feed_type_id'])).to_mongo()
+            # resturcture response
+            feedhistory.pop('pond_id')
+            feedhistory.pop('feed_type_id')
+            # add new key and value
+            feedhistory["pond"] = pond
+            feedhistory["feed_type"] = feedtype
+            response.append(feedhistory)
+            # custom datetime
+
+            # customdate = datetime.strptime(
+            #     feedhistory['feed_history_time'], 'YYYY-MM-DD HH:MM:SS.mmmmmm')
+            feedhistory['feed_history_time'] = feedhistory['feed_history_time'].strftime(
+                "%a %d/%B/%Y %H:%M:%f")
+        return render_template('home.html', name='Andri', feedhistorys=enumerate(response, start=1))
 
     return app
