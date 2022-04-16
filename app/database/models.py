@@ -7,8 +7,8 @@ class Pond(db.Document):
     id_int = db.IntField(required=True)
     alias = db.StringField(required=True)
     location = db.StringField(required=True)
-    created_at = db.DateTimeField(default=datetime.datetime.utcnow)
-    updated_at = db.DateTimeField(default=datetime.datetime.utcnow)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 
 class FeedType(db.Document):
@@ -17,14 +17,14 @@ class FeedType(db.Document):
     protein = db.IntField(required=True)
     carbohydrate = db.IntField(required=True)
     desc = db.StringField()
-    created_at = db.DateTimeField(default=datetime.datetime.utcnow)
-    updated_at = db.DateTimeField(default=datetime.datetime.utcnow)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 
 class FeedHistory(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
     feed_type_id = db.ReferenceField(FeedType, required=True)
     feed_dose = db.IntField(required=True)
-    feed_history_time = db.DateTimeField(default=datetime.datetime.utcnow)
-    created_at = db.DateTimeField(default=datetime.datetime.utcnow)
-    updated_at = db.DateTimeField(default=datetime.datetime.utcnow)
+    feed_history_time = db.DateTimeField(default=datetime.datetime.now)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
