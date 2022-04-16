@@ -59,5 +59,20 @@ class FeedHistoryApi(Resource):
         return '', 200
 
     def get(self, id):
-        feedhistory = FeedHistory.objects.get(id=id).to_json()
-        return Response(feedhistory, mimetype="application/json", status=200)
+        objects = FeedHistory.objects.get(id=id)
+        # convert to dict
+        feedhistory = objects.to_mongo()
+        # get pond and convert to dict
+        pond = Pond.objects.get(
+            id=str(feedhistory['pond_id'])).to_mongo()
+        # get feedtype and convert to dict
+        feedtype = FeedType.objects.get(
+            id=str(feedhistory['feed_type_id'])).to_mongo()
+        # resturcture response
+        feedhistory.pop('pond_id')
+        feedhistory.pop('feed_type_id')
+        # add new key and value
+        feedhistory["pond"] = pond
+        feedhistory["feed_type"] = feedtype
+        response = json.dumps(feedhistory, default=str)
+        return Response(response, mimetype="application/json", status=200)
