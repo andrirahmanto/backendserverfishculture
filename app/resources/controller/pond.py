@@ -22,7 +22,10 @@ class PondsApi(Resource):
         return Response(response_dump, mimetype="application/json", status=200)
 
     def post(self):
-        body = request.get_json()
+        body = {
+            "alias": request.form.get("alias", None),
+            "location": request.form.get("location", None),
+        }
         pond = Pond(**body).save()
         id = pond.id
         return {'id': str(id)}, 200
@@ -30,8 +33,11 @@ class PondsApi(Resource):
 
 class PondApi(Resource):
     def put(self, id):
-        body = request.get_json()
-        body['updated_at'] = datetime.datetime.utcnow()
+        body = {
+            "alias": request.form.get("alias", None),
+            "location": request.form.get("location", None),
+            "updated_at": datetime.datetime.utcnow()
+        }
         Pond.objects.get(id=id).update(**body)
         return '', 200
 
