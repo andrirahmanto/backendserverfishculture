@@ -59,10 +59,11 @@ class FeedHistorysApi(Resource):
         return Response(response_dump, mimetype="application/json", status=200)
 
     def post(self):
-        body = request.get_json()
-        # body["time_feeding"] = datetime.strptime(
-        #     body["time_feeding"], '%Y-%m-%dT%H:%M:%SZ')
-        # print(body)
+        body = {
+            "pond_id": request.form.get("pond_id", None),
+            "feed_type_id": request.form.get("feed_type_id", None),
+            "feed_dose": request.form.get("feed_dose", None)
+        }
         feedhistory = FeedHistory(**body).save()
         id = feedhistory.id
         return {'id': str(id)}, 200
@@ -70,8 +71,10 @@ class FeedHistorysApi(Resource):
 
 class FeedHistoryApi(Resource):
     def put(self, id):
-        body = request.get_json()
-        body['updated_at'] = datetime.datetime.utcnow()
+        body = {
+            "feed_dose": request.form.get("feed_dose", None),
+            "updated_at": datetime.datetime.utcnow()
+        }
         FeedHistory.objects.get(id=id).update(**body)
         return '', 200
 
