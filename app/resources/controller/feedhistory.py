@@ -9,13 +9,35 @@ class FeedHistorysApi(Resource):
     def get(self):
         # init FeedHistory objects
         objects = FeedHistory.objects()
-        # add filter in this section
-
         # filter section
+
+        # filter date
+        # get args with default input "all"
+        filter_date = request.args.get("filter_date", "all")
+        # handle input "today"
+        if filter_date == "today":
+            start = datetime.datetime.today().replace(
+                hour=0, minute=0, second=0, microsecond=0)
+            end = start + datetime.timedelta(hours=24)
+            date_query = {'created_at': {'$gte': start, '$lt': end}}
+        # handle input "all"
+        elif filter_date == "all":
+            date_query = {}
+        # handle input date with format like "2022-02-18"
+        else:
+            # convert string to datetime
+            filter_date = datetime.datetime.strptime(filter_date, "%Y-%m-%d")
+            start = filter_date
+            end = start + datetime.timedelta(days=7)
+            print(start)
+            print(end)
+            date_query = {'created_at': {'$gte': start, '$lt': end}}
+
+        filter = objects.filter(__raw__=date_query)
         # empty list for response
         response = []
         # access one feedhistory in objects
-        for feedhistory in objects:
+        for feedhistory in filter:
             # convert to dict
             feedhistory = feedhistory.to_mongo()
             # get pond and convert to dict
