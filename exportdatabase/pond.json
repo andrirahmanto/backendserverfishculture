@@ -1,0 +1,35 @@
+[{
+  "_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "id_int": 2,
+  "alias": "kolom 2",
+  "location": "lantai 2",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1650315926183"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1650315926183"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "625d7033a9a73e090c65cda2"
+  },
+  "id_int": 3,
+  "alias": "kolom 3",
+  "location": "lantai 3",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1650315939608"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1650315939608"
+    }
+  }
+}]

@@ -1,0 +1,39 @@
+[{
+  "_id": {
+    "$oid": "625d74d2a9a73e090c65cda4"
+  },
+  "name": "Queen pelet",
+  "feed_type": "pelet",
+  "protein": 50,
+  "carbohydrate": 50,
+  "desc": "Queen pelet hitam",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1650317122836"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1650317122836"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "625d74fba9a73e090c65cda5"
+  },
+  "name": "Kangkung",
+  "feed_type": "sayuran",
+  "protein": 50,
+  "carbohydrate": 50,
+  "desc": "sayur kangkung ijo",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1650317163485"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1650317163485"
+    }
+  }
+}]
