@@ -51,7 +51,7 @@ def create_app(test_config=None):
             # customdate = datetime.strptime(
             #     feedhistory['feed_history_time'], 'YYYY-MM-DD HH:MM:SS.mmmmmm')
             feedhistory['feed_history_time'] = feedhistory['feed_history_time'].strftime(
-                "%a %d/%B/%Y %H:%M:%f")
+                "%a || %d-%B-%Y || %H.%M.%f")
         return render_template('home.html', name='Andri', feedhistorys=enumerate(response, start=1))
 
     return app
