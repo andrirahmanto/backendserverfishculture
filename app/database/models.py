@@ -4,7 +4,7 @@ from bson import json_util
 
 
 class Pond(db.Document):
-    id_int = db.IntField(required=True)
+    id_int = db.SequenceField(required=True)
     alias = db.StringField(required=True)
     location = db.StringField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)

@@ -3,7 +3,6 @@ from app.database.models import FeedHistory, Pond, FeedType
 from flask_restful import Resource
 import datetime
 import json
-import bson
 
 
 class FeedHistorysApi(Resource):

@@ -2,12 +2,24 @@ from flask import Response, request
 from app.database.models import Pond
 from flask_restful import Resource
 import datetime
+import json
 
 
 class PondsApi(Resource):
     def get(self):
-        ponds = Pond.objects().to_json()
-        return Response(ponds, mimetype="application/json", status=200)
+        # init object pond
+        objects = Pond.objects()
+        # empty list for response
+        response = []
+        # access one feedhistory in objects
+        for pond in objects:
+            # convert to dict
+            pond = pond.to_mongo()
+            # add to list
+            response.append(pond)
+        # dump json to json string
+        response_dump = json.dumps(response, default=str)
+        return Response(response_dump, mimetype="application/json", status=200)
 
     def post(self):
         body = request.get_json()
@@ -28,5 +40,10 @@ class PondApi(Resource):
         return '', 200
 
     def get(self, id):
-        pond = Pond.objects.get(id=id).to_json()
-        return Response(pond, mimetype="application/json", status=200)
+        # init object pond
+        objects = Pond.objects.get(id=id)
+        # convert to dict
+        pond = objects.to_mongo()
+        # dump dict to json string
+        response_dump = json.dumps(pond, default=str)
+        return Response(response_dump, mimetype="application/json", status=200)
