@@ -104,34 +104,13 @@ class FeedHistoryApi(Resource):
         return Response(response, mimetype="application/json", status=200)
 
 
-class Test(Resource):
+class FeedHistoryTodayByPond(Resource):
     def get(self):
-        pipline = [
-            {'$lookup': {
-                'from': 'pond',
-                'localField': 'pond_id',
-                'foreignField': '_id',
-                'as': 'Matrix'
-            }
-            }
-        ]
-        feedHistorys = FeedHistory.objects().aggregate(pipline)
-        response = []
-        for feedHistory in feedHistorys:
-            response.append(feedHistory)
-        print(type(response))
-        response = json.dumps(response, default=str)
-        print(type(response))
-        return Response(response, mimetype="application/json", status=200)
-
-
-class Test2(Resource):
-    def get(self):
-        start = datetime.datetime.today().replace(
-            hour=0, minute=0, second=0, microsecond=0)
-        start = start - datetime.timedelta(hours=24)
-        start = start.strftime('%Y-%m-%d')
-        print(start)
+        # make variable for default field
+        default = datetime.datetime.today().strftime('%Y-%m-%d')
+        # get args with default input today
+        date = request.args.get("date", default)
+        print(date)
         pipline = [
             {'$lookup': {
                 'from': 'feed_history',
@@ -139,7 +118,7 @@ class Test2(Resource):
                 'pipeline': [
                     {'$match': {'$expr': {'$and': [
                         {'$eq': ['$pond_id', '$$pondid']},
-                        {'$eq': [start, {'$dateToString': {
+                        {'$eq': [date, {'$dateToString': {
                             'format': "%Y-%m-%d", 'date': "$feed_history_time"}}]}
                     ]}}},
                     {"$project": {
@@ -158,12 +137,10 @@ class Test2(Resource):
                 "alias": 1,
                 "location": 1,
                 "feed_historys_today": '$feed_historys_today',
-                "total_feed_today": {"$sum": "$feed_historys_today.feed_dose"}
+                "total_feed_dose_today": {"$sum": "$feed_historys_today.feed_dose"}
             }}
         ]
         ponds = Pond.objects().aggregate(pipline)
-        response = []
-        for pond in ponds:
-            response.append(pond)
+        response = list(ponds)
         response = json.dumps(response, default=str)
         return Response(response, mimetype="application/json", status=200)
