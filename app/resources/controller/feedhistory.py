@@ -85,62 +85,208 @@ class FeedHistoryApi(Resource):
         return '', 200
 
     def get(self, id):
-        objects = FeedHistory.objects.get(id=id)
-        # convert to dict
-        feedhistory = objects.to_mongo()
-        # get pond and convert to dict
-        pond = Pond.objects.get(
-            id=str(feedhistory['pond_id'])).to_mongo()
-        # get feedtype and convert to dict
-        feedtype = FeedType.objects.get(
-            id=str(feedhistory['feed_type_id'])).to_mongo()
-        # resturcture response
-        feedhistory.pop('pond_id')
-        feedhistory.pop('feed_type_id')
-        # add new key and value
-        feedhistory["pond"] = pond
-        feedhistory["feed_type"] = feedtype
-        response = json.dumps(feedhistory, default=str)
-        return Response(response, mimetype="application/json", status=200)
+        try:
+            pipline = [
+                {'$match': {'$expr': {'$eq': ['$_id', {'$toObjectId': id}]}}},
+                {'$lookup': {
+                    'from': 'pond',
+                    'let': {"pondid": "$pond_id"},
+                    'pipeline': [
+                        {'$match': {
+                            '$expr': {'$and': [{'$eq': ['$_id', '$$pondid']}]}}},
+                        {"$project": {
+                            "created_at": 0,
+                            "updated_at": 0,
+                        }}
+                    ],
+                    'as': 'pond'
+                }},
+                {'$lookup': {
+                    'from': 'feed_type',
+                    'let': {"feedid": "$feed_type_id"},
+                    'pipeline': [
+                        {'$match': {'$expr': {'$eq': ['$_id', '$$feedid']}}},
+                        {"$project": {
+                            "created_at": 0,
+                            "updated_at": 0,
+                        }}
+                    ],
+                    'as': 'feed_type'
+                }},
+                {"$project": {
+                    "pond_id": 0,
+                    "feed_type_id": 0,
+                    "created_at": 0,
+                    "updated_at": 0,
+                }}
+            ]
+            print(id)
+            feedhistory = FeedHistory.objects.aggregate(pipline)
+            list_feedhistory = list(feedhistory)
+            response = dict(list_feedhistory[0])
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=401)
 
 
 class FeedHistoryTodayByPond(Resource):
     def get(self):
-        # make variable for default field
-        default = datetime.datetime.today().strftime('%Y-%m-%d')
-        # get args with default input today
-        date = request.args.get("date", default)
-        print(date)
-        pipline = [
-            {'$lookup': {
-                'from': 'feed_history',
-                'let': {"pondid": "$_id"},
-                'pipeline': [
-                    {'$match': {'$expr': {'$and': [
-                        {'$eq': ['$pond_id', '$$pondid']},
-                        {'$eq': [date, {'$dateToString': {
-                            'format': "%Y-%m-%d", 'date': "$feed_history_time"}}]}
-                    ]}}},
-                    {"$project": {
-                        "_id": 1,
-                        "feed_type_id": 1,
-                        "feed_dose": 1,
-                        "feed_history_time": 1,
+        try:
+            # make variable for default field
+            default = datetime.datetime.today().strftime('%Y-%m-%d')
+            # get args with default input today
+            date = request.args.get("date", default)
+            print(date)
+            pipline = [
+                {'$lookup': {
+                    'from': 'feed_history',
+                    'let': {"pondid": "$_id"},
+                    'pipeline': [
+                        {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_id', '$$pondid']},
+                            {'$eq': [date, {'$dateToString': {
+                                'format': "%Y-%m-%d", 'date': "$feed_history_time"}}]}
+                        ]}}},
+                        {'$lookup': {
+                            'from': 'feed_type',
+                            'let': {"feedid": "$feed_type_id"},
+                            'pipeline': [
+                                {'$match': {
+                                    '$expr': {'$eq': ['$_id', '$$feedid']}}},
+                                {"$project": {
+                                    "created_at": 0,
+                                    "updated_at": 0,
+                                }}
+                            ],
+                            'as': 'feed_type'
+                        }},
+                        {"$project": {
+                            "_id": 1,
+                            "feed_type_id": 1,
+                            "feed_dose": 1,
+                            "feed_history_time": 1,
+                            "feed_type": 1,
 
-                    }}
-                ],
-                'as': 'feed_historys_today'
-            }},
-            {"$project": {
-                "_id": 1,
-                "id_int": 1,
-                "alias": 1,
-                "location": 1,
-                "feed_historys_today": '$feed_historys_today',
-                "total_feed_dose_today": {"$sum": "$feed_historys_today.feed_dose"}
-            }}
-        ]
-        ponds = Pond.objects().aggregate(pipline)
-        response = list(ponds)
-        response = json.dumps(response, default=str)
-        return Response(response, mimetype="application/json", status=200)
+                        }}
+                    ],
+                    'as': 'feed_historys_today'
+                }},
+                {"$project": {
+                    "_id": 1,
+                    "id_int": 1,
+                    "alias": 1,
+                    "location": 1,
+                    "feed_historys_today": '$feed_historys_today',
+                    "total_feed_dose_today": {"$sum": "$feed_historys_today.feed_dose"}
+                }}
+            ]
+            ponds = Pond.objects().aggregate(pipline)
+            response = list(ponds)
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+
+
+class FeedHistoryTodayByOnePond(Resource):
+    def get(self, id):
+        try:
+            objects = Pond.objects.get(id=id)
+            # make variable for default field
+            default = datetime.datetime.today().strftime('%Y-%m-%d')
+            # get args with default input today
+            date = request.args.get("date", default)
+            pipeline = [
+                {'$match': {'$expr': {'$eq': ['$_id', {'$toObjectId': id}]}}},
+                {'$lookup': {
+                    'from': 'feed_history',
+                    'let': {"pondid": "$_id"},
+                    'pipeline': [
+                        {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_id', '$$pondid']},
+                            {'$eq': [date, {'$dateToString': {
+                                'format': "%Y-%m-%d", 'date': "$feed_history_time"}}]}
+                        ]}}},
+                        {'$lookup': {
+                            'from': 'feed_type',
+                            'let': {"feedid": "$feed_type_id"},
+                            'pipeline': [
+                                {'$match': {
+                                    '$expr': {'$eq': ['$_id', '$$feedid']}}},
+                                {"$project": {
+                                    "created_at": 0,
+                                    "updated_at": 0,
+                                }}
+                            ],
+                            'as': 'feed_type'
+                        }},
+                        {"$project": {
+                            "_id": 1,
+                            "feed_dose": 1,
+                            "feed_history_time": 1,
+                            "feed_type": 1,
+
+                        }}
+                    ],
+                    'as': 'feed_historys_today'
+                }},
+                {"$project": {
+                    "created_at": 0,
+                    "updated_at": 0,
+                }}
+            ]
+            data = Pond.objects.aggregate(pipeline)
+            data = list(data)
+            data = dict(data[0])
+            response = json.dumps(data, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+
+
+class FeedHistoryMonthByPond(Resource):
+    def get(self):
+        try:
+            # make variable for default field
+            default = datetime.datetime.today().strftime('%Y-%m')
+            # get args with default input today
+            date = request.args.get("date", default)
+            print(date)
+            pipline = [
+                {'$lookup': {
+                    'from': 'feed_history',
+                    'let': {"pondid": "$_id"},
+                    'pipeline': [
+                        {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_id', '$$pondid']},
+                            {'$eq': [date, {'$dateToString': {
+                                'format': "%Y-%m", 'date': "$feed_history_time"}}]}
+                        ]}}},
+                    ],
+                    'as': 'feed_historys_today'
+                }},
+                {"$project": {
+                    "_id": 1,
+                    "id_int": 1,
+                    "alias": 1,
+                    "location": 1,
+                    "total_feed_historys": {"$size": "$feed_historys_today"},
+                    "total_feed_dose": {"$sum": "$feed_historys_today.feed_dose"},
+                    "avg_feed_dose": {'$avg': "$feed_historys_today.feed_dose"}
+                }}
+            ]
+            ponds = Pond.objects().aggregate(pipline)
+            response = list(ponds)
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
