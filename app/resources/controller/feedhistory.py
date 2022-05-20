@@ -145,10 +145,10 @@ class FeedHistoryApi(Resource):
                     'as': 'feed_type'
                 }},
                 {"$project": {
-                    "pond_id": 0,
-                    "feed_type_id": 0,
-                    "created_at": 0,
-                    "updated_at": 0,
+                    "feed_dose": 1,
+                    "feed_history_time": 1,
+                    "pond": {"$first": "$pond"},
+                    "feed_type": {"$first": "$feed_type"}
                 }}
             ]
             print(id)
@@ -199,7 +199,7 @@ class FeedHistoryTodayByPond(Resource):
                             "feed_type_id": 1,
                             "feed_dose": 1,
                             "feed_history_time": 1,
-                            "feed_type": 1,
+                            "feed_type": {"$first": "$feed_type"}
 
                         }}
                     ],
