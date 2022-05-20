@@ -1,6 +1,6 @@
-from .controller.feedhistory import FeedHistorysApi, FeedHistoryApi, FeedHistoryTodayByPond, FeedHistoryTodayByOnePond, FeedHistoryMonthByPond
-from .controller.pond import PondsApi, PondApi
-from .controller.feedtype import FeedTypesApi, FeedTypeApi
+from .controller.feedhistory import *
+from .controller.pond import *
+from .controller.feedtype import *
 
 
 def initialize_routes(api):
@@ -18,7 +18,5 @@ def initialize_routes(api):
     api.add_resource(FeedHistoryApi, '/api/feedhistorys/<id>')
     api.add_resource(FeedHistoryTodayByPond,
                      '/api/feedhistorybypond/day')
-    api.add_resource(FeedHistoryMonthByPond,
-                     '/api/feedhistorybypond/month')
     api.add_resource(FeedHistoryTodayByOnePond,
                      '/api/feedhistorybyonepond/<id>')
