@@ -76,32 +76,19 @@ def create_app(test_config=None):
                         'pipeline': [
                             {'$match': {
                                 '$expr': {'$eq': ['$_id', '$$feedid']}}},
-                            {"$project": {
-                                "created_at": 0,
-                                "updated_at": 0,
-                            }}
                         ],
                         'as': 'feed_type'
                     }},
-                    {"$project": {
-                        "_id": 1,
-                        "feed_type_id": 1,
-                        "feed_dose": 1,
+                    {"$addFields": {
                         "feed_history_time": {'$dateToString': {
                             'format': "%H:%M:%S", 'date': "$feed_history_time"}},
-                        "feed_type": 1,
-
+                        "feed_type": {"$first": "$feed_type"}
                     }}
                 ],
-                'as': 'feed_historys_today'
+                'as': 'feed_historys_list'
             }},
-            {"$project": {
-                "_id": 1,
-                "id_int": 1,
-                "alias": 1,
-                "location": 1,
-                "feed_historys_today": '$feed_historys_today',
-                "total_feed_dose_today": {"$sum": "$feed_historys_today.feed_dose"}
+            {"$addFields": {
+                "total_feed_dose": {"$sum": "$feed_historys_list.feed_dose"},
             }}
         ]
         ponds = Pond.objects().aggregate(pipline)

@@ -8,7 +8,8 @@
             <h1>Dashboard</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                <div class="breadcrumb-item"><a href="#">Feed History today</a></div>
+                <div class="breadcrumb-item"><a href="#">Feed
+                        History Per Pond</a></div>
             </div>
         </div>
 
@@ -24,29 +25,31 @@
                                 <th>No</th>
                                 <th>Alias</th>
                                 <th>Location</th>
-                                <th>feed historys today</th>
                                 <th>total dose today</th>
+                                <th>feed historys today</th>
                             </tr>
                             {% for index, pond in ponds %}
                             <tr>
                                 <td>{{index}}</td>
                                 <td>{{pond["alias"]}}</td>
                                 <td>{{pond["location"]}}</td>
+                                <td>{{pond["total_feed_dose"]}} gr</td>
                                 <td>
                                     <table>
                                         <tr>
                                             <th>time</th>
                                             <th>dose</th>
+                                            <th>feed name</th>
                                         </tr>
-                                        {% for feedhistory in pond['feed_historys_today'] %}
+                                        {% for feedhistory in pond['feed_historys_list'] %}
                                         <tr>
                                             <td>{{feedhistory['feed_history_time']}}</td>
                                             <td>{{feedhistory['feed_dose']}} gr</td>
+                                            <td>{{feedhistory['feed_type']['name']}}</td>
                                         </tr>
                                         {% endfor %}
                                     </table>
                                 </td>
-                                <td>{{pond["total_feed_dose_today"]}} gr</td>
                             </tr>
                             {% endfor %}
                         </table>
