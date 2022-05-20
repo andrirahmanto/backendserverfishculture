@@ -61,31 +61,51 @@ class FeedHistorysApi(Resource):
         return Response(response_dump, mimetype="application/json", status=200)
 
     def post(self):
-        body = {
-            "pond_id": request.form.get("pond_id", None),
-            "feed_type_id": request.form.get("feed_type_id", None),
-            "feed_dose": request.form.get("feed_dose", None)
-        }
-        feedhistory = FeedHistory(**body).save()
-        id = feedhistory.id
-        return {'id': str(id)}, 200
+        try:
+            body = {
+                "pond_id": request.form.get("pond_id", None),
+                "feed_type_id": request.form.get("feed_type_id", None),
+                "feed_dose": request.form.get("feed_dose", None)
+            }
+            feedhistory = FeedHistory(**body).save()
+            id = feedhistory.id
+            return {'id': str(id), 'message': 'success input'}, 200
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
 
 
 class FeedHistoryApi(Resource):
     def put(self, id):
-        body = {
-            "feed_dose": request.form.get("feed_dose", None),
-            "updated_at": datetime.datetime.utcnow()
-        }
-        FeedHistory.objects.get(id=id).update(**body)
-        return '', 200
+        try:
+            body = {
+                "feed_dose": request.form.get("feed_dose", None),
+                "updated_at": datetime.datetime.utcnow()
+            }
+            FeedHistory.objects.get(id=id).update(**body)
+            response = {"message": "success"}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
 
     def delete(self, id):
-        feedhistory = FeedHistory.objects.get(id=id).delete()
-        return '', 200
+        try:
+            feedhistory = FeedHistory.objects.get(id=id).delete()
+            response = {"message": "success"}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
 
     def get(self, id):
         try:
+            feedhistory = FeedHistory.objects.get(id=id)
             pipline = [
                 {'$match': {'$expr': {'$eq': ['$_id', {'$toObjectId': id}]}}},
                 {'$lookup': {
@@ -129,7 +149,7 @@ class FeedHistoryApi(Resource):
         except Exception as e:
             response = {"message": str(e)}
             response = json.dumps(response, default=str)
-            return Response(response, mimetype="application/json", status=401)
+            return Response(response, mimetype="application/json", status=400)
 
 
 class FeedHistoryTodayByPond(Resource):
