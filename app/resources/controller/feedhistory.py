@@ -9,56 +9,67 @@ from bson.json_util import dumps
 
 class FeedHistorysApi(Resource):
     def get(self):
-        # init FeedHistory objects
-        objects = FeedHistory.objects()
-        # filter section
+        try:
+            # filter date
+            # get args with default input "all"
+            filter_date = request.args.get("filter_date", "all")
+            # handle input "today"
+            if filter_date == "today":
+                date = datetime.datetime.today().strftime('%Y-%m-%d')
+                date_equation = {'$eq': [date, {'$dateToString': {
+                    'format': "%Y-%m-%d", 'date': "$feed_history_time"}}]}
+            # handle input "all"
+            elif filter_date == "all":
+                date_equation = {}
+            # handle input date with format like "2022-02-18"
+            else:
+                # convert string to datetime
+                filter_date = datetime.datetime.strptime(
+                    filter_date, "%Y-%m-%d")
+                date_equation = {'$eq': [date, {'$dateToString': {
+                    'format': "%Y-%m-%d", 'date': "$feed_history_time"}}]}
 
-        # filter date
-        # get args with default input "all"
-        filter_date = request.args.get("filter_date", "all")
-        # handle input "today"
-        if filter_date == "today":
-            start = datetime.datetime.today().replace(
-                hour=0, minute=0, second=0, microsecond=0)
-            end = start + datetime.timedelta(hours=24)
-            date_query = {'created_at': {'$gte': start, '$lt': end}}
-        # handle input "all"
-        elif filter_date == "all":
-            date_query = {}
-        # handle input date with format like "2022-02-18"
-        else:
-            # convert string to datetime
-            filter_date = datetime.datetime.strptime(filter_date, "%Y-%m-%d")
-            start = filter_date
-            end = start + datetime.timedelta(days=7)
-            print(start)
-            print(end)
-            date_query = {'created_at': {'$gte': start, '$lt': end}}
-
-        filter = objects.filter(__raw__=date_query)
-        # empty list for response
-        response = []
-        # access one feedhistory in objects
-        for feedhistory in filter:
-            # convert to dict
-            feedhistory = feedhistory.to_mongo()
-            # get pond and convert to dict
-            pond = Pond.objects.get(
-                id=str(feedhistory['pond_id'])).to_mongo()
-            # get feedtype and convert to dict
-            feedtype = FeedType.objects.get(
-                id=str(feedhistory['feed_type_id'])).to_mongo()
-            # resturcture response
-            feedhistory.pop('pond_id')
-            feedhistory.pop('feed_type_id')
-            # add new key and value
-            feedhistory["pond"] = pond
-            feedhistory["feed_type"] = feedtype
-            response.append(feedhistory)
-
-        # dump json to json string
-        response_dump = json.dumps(response, default=str)
-        return Response(response_dump, mimetype="application/json", status=200)
+            pipeline = [
+                {'$lookup': {
+                    'from': 'pond',
+                    'let': {"pondid": "$pond_id"},
+                    'pipeline': [
+                        {'$match': {
+                            '$expr': {'$and': [{'$eq': ['$_id', '$$pondid']}]}}},
+                        {"$project": {
+                            "created_at": 0,
+                            "updated_at": 0,
+                        }}
+                    ],
+                    'as': 'pond'
+                }},
+                {'$lookup': {
+                    'from': 'feed_type',
+                    'let': {"feedid": "$feed_type_id"},
+                    'pipeline': [
+                        {'$match': {'$expr': {'$eq': ['$_id', '$$feedid']}}},
+                        {"$project": {
+                            "created_at": 0,
+                            "updated_at": 0,
+                        }}
+                    ],
+                    'as': 'feed_type'
+                }},
+                {"$project": {
+                    "pond_id": 0,
+                    "feed_type_id": 0,
+                    "created_at": 0,
+                    "updated_at": 0,
+                }}
+            ]
+            feedhistory = FeedHistory.objects.aggregate(pipeline)
+            list_feedhistory = list(feedhistory)
+            response = json.dumps(list_feedhistory, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
 
     def post(self):
         try:
