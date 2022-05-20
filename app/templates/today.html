@@ -33,12 +33,18 @@
                                 <td>{{pond["alias"]}}</td>
                                 <td>{{pond["location"]}}</td>
                                 <td>
-                                    <ul>
+                                    <table>
+                                        <tr>
+                                            <th>time</th>
+                                            <th>dose</th>
+                                        </tr>
                                         {% for feedhistory in pond['feed_historys_today'] %}
-                                        <li>{{feedhistory['feed_history_time']}} || {{feedhistory['feed_dose']}} gr
-                                        </li>
+                                        <tr>
+                                            <td>{{feedhistory['feed_history_time']}}</td>
+                                            <td>{{feedhistory['feed_dose']}} gr</td>
+                                        </tr>
                                         {% endfor %}
-                                    </ul>
+                                    </table>
                                 </td>
                                 <td>{{pond["total_feed_dose_today"]}} gr</td>
                             </tr>

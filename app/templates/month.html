@@ -27,6 +27,7 @@
                                 <th>total feed</th>
                                 <th>total dose</th>
                                 <th>avg dose</th>
+                                <th>avg dose</th>
                             </tr>
                             {% for index, pond in ponds %}
                             <tr>
@@ -36,6 +37,14 @@
                                 <td>{{pond["total_feed_historys"]}} X</td>
                                 <td>{{pond["total_feed_dose"]}} gr</td>
                                 <td>{{pond["avg_feed_dose"]}} gr</td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <th>nama</th>
+                                            <th>umur</th>
+                                        </tr>
+                                    </table>
+                                </td>
                             </tr>
                             {% endfor %}
                         </table>
