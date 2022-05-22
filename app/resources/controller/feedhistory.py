@@ -73,11 +73,16 @@ class FeedHistorysApi(Resource):
 
     def post(self):
         try:
+            pond_id = request.form.get("pond_id", None)
+            feed_type_id = request.form.get("feed_type_id", None)
+            print(pond_id)
             body = {
-                "pond_id": request.form.get("pond_id", None),
-                "feed_type_id": request.form.get("feed_type_id", None),
+                "pond_id": pond_id,
+                "feed_type_id": feed_type_id,
                 "feed_dose": request.form.get("feed_dose", None)
             }
+            check_pond = Pond.objects.get(id=pond_id)
+            check_feed_type = FeedType.objects.get(id=feed_type_id)
             feedhistory = FeedHistory(**body).save()
             id = feedhistory.id
             return {'id': str(id), 'message': 'success input'}, 200

@@ -17,6 +17,6 @@ def initialize_routes(api):
     api.add_resource(FeedHistorysApi, '/api/feedhistorys')
     api.add_resource(FeedHistoryApi, '/api/feedhistorys/<id>')
     api.add_resource(FeedHistoryTodayByPond,
-                     '/api/feedhistorybypond/day')
+                     '/api/feedhistorybypond')
     api.add_resource(FeedHistoryTodayByOnePond,
                      '/api/feedhistorybyonepond/<id>')
