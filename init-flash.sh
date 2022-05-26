@@ -1,3 +1,3 @@
-export FLASK_APP=app
+export FLASK_APP=fishapi
 export FLASK_ENV=development
 flask run

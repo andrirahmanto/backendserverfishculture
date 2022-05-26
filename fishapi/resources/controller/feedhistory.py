@@ -1,7 +1,7 @@
 from flask import Response, request
-from app.database.models import FeedHistory, Pond, FeedType
+from fishapi.database.models import FeedHistory, Pond, FeedType
 from flask_restful import Resource
-from app.database.db import db
+from fishapi.database.db import db
 import datetime
 import json
 from bson.json_util import dumps

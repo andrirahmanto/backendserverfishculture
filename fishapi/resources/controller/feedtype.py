@@ -1,5 +1,5 @@
 from flask import Response, request
-from app.database.models import FeedType
+from fishapi.database.models import FeedType
 from flask_restful import Resource
 import datetime
 import json

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for
 from .database.db import initialize_db
 from flask_restful import Api
-from app.database.models import FeedHistory, Pond, FeedType
+from fishapi.database.models import FeedHistory, Pond, FeedType
 from .resources.routes import initialize_routes
 import json
 from datetime import datetime
@@ -58,7 +58,6 @@ def create_app(test_config=None):
     def feedhistoryToday():
         # make variable for default field
         date = datetime.today().strftime('%Y-%m-%d')
-        date = "2022-05-13"
         print(date)
         pipline = [
             {'$lookup': {
