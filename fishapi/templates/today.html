@@ -19,39 +19,56 @@
                     <h4>Table</h4>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-md">
-                            <tr>
-                                <th>No</th>
-                                <th>Alias</th>
-                                <th>Location</th>
-                                <th>total dose today</th>
-                                <th>feed historys today</th>
-                            </tr>
-                            {% for index, pond in ponds %}
-                            <tr>
-                                <td>{{index}}</td>
-                                <td>{{pond["alias"]}}</td>
-                                <td>{{pond["location"]}}</td>
-                                <td>{{pond["total_feed_dose"]}} gr</td>
-                                <td>
-                                    <table>
-                                        <tr>
-                                            <th>time</th>
-                                            <th>dose</th>
-                                            <th>feed name</th>
-                                        </tr>
-                                        {% for feedhistory in pond['feed_historys_list'] %}
-                                        <tr>
-                                            <td>{{feedhistory['feed_history_time']}}</td>
-                                            <td>{{feedhistory['feed_dose']}} gr</td>
-                                            <td>{{feedhistory['feed_type']['name']}}</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </table>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                    <div class="table-responsive p-5">
+                        <table id="mainTable" class="table table-striped table-md">
+                            <thead>
+                                <!-- <tr>
+                                    <th>No</th>
+                                    <th>Alias</th>
+                                    <th>Location</th>
+                                    <th>total dose today</th>
+                                    <th>feed historys today</th>
+                                </tr> -->
+                                <tr>
+                                    <th>No</th>
+                                    <th>Alias</th>
+                                    <th>Location</th>
+                                    <th>total dose today</th>
+                                    <th>feed historys today</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for index, pond in ponds %}
+                                <tr>
+                                    <td>{{index}}</td>
+                                    <td>{{pond["alias"]}}</td>
+                                    <td>{{pond["location"]}}</td>
+                                    <td>{{pond["total_feed_dose"]}} gr</td>
+                                    <td>
+                                        <table id="subTable" class="table tablesub">
+                                            <thead>
+                                                <tr>
+                                                    <th>date</th>
+                                                    <th>time</th>
+                                                    <th>dose</th>
+                                                    <th>feed name</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for feedhistory in pond['feed_historys_list'] %}
+                                                <tr>
+                                                    <td>{{feedhistory['feed_history_date']}}</td>
+                                                    <td>{{feedhistory['feed_history_time']}} WIB</td>
+                                                    <td>{{feedhistory['feed_dose']}} gr</td>
+                                                    <td>{{feedhistory['feed_type']['name']}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>

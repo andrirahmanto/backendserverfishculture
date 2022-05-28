@@ -18,24 +18,28 @@
                     <h4>Table</h4>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-md">
-                            <tr>
-                                <th>No</th>
-                                <th>Pond</th>
-                                <th>Feed type</th>
-                                <th>Feed dose</th>
-                                <th>Feed time</th>
-                            </tr>
-                            {% for index, feedhistory in feedhistorys %}
-                            <tr>
-                                <td>{{index}}</td>
-                                <td>{{feedhistory["pond"]["alias"]}}</td>
-                                <td>{{feedhistory["feed_type"]["name"]}}</td>
-                                <td>{{feedhistory["feed_dose"]}} gr</td>
-                                <td>{{feedhistory["feed_history_time"]}}</td>
-                            </tr>
-                            {% endfor %}
+                    <div class="table-responsive p-5">
+                        <table id="mainTable" class="table table-striped table-md">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Pond</th>
+                                    <th>Feed type</th>
+                                    <th>Feed dose</th>
+                                    <th>Feed time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for index, feedhistory in feedhistorys %}
+                                <tr>
+                                    <td>{{index}}</td>
+                                    <td>{{feedhistory["pond"]["alias"]}}</td>
+                                    <td>{{feedhistory["feed_type"]["name"]}}</td>
+                                    <td>{{feedhistory["feed_dose"]}} gr</td>
+                                    <td>{{feedhistory["feed_history_time"]}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>

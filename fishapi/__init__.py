@@ -11,11 +11,6 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     api = Api(app)
     app.config.from_pyfile('settings.cfg', silent=False)
-    # app.config['MONGODB_SETTINGS'] = {
-    #     'db': 'fishapidb',
-    #     'host': '127.0.0.1',
-    #     'port': 27017
-    # }
 
     initialize_db(app)
     initialize_routes(api)
@@ -54,11 +49,15 @@ def create_app(test_config=None):
                 "%a || %d-%B-%Y || %H.%M.%f")
         return render_template('home.html', name='Andri', feedhistorys=enumerate(response, start=1))
 
-    @app.route('/feedhistory/today')
-    def feedhistoryToday():
-        # make variable for default field
-        date = datetime.today().strftime('%Y-%m-%d')
+    @app.route('/feedhistory/today/', defaults={'date': datetime.today().strftime('%Y-%m-%d')})
+    @app.route('/feedhistory/today/<date>')
+    def feedhistoryToday(date):
         print(date)
+        if len(date) > 7:
+            format_date = '%Y-%m-%d'
+        else:
+            format_date = '%Y-%m'
+        print(format_date)
         pipline = [
             {'$lookup': {
                 'from': 'feed_history',
@@ -67,7 +66,7 @@ def create_app(test_config=None):
                     {'$match': {'$expr': {'$and': [
                         {'$eq': ['$pond_id', '$$pondid']},
                         {'$eq': [date, {'$dateToString': {
-                            'format': "%Y-%m-%d", 'date': "$feed_history_time"}}]}
+                            'format': format_date, 'date': "$feed_history_time"}}]}
                     ]}}},
                     {'$lookup': {
                         'from': 'feed_type',
@@ -79,6 +78,8 @@ def create_app(test_config=None):
                         'as': 'feed_type'
                     }},
                     {"$addFields": {
+                        "feed_history_date": {'$dateToString': {
+                            'format': "%d-%m-%Y", 'date': "$feed_history_time"}},
                         "feed_history_time": {'$dateToString': {
                             'format': "%H:%M:%S", 'date': "$feed_history_time"}},
                         "feed_type": {"$first": "$feed_type"}

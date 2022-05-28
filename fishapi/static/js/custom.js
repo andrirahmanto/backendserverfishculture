@@ -6,3 +6,8 @@
  */
 
 "use strict";
+
+$(document).ready(function () {
+    $('#mainTable').DataTable();
+    $('.tablesub').DataTable();
+});
