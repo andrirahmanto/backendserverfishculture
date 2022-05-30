@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 {% block name %}{{name}}{% endblock %}
+
+{% block plugins_css %}
+<link rel="stylesheet"
+    href="{{url_for('static', filename='node_modules/bootstrap-daterangepicker/daterangepicker.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='node_modules/select2/dist/css/select2.min.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='node_modules/selectric/public/selectric.css')}}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css"
+    rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <!-- Main Content -->
 <div class="main-content">
@@ -20,6 +33,18 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive p-5">
+                        <div class="row">
+                            <div class="col-6">
+                                <label>Daily</label>
+                                <input id="form-date" type="text" class="form-control datepicker" value="{{date}}">
+                                <br>
+                                <button type="button" class="btn btn-success btn-block"
+                                    onclick="setDate()">Search</button>
+                            </div>
+                        </div>
+                        <br>
+                        <h5>Result for {{date}}</h5>
+                        <br>
                         <table id="mainTable" class="table table-striped table-md">
                             <thead>
                                 <!-- <tr>
@@ -76,4 +101,14 @@
         </div>
     </section>
 </div>
+{% endblock %}
+
+{% block plugins_js %}
+<script src="{{url_for('static', filename='node_modules/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<script
+    src="{{url_for('static', filename='node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
+<script src="{{url_for('static', filename='node_modules/select2/dist/js/select2.full.min.js')}}"></script>
+<script src="{{url_for('static', filename='node_modules/selectric/public/jquery.selectric.min.js')}}"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 {% endblock %}

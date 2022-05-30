@@ -11,3 +11,8 @@ $(document).ready(function () {
     $('#mainTable').DataTable();
     $('.tablesub').DataTable();
 });
+
+function setDate() {
+    let date = document.getElementById("form-date").value;
+    window.location.href = `/feedhistory/today/${date}`
+}

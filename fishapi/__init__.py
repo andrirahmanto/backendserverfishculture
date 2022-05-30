@@ -93,7 +93,7 @@ def create_app(test_config=None):
         ]
         ponds = Pond.objects().aggregate(pipline)
         response = list(ponds)
-        return render_template('today.html', name='Andri', ponds=enumerate(response, start=1))
+        return render_template('today.html', name='Andri', ponds=enumerate(response, start=1), date=date)
 
     @app.route('/feedhistory/month')
     def feedhistoryMonth():
