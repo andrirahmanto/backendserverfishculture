@@ -14,5 +14,6 @@ $(document).ready(function () {
 
 function setDate() {
     let date = document.getElementById("form-date").value;
-    window.location.href = `/feedhistory/today/${date}`
+    let link = document.getElementById("link-root").value;
+    window.location.href = `${link}${date}`
 }

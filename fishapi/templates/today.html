@@ -37,6 +37,8 @@
                             <div class="col-6">
                                 <label>Daily</label>
                                 <input id="form-date" type="text" class="form-control datepicker" value="{{date}}">
+                                <input id="link-root" type="text" class="form-control"
+                                    value="{{url_for('feedhistoryToday')}}" hidden>
                                 <br>
                                 <button type="button" class="btn btn-success btn-block"
                                     onclick="setDate()">Search</button>
