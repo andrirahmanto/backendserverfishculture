@@ -7,10 +7,9 @@
 <link rel="stylesheet" href="{{url_for('static', filename='node_modules/select2/dist/css/select2.min.css')}}">
 <link rel="stylesheet" href="{{url_for('static', filename='node_modules/selectric/public/selectric.css')}}">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-<link
+<!-- <link
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css"
-    rel="stylesheet">
+    rel="stylesheet"> -->
 {% endblock %}
 
 {% block content %}
@@ -106,6 +105,7 @@
 {% endblock %}
 
 {% block plugins_js %}
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></scrip`t> -->
 <script src="{{url_for('static', filename='node_modules/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
 <script
     src="{{url_for('static', filename='node_modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
