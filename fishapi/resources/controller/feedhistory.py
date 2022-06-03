@@ -175,11 +175,14 @@ class FeedHistoryApi(Resource):
 class FeedHistoryTodayByPond(Resource):
     def get(self):
         try:
+            # Filter Date
+            # DATE FIELD
             # make variable for default field
             default = datetime.datetime.today().strftime('%Y-%m-%d')
             # get args with default input today
             date = request.args.get("date", default)
             date = datetime.datetime.strptime(date, '%Y-%m-%d')  # datetime
+            # RANGE FIELD
             # get args with default input daily
             date_range = request.args.get("range", "daily")
             if date_range == "monthly":
@@ -193,7 +196,20 @@ class FeedHistoryTodayByPond(Resource):
                 date_query = {'$eq': [daily_date, {'$dateToString': {
                     'format': daily_format, 'date': "$feed_history_time"}}]}
             print(date_query)
+
+            # Filter Pond
+            # LIST POND FIELD
+            # make variable for default field
+            list_pond = request.args.get("list_pond", default="[]")
+            list_pond = json.loads(list_pond)
+            list_pond_query = {}
+            if len(list_pond) >= 1:
+                list_pond_query = {"$match": {
+                    "$expr": {"$in": [{"$toString": "$_id"}, list_pond]}}}
+            print(list_pond_query)
+
             pipline = [
+                list_pond_query,
                 {'$lookup': {
                     'from': 'feed_history',
                     'let': {"pondid": "$_id"},
