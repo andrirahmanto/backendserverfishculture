@@ -17,27 +17,23 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Dashboard</h1>
+            <h1>Daily Feed History</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                <div class="breadcrumb-item"><a href="#">Feed
-                        History Per Pond</a></div>
+                <div class="breadcrumb-item active"><a href="#">Feed History</a></div>
+                <div class="breadcrumb-item"><a href="#">Daily</a></div>
             </div>
         </div>
 
         <div class="section-body">
             <div class="card">
-                <div class="card-header">
-                    <h4>Table</h4>
-                </div>
                 <div class="card-body p-0">
                     <div class="table-responsive p-5">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-lg-6">
                                 <label>Daily</label>
                                 <input id="form-date" type="text" class="form-control datepicker" value="{{date}}">
                                 <input id="link-root" type="text" class="form-control"
-                                    value="{{url_for('feedhistoryToday')}}" hidden>
+                                    value="{{url_for('feedhistoryDaily')}}" hidden>
                                 <br>
                                 <button type="button" class="btn btn-success btn-block"
                                     onclick="setDate()">Search</button>
@@ -74,10 +70,10 @@
                                         <table id="subTable" class="table tablesub">
                                             <thead>
                                                 <tr>
-                                                    <th>date</th>
-                                                    <th>time</th>
-                                                    <th>dose</th>
-                                                    <th>feed name</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+                                                    <th>Dose</th>
+                                                    <th>Feed Name</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
