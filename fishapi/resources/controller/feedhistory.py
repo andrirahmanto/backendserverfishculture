@@ -172,7 +172,7 @@ class FeedHistoryApi(Resource):
             return Response(response, mimetype="application/json", status=400)
 
 
-class FeedHistoryTodayByPond(Resource):
+class FeedHistoryByPond(Resource):
     def get(self):
         try:
             # Filter Date
@@ -262,7 +262,7 @@ class FeedHistoryTodayByPond(Resource):
             return Response(response, mimetype="application/json", status=400)
 
 
-class FeedHistoryTodayByOnePond(Resource):
+class FeedHistoryByOnePond(Resource):
     def get(self, id):
         try:
             objects = Pond.objects.get(id=id)
