@@ -17,7 +17,7 @@
             <div class="card">
                 <div class="card-body p-0">
                     <div class="table-responsive p-5">
-                        <h5>Result for {{date}}</h5>
+                        <h5>Result for {{date_read}}</h5>
                         <br>
                         <table class="table table-sm">
                             <tbody>
@@ -66,4 +66,7 @@
         </div>
     </section>
 </div>
+{% endblock %}
+{% block page_js %}
+<script src="{{url_for('static', filename='js/custom_page/detail.js')}}"></script>
 {% endblock %}
