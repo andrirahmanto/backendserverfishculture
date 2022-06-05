@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block name %}{{name}}{% endblock %}
+{% block plugins_css %}
+<link rel="stylesheet"
+    href="{{url_for('static', filename='node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
+{% endblock %}
 {% block content %}
 <!-- Main Content -->
 <div class="main-content">
@@ -16,7 +20,19 @@
             <div class="card">
                 <div class="card-body p-0">
                     <div class="table-responsive p-5">
-                        <h5>Result for {{date}}</h5>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <label>Monthly</label>
+                                <input id="form-date" type="text" class="form-control datepicker" value="{{date}}">
+                                <input id="link-root" type="text" class="form-control"
+                                    value="{{url_for('feedhistoryMonthly')}}" hidden>
+                                <br>
+                                <button type="button" class="btn btn-success btn-block"
+                                    onclick="setDate()">Search</button>
+                            </div>
+                        </div>
+                        <br>
+                        <h5>Result for {{date_read}}</h5>
                         <br>
                         <table id="mainTable" class="table table-striped table-md">
                             <thead>
@@ -39,7 +55,7 @@
                                     <td>{{pond["total_feed_historys"]}} X</td>
                                     <td>{{pond["total_feed_dose"]}} gr</td>
                                     <td>{{pond["avg_feed_dose"]}} gr / day</td>
-                                    <td> <a href="{{url_for('feedhistoryMonthlyOnePond', pondid = pond['_id'])}}"
+                                    <td> <a href="{{url_for('feedhistoryMonthlyOnePond', pondid = pond['_id'], date = date)}}"
                                             class="btn btn-icon icon-left btn-info"><i class="fas fa-info-circle"></i>
                                             Detail</a></td>
                                 </tr>
@@ -52,4 +68,11 @@
         </div>
     </section>
 </div>
+{% endblock %}
+{% block plugins_js %}
+<script
+    src="{{url_for('static', filename='node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+{% endblock %}
+{% block page_js %}
+<script src="{{url_for('static', filename='js/custom_page/monthly.js')}}"></script>
 {% endblock %}

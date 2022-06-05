@@ -16,6 +16,13 @@ bootstrap-colorpicker@^3.0.3:
     jquery ">=2.2"
     popper.js ">=1.10"
 
+bootstrap-datepicker@1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-datepicker/-/bootstrap-datepicker-1.9.0.tgz#e4bfce3fcce1967876b21dc6833ec5994aaed090"
+  integrity sha512-9rYYbaVOheGYxjOr/+bJCmRPihfy+LkLSg4fIFMT9Od8WwWB/MB50w0JO1eBgKUMbb7PFHQD5uAfI3ArAxZRXA==
+  dependencies:
+    jquery ">=1.7.1 <4.0.0"
+
 bootstrap-daterangepicker@^3.0.3:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/bootstrap-daterangepicker/-/bootstrap-daterangepicker-3.1.0.tgz#632e6fb2de4b6360c5c0a9d5f6adb9aace051fe8"
@@ -146,7 +153,7 @@ jquery.nicescroll@^3.7.6:
   dependencies:
     jquery ">=1.8.3"
 
-jquery@>=1.10, jquery@>=1.7, "jquery@>=1.8.0 <4.0.0", jquery@>=1.8.3, jquery@>=2.2, jquery@^3.1.1, jquery@^3.3.1:
+jquery@>=1.10, jquery@>=1.7, "jquery@>=1.7.1 <4.0.0", "jquery@>=1.8.0 <4.0.0", jquery@>=1.8.3, jquery@>=2.2, jquery@^3.1.1, jquery@^3.3.1:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.0.tgz#c72a09f15c1bdce142f49dbf1170bdf8adac2470"
   integrity sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==
