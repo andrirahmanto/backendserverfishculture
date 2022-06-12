@@ -7,24 +7,43 @@ import json
 
 class PondsApi(Resource):
     def get(self):
-        # init object pond
-        objects = Pond.objects()
-        # empty list for response
-        response = []
-        # access one feedhistory in objects
-        for pond in objects:
-            # convert to dict
-            pond = pond.to_mongo()
-            # add to list
-            response.append(pond)
-        # dump json to json string
-        response_dump = json.dumps(response, default=str)
-        return Response(response_dump, mimetype="application/json", status=200)
+        pipeline = [
+            {"$addFields": {
+                "area": {"$cond": {
+                    "if": {"$eq": ["$shape", "persegi"]},
+                    "then": {"$multiply": ["$length", "$width"]},
+                    "else": {"$divide": [
+                        {"$multiply": [22, "$diameter", "$diameter"]},
+                        28
+                    ]},
+                }}
+            }},
+            {"$addFields": {
+                "volume": {"$multiply": ["$area", "$height"]}
+            }},
+            {"$project": {
+                "pond_id": 0,
+                "feed_type_id": 0,
+                "created_at": 0,
+                "updated_at": 0,
+            }}
+        ]
+        ponds = Pond.objects.aggregate(pipeline)
+        list_ponds = list(ponds)
+        response = json.dumps(list_ponds, default=str)
+        return Response(response, mimetype="application/json", status=200)
 
     def post(self):
         body = {
             "alias": request.form.get("alias", None),
             "location": request.form.get("location", None),
+            "shape": request.form.get("shape", None),
+            "material": request.form.get("material", None),
+            "length": request.form.get("length", None),
+            "width": request.form.get("width", None),
+            "diameter": request.form.get("diameter", None),
+            "height": request.form.get("height", None),
+            "build_at": request.form.get("build_at", None),
         }
         pond = Pond(**body).save()
         id = pond.id
