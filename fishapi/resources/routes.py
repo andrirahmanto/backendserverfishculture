@@ -8,6 +8,8 @@ def initialize_routes(api):
     # pond
     api.add_resource(PondsApi, '/api/ponds')
     api.add_resource(PondApi, '/api/ponds/<id>')
+    api.add_resource(PondImageApi, '/api/ponds/image/<id>')
+    api.add_resource(PondImageApiDummy, '/api/ponds/image')
 
     # feedtype
     api.add_resource(FeedTypesApi, '/api/feedtypes')

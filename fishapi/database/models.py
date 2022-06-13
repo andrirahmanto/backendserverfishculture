@@ -20,7 +20,7 @@ class Pond(db.Document):
 
 class PondImage(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
-    address = db.StringField(required=True, default='')
+    image_name = db.StringField(required=True, default='default.png')
 
 
 class FeedType(db.Document):
