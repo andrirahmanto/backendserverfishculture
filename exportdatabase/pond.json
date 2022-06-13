@@ -3,14 +3,25 @@
     "$oid": "625d7026a9a73e090c65cda1"
   },
   "id_int": 2,
-  "alias": "kolom 2",
-  "location": "lantai 2",
+  "alias": "alpha",
+  "location": "blok 1",
   "created_at": {
     "$date": {
       "$numberLong": "1650315926183"
     }
   },
   "updated_at": {
+    "$date": {
+      "$numberLong": "1650315926183"
+    }
+  },
+  "shape": "bundar",
+  "material": "beton",
+  "length": 0,
+  "width": 0,
+  "diameter": 1400,
+  "height": 100,
+  "build_at": {
     "$date": {
       "$numberLong": "1650315926183"
     }
@@ -20,8 +31,8 @@
     "$oid": "625d7033a9a73e090c65cda2"
   },
   "id_int": 3,
-  "alias": "kolom 3",
-  "location": "lantai 3",
+  "alias": "beta",
+  "location": "blok 1",
   "created_at": {
     "$date": {
       "$numberLong": "1650315939608"
@@ -30,6 +41,45 @@
   "updated_at": {
     "$date": {
       "$numberLong": "1650315939608"
+    }
+  },
+  "shape": "persegi",
+  "material": "terpal",
+  "length": 800,
+  "width": 400,
+  "diameter": 0,
+  "height": 100,
+  "build_at": {
+    "$date": {
+      "$numberLong": "1650315939608"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "id_int": 4,
+  "alias": "charlie",
+  "location": "blok 2",
+  "shape": "persegi",
+  "material": "tanah",
+  "length": 500,
+  "width": 300,
+  "diameter": 0,
+  "height": 100,
+  "build_at": {
+    "$date": {
+      "$numberLong": "1655079891473"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1655079891473"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1655079891473"
     }
   }
 }]
