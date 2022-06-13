@@ -48,7 +48,7 @@ def create_app(test_config=None):
             #     feedhistory['feed_history_time'], 'YYYY-MM-DD HH:MM:SS.mmmmmm')
             feedhistory['feed_history_time'] = feedhistory['feed_history_time'].strftime(
                 "%a || %d-%B-%Y || %H.%M.%f")
-        return render_template('log.html', name='Andri', feedhistorys=enumerate(response, start=1))
+        return render_template('feedhistory/log.html', name='Andri', feedhistorys=enumerate(response, start=1))
 
     @app.route('/feedhistorys/daily/', defaults={'date': datetime.today().strftime('%Y-%m-%d')})
     @app.route('/feedhistorys/daily/<date>')
@@ -94,7 +94,7 @@ def create_app(test_config=None):
         ]
         ponds = Pond.objects().aggregate(pipline)
         response = list(ponds)
-        return render_template('daily.html', name='Andri', ponds=enumerate(response, start=1), date=date)
+        return render_template('feedhistory/daily.html', name='Andri', ponds=enumerate(response, start=1), date=date)
 
     @app.route('/feedhistorys/monthly/', defaults={'date': datetime.today().strftime('%Y-%m')})
     @app.route('/feedhistorys/monthly/<date>')
@@ -127,7 +127,7 @@ def create_app(test_config=None):
         response = list(ponds)
         print(response)
         date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
-        return render_template('monthly.html', name='Andri', ponds=enumerate(response, start=1), date=date, date_read=date_read)
+        return render_template('feedhistory/monthly.html', name='Andri', ponds=enumerate(response, start=1), date=date, date_read=date_read)
 
     @app.route('/feedhistorys/monthly/detail/<pondid>/<date>')
     def feedhistoryMonthlyOnePond(pondid, date=datetime.today().strftime('%Y-%m')):
@@ -186,6 +186,33 @@ def create_app(test_config=None):
         data = list(data)
         data = dict(data[0])
         date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
-        return render_template('detail.html', name='Andri', pond=data, date=date, date_read=date_read)
+        return render_template('feedhistory/detail.html', name='Andri', pond=data, date=date, date_read=date_read)
+
+    @app.route('/ponds')
+    def pondView():
+        pipeline = [
+            {"$addFields": {
+                "area": {"$cond": {
+                    "if": {"$eq": ["$shape", "persegi"]},
+                    "then": {"$multiply": ["$length", "$width"]},
+                    "else": {"$divide": [
+                        {"$multiply": [22, "$diameter", "$diameter"]},
+                        28
+                    ]},
+                }}
+            }},
+            {"$addFields": {
+                "volume": {"$multiply": ["$area", "$height"]}
+            }},
+            {"$project": {
+                "pond_id": 0,
+                "feed_type_id": 0,
+                "created_at": 0,
+                "updated_at": 0,
+            }}
+        ]
+        ponds = Pond.objects().aggregate(pipeline)
+        response = list(ponds)
+        return render_template('pond/pondlist.html', name='Andri', ponds=enumerate(response, start=1))
 
     return app
