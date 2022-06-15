@@ -21,9 +21,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Alias</th>
-                                    <th>Location</th>
                                     <th>Shape</th>
                                     <th>Dimension</th>
+                                    <th>Height</th>
                                     <th>Area</th>
                                     <th>volume</th>
                                     <th>Material</th>
@@ -33,17 +33,17 @@
                             <tbody>
                                 {% for index, pond in ponds %}
                                 <tr>
-                                    <td>{{pond["id_int"]}}</td>
+                                    <td>{{index}}</td>
                                     <td>{{pond["alias"]}}</td>
-                                    <td>{{pond["location"]}}</td>
                                     <td>{{pond["shape"]}}</td>
                                     {% if pond["shape"] == "persegi" %}
-                                    <td>{{pond["length"]}}X{{pond["width"]}} Cm</td>
+                                    <td>{{pond["length"]}}X{{pond["width"]}} m</td>
                                     {% else %}
-                                    <td>{{pond["diameter"]}} Cm</td>
+                                    <td>{{pond["diameter"]}} m</td>
                                     {% endif %}
-                                    <td>{{pond["area"]}} Cm2</td>
-                                    <td>{{pond["volume"]}} Cm3</td>
+                                    <td>{{pond["height"]}} m</td>
+                                    <td>{{pond["area"]}} m2</td>
+                                    <td>{{pond["volume"]}} m3</td>
                                     <td>{{pond["material"]}}</td>
                                     <td>{{pond["build_at"]}}</td>
                                 </tr>

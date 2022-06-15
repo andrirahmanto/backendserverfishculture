@@ -9,18 +9,14 @@ class Pond(db.Document):
     location = db.StringField(required=True)
     shape = db.StringField(required=True)
     material = db.StringField(required=True)
-    length = db.IntField(required=True, default=0)
-    width = db.IntField(required=True, default=0)
-    diameter = db.IntField(required=True, default=0)
-    height = db.IntField(required=True, default=0)
+    length = db.FloatField(required=True, default=0)
+    width = db.FloatField(required=True, default=0)
+    diameter = db.FloatField(required=True, default=0)
+    height = db.FloatField(required=True, default=0)
+    image_name = db.StringField(required=True, default='default.jpg')
     build_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
-
-
-class PondImage(db.Document):
-    pond_id = db.ReferenceField(Pond, required=True)
-    image_name = db.StringField(required=True, default='default.png')
 
 
 class FeedType(db.Document):

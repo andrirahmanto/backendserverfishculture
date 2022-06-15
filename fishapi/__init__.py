@@ -202,14 +202,16 @@ def create_app(test_config=None):
                 "area": {"$cond": {
                     "if": {"$eq": ["$shape", "persegi"]},
                     "then": {"$multiply": ["$length", "$width"]},
-                    "else": {"$divide": [
+                    "else": {"$round": [{"$divide": [
                         {"$multiply": [22, "$diameter", "$diameter"]},
                         28
-                    ]},
+                    ]}, 3]},
                 }}
             }},
             {"$addFields": {
-                "volume": {"$multiply": ["$area", "$height"]}
+                "volume": {"$multiply": ["$area", "$height"]},
+                "build_at":{'$dateToString': {
+                    'format': "%d-%m-%Y", 'date': "$build_at"}}
             }},
             {"$project": {
                 "pond_id": 0,

@@ -12,18 +12,6 @@ class PondsApi(Resource):
     def get(self):
         url = url_for('pondimageapidummy', _external=True)
         pipeline = [
-            {'$lookup': {
-                'from': 'pond_image',
-                'let': {"pondid": "$_id"},
-                'pipeline': [
-                    {'$match': {
-                        '$expr': {'$eq': ['$pond_id', '$$pondid']}}},
-                    {"$addFields": {
-                        "link": {"$concat": [url, "/", {"$toString": "$pond_id"}]}
-                    }},
-                ],
-                'as': 'pond_image'
-            }},
             {"$addFields": {
                 "area": {"$cond": {
                     "if": {"$eq": ["$shape", "persegi"]},
@@ -33,7 +21,7 @@ class PondsApi(Resource):
                         28
                     ]},
                 }},
-                "pond_image":{"$first": "$pond_image"}
+                "image_link":{"$concat": [url, "/", {"$toString": "$_id"}]}
             }},
             {"$addFields": {
                 "volume": {"$multiply": ["$area", "$height"]}
@@ -75,7 +63,7 @@ class PondImageApiDummy(Resource):
 class PondImageApi(Resource):
     def get(self, id):
         # init object pond
-        objects = PondImage.objects.get(pond_id=id)
+        objects = Pond.objects.get(id=id)
         # convert to dict
         pond = objects.to_mongo()
         # dump dict to json string
@@ -83,9 +71,8 @@ class PondImageApi(Resource):
                             current_app.config['UPLOAD_DIR'])
         return send_from_directory(path, pond['image_name'])
 
-    def post(self, id):
+    def put(self, id):
         file = request.files['image']
-
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             filename = pad_timestamp(filename)
@@ -97,22 +84,24 @@ class PondImageApi(Resource):
                 pass
             filepath = os.path.join(path, filename)
             file.save(filepath)
-
-            # save to db
+            # database
+            objects = Pond.objects.get(id=id)
+            pond = objects.to_mongo()
+            old_image_name = pond["image_name"]
+            new_image_name = filename
+            if old_image_name != "default.jpg":
+                os.remove(os.path.join(path, old_image_name))
             data = {
-                "pond_id": id,
-                "image_name": filename
+                "image_name": new_image_name
             }
-            pondimage = PondImage(**data).save()
-            id = pondimage.id
+            objects.update(**data)
+            id = objects.id
             return {'id': str(id)}, 200
+        return {'error': 'tidak ada file'}, 400
 
-        response = {"message": str(e)}
-        response = json.dumps(response, default=str)
-        return Response(response, mimetype="application/json", status=400)
-
-    def put(self, id):
-        pass
+        # response = {"message": str(e)}
+        # response = json.dumps(response, default=str)
+        # return Response(response, mimetype="application/json", status=400)
 
 
 class PondApi(Resource):
