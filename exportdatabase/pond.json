@@ -19,13 +19,14 @@
   "material": "beton",
   "length": 0,
   "width": 0,
-  "diameter": 1400,
-  "height": 100,
+  "diameter": 1.4,
+  "height": 1,
   "build_at": {
     "$date": {
       "$numberLong": "1650315926183"
     }
-  }
+  },
+  "image_name": "kolam_1655141767.jpeg"
 },{
   "_id": {
     "$oid": "625d7033a9a73e090c65cda2"
@@ -45,15 +46,16 @@
   },
   "shape": "persegi",
   "material": "terpal",
-  "length": 800,
-  "width": 400,
+  "length": 8,
+  "width": 4,
   "diameter": 0,
-  "height": 100,
+  "height": 1,
   "build_at": {
     "$date": {
       "$numberLong": "1650315939608"
     }
-  }
+  },
+  "image_name": "default.jpg"
 },{
   "_id": {
     "$oid": "62a62163e445ffb9c5f746f3"
@@ -63,10 +65,10 @@
   "location": "blok 2",
   "shape": "persegi",
   "material": "tanah",
-  "length": 500,
-  "width": 300,
+  "length": 5,
+  "width": 3,
   "diameter": 0,
-  "height": 100,
+  "height": 1,
   "build_at": {
     "$date": {
       "$numberLong": "1655079891473"
@@ -80,6 +82,65 @@
   "updated_at": {
     "$date": {
       "$numberLong": "1655079891473"
+    }
+  },
+  "image_name": "default.jpg"
+},{
+  "_id": {
+    "$oid": "62a955888911334402ddb3b3"
+  },
+  "id_int": 5,
+  "alias": "delta",
+  "location": "blok 4",
+  "shape": "persegi",
+  "material": "tanah",
+  "length": 5,
+  "width": 3,
+  "diameter": 0,
+  "height": 1,
+  "image_name": "default.jpg",
+  "build_at": {
+    "$date": {
+      "$numberLong": "1655289848180"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1655289848180"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1655289848180"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62a9a466299f257e382a8295"
+  },
+  "id_int": 6,
+  "alias": "epsilon",
+  "location": "blok 3",
+  "shape": "persegi",
+  "material": "tanah",
+  "length": 5,
+  "width": 3,
+  "diameter": 0,
+  "height": 0.7,
+  "image_name": "default.jpg",
+  "build_at": {
+    "$date": {
+      "$numberLong": "1655310038087"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1655310038087"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1655310038087"
     }
   }
 }]
