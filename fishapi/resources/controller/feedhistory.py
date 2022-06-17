@@ -95,12 +95,9 @@ class FeedHistorysApi(Resource):
 class FeedHistoryApi(Resource):
     def put(self, id):
         try:
-            body = {
-                "feed_dose": request.form.get("feed_dose", None),
-                "updated_at": datetime.datetime.utcnow()
-            }
+            body = request.form.to_dict(flat=True)
             FeedHistory.objects.get(id=id).update(**body)
-            response = {"message": "success"}
+            response = {"message": "success change data feedhistory", "id": id}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
         except Exception as e:
