@@ -14,7 +14,37 @@ class Pond(db.Document):
     diameter = db.FloatField(required=True, default=0)
     height = db.FloatField(required=True, default=0)
     image_name = db.StringField(required=True, default='default.jpg')
+    isActive = db.BooleanField(required=True, default=False)
     build_at = db.DateTimeField(default=datetime.datetime.now)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class Activation(db.Document):
+    fish = db.ListField(required=True)
+    water_preparation = db.BooleanField(required=True, default=False)
+    water_level = db.FloatField(required=True, default=0)
+    activated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class WaterPreparation(db.Document):
+    activation_id = db.ReferenceField(Activation, required=True)
+    carbohydrate = db.IntField(required=True)
+    carbohydrate_type = db.StringField(required=True)
+    salt = db.IntField(required=True)
+    calcium = db.IntField(required=True)
+
+
+class Diactivation(db.Document):
+    total_fish_harvested = db.IntField(required=True)
+    total_weight_harvested = db.FloatField(required=True)
+    deactivated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class PondStatus(db.Document):
+    pond_id = db.ReferenceField(Pond, required=True)
+    activation_id = db.ReferenceField(Activation, required=True)
+    diactivation_id = db.ReferenceField(Diactivation, required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
