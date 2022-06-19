@@ -20,33 +20,26 @@ class Pond(db.Document):
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 
-class Activation(db.Document):
+class PondActivation(db.Document):
+    pond_id = db.ReferenceField(Pond, required=True)
+    isFinish = db.BooleanField(required=True, default=False)
     fish = db.ListField(required=True)
-    water_preparation = db.BooleanField(required=True, default=False)
+    isWaterPreparation = db.BooleanField(required=True, default=False)
     water_level = db.FloatField(required=True, default=0)
+    total_fish_harvested = db.IntField(required=True, default=0)
+    total_weight_harvested = db.IntField(required=True, default=0)
     activated_at = db.DateTimeField(default=datetime.datetime.now)
+    diactivated_at = db.DateTimeField(default=None)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 
 class WaterPreparation(db.Document):
-    activation_id = db.ReferenceField(Activation, required=True)
+    pond_activation_id = db.ReferenceField(PondActivation, required=True)
     carbohydrate = db.IntField(required=True)
     carbohydrate_type = db.StringField(required=True)
     salt = db.IntField(required=True)
     calcium = db.IntField(required=True)
-
-
-class Diactivation(db.Document):
-    total_fish_harvested = db.IntField(required=True)
-    total_weight_harvested = db.FloatField(required=True)
-    deactivated_at = db.DateTimeField(default=datetime.datetime.now)
-
-
-class PondStatus(db.Document):
-    pond_id = db.ReferenceField(Pond, required=True)
-    activation_id = db.ObjectIdField(required=True)
-    diactivation_id = db.ObjectIdField(required=False, default=None)
-    created_at = db.DateTimeField(default=datetime.datetime.now)
-    updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 
 class FeedType(db.Document):

@@ -9,12 +9,120 @@ from bson.json_util import dumps
 
 class PondsStatusApi(Resource):
     def get(self):
-        pass
+        pipline = [
+            {'$lookup': {
+                'from': 'pond_activation',
+                'let': {"pondid": "$_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$and': [
+                        {'$eq': ['$pond_id', '$$pondid']},
+                    ]}}},
+                    {'$lookup': {
+                        'from': 'water_preparation',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                        'as': 'water_preparation'
+                    }},
+                    {"$addFields": {
+                        "water_preparation": {"$first": "$water_preparation"}
+                    }},
+                    {"$project": {
+                        "pond_id": 0,
+                        "feed_type_id": 0,
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'pond_activation_list'
+            }},
+            {"$addFields": {
+                "total_activation": {"$size": "$pond_activation_list"},
+            }},
+            {"$project": {
+                "location": 0,
+                "shape": 0,
+                "material": 0,
+                "length": 0,
+                "width": 0,
+                "diameter": 0,
+                "height": 0,
+                "image_name": 0,
+                "pond_activation_list": 0,
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        ponds = Pond.objects().aggregate(pipline)
+        response = list(ponds)
+        response = json.dumps(response, default=str)
+        return Response(response, mimetype="application/json", status=200)
 
 
 class PondStatusApi(Resource):
     def get(self, pond_id):
-        pass
+        pond_objects = Pond.objects.get(id=pond_id)
+        pipline = [
+            {'$lookup': {
+                'from': 'pond_activation',
+                'let': {"pondid": "$_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$and': [
+                        {'$eq': ['$pond_id', '$$pondid']},
+                    ]}}},
+                    {'$lookup': {
+                        'from': 'water_preparation',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                        'as': 'water_preparation'
+                    }},
+                    {"$addFields": {
+                        "water_preparation": {"$first": "$water_preparation"}
+                    }},
+                    {"$project": {
+                        "pond_id": 0,
+                        "feed_type_id": 0,
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'pond_activation_list'
+            }},
+            {"$addFields": {
+                "total_activation": {"$size": "$pond_activation_list"},
+                "pond_activation_list": '$pond_activation_list'
+            }},
+            {"$project": {
+                "location": 0,
+                "shape": 0,
+                "material": 0,
+                "length": 0,
+                "width": 0,
+                "diameter": 0,
+                "height": 0,
+                "image_name": 0,
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        ponds = Pond.objects().aggregate(pipline)
+        ponds = list(ponds)
+        ponds = dict(ponds[0])
+        response = json.dumps(ponds, default=str)
+        return Response(response, mimetype="application/json", status=200)
 
 
 class PondActivationApi(Resource):
@@ -26,29 +134,31 @@ class PondActivationApi(Resource):
             return Response(response, mimetype="application/json", status=400)
         fish = request.form.get("fish", "[]")
         fish = json.loads(fish)
-        water_preparation = request.form.get("water_preparation", False)
-        if water_preparation == "true":
-            water_preparation = True
+        isWaterPreparation = request.form.get("isWaterPreparation", False)
+        if isWaterPreparation == "true":
+            isWaterPreparation = True
         else:
-            False
+            isWaterPreparation = False
         water_level = request.form.get("water_level", None)
         activated_at = request.form.get(
             "activated_at", datetime.datetime.now())
-        activation_data = {
+        pond_activation_data = {
+            "pond_id": pond_id,
+            "isFinish": False,
             "fish": fish,
-            "water_preparation": water_preparation,
+            "isWaterPreparation": isWaterPreparation,
             "water_level": water_level,
             "activated_at": activated_at
         }
-        activation = Activation(**activation_data).save()
-        activation_id = activation.id
-        if water_preparation == True:
+        pondActivation = PondActivation(**pond_activation_data).save()
+        pondActivation_id = pondActivation.id
+        if isWaterPreparation == True:
             carbohydrate = request.form.get("carbohydrate", None)
             carbohydrate_type = request.form.get("carbohydrate_type", None)
             salt = request.form.get("salt", None)
             calcium = request.form.get("calcium", None)
             water_preparation_data = {
-                "activation_id": activation_id,
+                "pond_activation_id": pondActivation_id,
                 "carbohydrate": carbohydrate,
                 "carbohydrate_type": carbohydrate_type,
                 "salt": salt,
@@ -56,12 +166,6 @@ class PondActivationApi(Resource):
             }
             water_preparation = WaterPreparation(
                 **water_preparation_data).save()
-        pond_status_data = {
-            "pond_id": pond_id,
-            "activation_id": activation_id
-        }
-        pond_status = PondStatus(**pond_status_data).save()
-        print(pond_status.id)
         pond.update(**{"isActive": True})
         response = {"message": "success to activation pond"}
         response = json.dumps(response, default=str)
@@ -70,4 +174,26 @@ class PondActivationApi(Resource):
 
 class PondDiactivationApi(Resource):
     def post(self, pond_id):
-        pass
+        pond = Pond.objects.get(id=pond_id)
+        if pond.isActive == False:
+            response = {"message": "status pond is already not active"}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+        # get last pond_activation
+        pond_activation = PondActivation.objects(
+            pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
+        # get args form data
+        # update pond_activation
+        pond_diactivation_data = {
+            "isFinish": True,
+            "total_fish_harvested": request.form.get("total_fish_harvested", None),
+            "total_weight_harvested": request.form.get("total_weight_harvested", None),
+            "diactivated_at": request.form.get("activated_at", datetime.datetime.now())
+        }
+        pond_activation.update(**pond_diactivation_data)
+        # update pond isActive
+        pond.update(**{"isActive": False})
+        response = {"message": "success to diactivation pond"}
+        response = json.dumps(response, default=str)
+        return Response(response, mimetype="application/json", status=200)
+        return
