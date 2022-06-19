@@ -43,8 +43,8 @@ class Diactivation(db.Document):
 
 class PondStatus(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
-    activation_id = db.ReferenceField(Activation, required=True)
-    diactivation_id = db.ReferenceField(Diactivation, required=True)
+    activation_id = db.ObjectIdField(required=True)
+    diactivation_id = db.ObjectIdField(required=False, default=None)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
