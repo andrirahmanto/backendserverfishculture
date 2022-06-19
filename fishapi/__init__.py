@@ -224,4 +224,118 @@ def create_app(test_config=None):
         response = list(ponds)
         return render_template('pond/pondlist.html', name='Andri', ponds=enumerate(response, start=1))
 
+    @app.route('/ponds/activation')
+    def pondActivationListView():
+        pipeline = [
+            {'$lookup': {
+                'from': 'pond_activation',
+                'let': {"pondid": "$_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$and': [
+                        {'$eq': ['$pond_id', '$$pondid']},
+                    ]}}},
+                    {'$lookup': {
+                        'from': 'water_preparation',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                        'as': 'water_preparation'
+                    }},
+                    {"$addFields": {
+                        "water_preparation": {"$first": "$water_preparation"}
+                    }},
+                    {"$project": {
+                        "pond_id": 0,
+                        "feed_type_id": 0,
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'pond_activation_list'
+            }},
+            {"$addFields": {
+                "total_activation": {"$size": "$pond_activation_list"},
+            }},
+            {"$project": {
+                "location": 0,
+                "shape": 0,
+                "material": 0,
+                "length": 0,
+                "width": 0,
+                "diameter": 0,
+                "height": 0,
+                "image_name": 0,
+                "pond_activation_list": 0,
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        ponds = Pond.objects().aggregate(pipeline)
+        response = list(ponds)
+        return render_template('pond/pondactivation.html', name='Andri', ponds=enumerate(response, start=1))
+
+    @app.route('/ponds/activation/<pondid>')
+    def pondActivationView():
+        pipeline = [
+            {'$match': {'$expr': {'$eq': ['$_id', {'$toObjectId': pondid}]}}},
+            {'$lookup': {
+                'from': 'pond_activation',
+                'let': {"pondid": "$_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$and': [
+                        {'$eq': ['$pond_id', '$$pondid']},
+                    ]}}},
+                    {'$lookup': {
+                        'from': 'water_preparation',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                        'as': 'water_preparation'
+                    }},
+                    {"$addFields": {
+                        "water_preparation": {"$first": "$water_preparation"}
+                    }},
+                    {"$project": {
+                        "pond_id": 0,
+                        "feed_type_id": 0,
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'pond_activation_list'
+            }},
+            {"$addFields": {
+                "total_activation": {"$size": "$pond_activation_list"},
+            }},
+            {"$project": {
+                "location": 0,
+                "shape": 0,
+                "material": 0,
+                "length": 0,
+                "width": 0,
+                "diameter": 0,
+                "height": 0,
+                "image_name": 0,
+                "pond_activation_list": 0,
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        ponds = Pond.objects().aggregate(pipeline)
+        response = list(ponds)
+        response = dict(response[0])
+        return render_template('pond/pondactivationdetail.html', name='Andri', ponds=enumerate(response, start=1))
+
     return app

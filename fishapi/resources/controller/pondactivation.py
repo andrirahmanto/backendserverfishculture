@@ -69,6 +69,7 @@ class PondStatusApi(Resource):
     def get(self, pond_id):
         pond_objects = Pond.objects.get(id=pond_id)
         pipline = [
+            {'$match': {'$expr': {'$eq': ['$_id', {'$toObjectId': pond_id}]}}},
             {'$lookup': {
                 'from': 'pond_activation',
                 'let': {"pondid": "$_id"},

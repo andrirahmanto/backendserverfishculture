@@ -5,10 +5,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Pond List</h1>
+            <h1>Pond Activation</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Pond</a></div>
-                <div class="breadcrumb-item"><a href="#">Pond List</a></div>
+                <div class="breadcrumb-item"><a href="#">Pond Activation</a></div>
             </div>
         </div>
 
@@ -21,13 +21,9 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Alias</th>
-                                    <th>Shape</th>
-                                    <th>Dimension</th>
-                                    <th>Height</th>
-                                    <th>Area</th>
-                                    <th>volume</th>
-                                    <th>Material</th>
-                                    <th>Build at</th>
+                                    <th>Total Activation</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -35,17 +31,17 @@
                                 <tr>
                                     <td>{{index}}</td>
                                     <td>{{pond["alias"]}}</td>
-                                    <td>{{pond["shape"]}}</td>
-                                    {% if pond["shape"] == "persegi" %}
-                                    <td>{{pond["length"]}}X{{pond["width"]}} m (PxL)</td>
+                                    <td>{{pond["total_activation"]}}</td>
+                                    {% if pond["isActive"] == True %}
+                                    <td><a href="#" class="btn btn-icon icon-left btn-success">
+                                            Active</a></td>
                                     {% else %}
-                                    <td>{{pond["diameter"]}} m (D)</td>
+                                    <td><a href="#" class="btn btn-icon icon-left btn-danger">
+                                            Diactive</a></td>
                                     {% endif %}
-                                    <td>{{pond["height"]}} m</td>
-                                    <td>{{pond["area"]}} m2</td>
-                                    <td>{{pond["volume"]}} m3</td>
-                                    <td>{{pond["material"]}}</td>
-                                    <td>{{pond["build_at"]}}</td>
+                                    <td> <a href="#" class="btn btn-icon icon-left btn-info"><i
+                                                class="fas fa-info-circle"></i>
+                                            Activation</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -58,5 +54,5 @@
 </div>
 {% endblock %}
 {% block page_js %}
-<script src="{{url_for('static', filename='js/custom_page/pond/pondlist.js')}}"></script>
+<script src="{{url_for('static', filename='js/custom_page/pond/pondactivation.js')}}"></script>
 {% endblock %}
