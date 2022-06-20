@@ -1,0 +1,76 @@
+[{
+  "_id": {
+    "$oid": "62af3d637cf22faa567235ad"
+  },
+  "pond_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "isFinish": true,
+  "fish": [
+    {
+      "lele": 100
+    },
+    {
+      "patin": 200
+    }
+  ],
+  "isWaterPreparation": true,
+  "water_level": 1.23,
+  "total_fish_harvested": 300,
+  "total_weight_harvested": 3000,
+  "activated_at": {
+    "$date": {
+      "$numberLong": "1655676883952"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1655676883952"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1655676883952"
+    }
+  },
+  "diactivated_at": {
+    "$date": {
+      "$numberLong": "1655680203469"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62af4c24f6a3ffba25a6be6a"
+  },
+  "pond_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "isFinish": false,
+  "fish": [
+    {
+      "lele": 100
+    },
+    {
+      "patin": 200
+    }
+  ],
+  "isWaterPreparation": false,
+  "water_level": 1.34,
+  "total_fish_harvested": 0,
+  "total_weight_harvested": 0,
+  "activated_at": {
+    "$date": {
+      "$numberLong": "1655680660501"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1655680660501"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1655680660501"
+    }
+  }
+}]

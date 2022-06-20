@@ -1,0 +1,12 @@
+[{
+  "_id": {
+    "$oid": "62af3d637cf22faa567235ae"
+  },
+  "pond_activation_id": {
+    "$oid": "62af3d637cf22faa567235ad"
+  },
+  "carbohydrate": 100,
+  "carbohydrate_type": "gula",
+  "salt": 100,
+  "calcium": 100
+}]

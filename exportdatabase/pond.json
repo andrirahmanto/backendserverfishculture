@@ -26,14 +26,15 @@
       "$numberLong": "1650315926183"
     }
   },
-  "image_name": "kolam_1655141767.jpeg"
+  "image_name": "kolam_1655141767.jpeg",
+  "isActive": true
 },{
   "_id": {
     "$oid": "625d7033a9a73e090c65cda2"
   },
   "id_int": 3,
   "alias": "beta",
-  "location": "blok 1",
+  "location": "blok 10",
   "created_at": {
     "$date": {
       "$numberLong": "1650315939608"
@@ -41,7 +42,7 @@
   },
   "updated_at": {
     "$date": {
-      "$numberLong": "1650315939608"
+      "$numberLong": "1655352398665"
     }
   },
   "shape": "persegi",
@@ -55,7 +56,8 @@
       "$numberLong": "1650315939608"
     }
   },
-  "image_name": "default.jpg"
+  "image_name": "default.jpg",
+  "isActive": false
 },{
   "_id": {
     "$oid": "62a62163e445ffb9c5f746f3"
@@ -84,7 +86,8 @@
       "$numberLong": "1655079891473"
     }
   },
-  "image_name": "default.jpg"
+  "image_name": "default.jpg",
+  "isActive": false
 },{
   "_id": {
     "$oid": "62a955888911334402ddb3b3"
@@ -113,12 +116,13 @@
     "$date": {
       "$numberLong": "1655289848180"
     }
-  }
+  },
+  "isActive": false
 },{
   "_id": {
-    "$oid": "62a9a466299f257e382a8295"
+    "$oid": "62ada3ff1dc3a711668e7ca3"
   },
-  "id_int": 6,
+  "id_int": 7,
   "alias": "epsilon",
   "location": "blok 3",
   "shape": "persegi",
@@ -128,19 +132,20 @@
   "diameter": 0,
   "height": 0.7,
   "image_name": "default.jpg",
+  "isActive": false,
   "build_at": {
     "$date": {
-      "$numberLong": "1655310038087"
+      "$numberLong": "1655572079396"
     }
   },
   "created_at": {
     "$date": {
-      "$numberLong": "1655310038087"
+      "$numberLong": "1655572079396"
     }
   },
   "updated_at": {
     "$date": {
-      "$numberLong": "1655310038087"
+      "$numberLong": "1655572079396"
     }
   }
 }]
