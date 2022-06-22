@@ -75,7 +75,6 @@ class FeedHistorysApi(Resource):
         try:
             pond_id = request.form.get("pond_id", None)
             feed_type_id = request.form.get("feed_type_id", None)
-            print(pond_id)
             body = {
                 "pond_id": pond_id,
                 "feed_type_id": feed_type_id,
@@ -157,7 +156,6 @@ class FeedHistoryApi(Resource):
                     "updated_at": 0,
                 }}
             ]
-            print(id)
             feedhistory = FeedHistory.objects.aggregate(pipline)
             list_feedhistory = list(feedhistory)
             response = dict(list_feedhistory[0])
@@ -192,8 +190,6 @@ class FeedHistoryByPond(Resource):
                 daily_date = date.strftime(daily_format)
                 date_query = {'$eq': [daily_date, {'$dateToString': {
                     'format': daily_format, 'date': "$feed_history_time"}}]}
-            print(date_query)
-
             # Filter Pond
             # LIST POND FIELD
             # make variable for default field
@@ -203,8 +199,6 @@ class FeedHistoryByPond(Resource):
             if len(list_pond) >= 1:
                 list_pond_query = {"$match": {
                     "$expr": {"$in": [{"$toString": "$_id"}, list_pond]}}}
-            print(list_pond_query)
-
             pipline = [
                 list_pond_query,
                 {'$lookup': {
@@ -280,7 +274,6 @@ class FeedHistoryByOnePond(Resource):
                 daily_date = date.strftime(daily_format)
                 date_query = {'$eq': [daily_date, {'$dateToString': {
                     'format': daily_format, 'date': "$feed_history_time"}}]}
-            print(date_query)
             pipeline = [
                 {'$match': {'$expr': {'$eq': ['$_id', {'$toObjectId': id}]}}},
                 {'$lookup': {

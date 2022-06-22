@@ -60,12 +60,10 @@ def create_app(test_config=None):
     @app.route('/feedhistorys/daily/', defaults={'date': datetime.today().strftime('%Y-%m-%d')})
     @app.route('/feedhistorys/daily/<date>')
     def feedhistoryDaily(date):
-        print(date)
         if len(date) > 7:
             format_date = '%Y-%m-%d'
         else:
             format_date = '%Y-%m'
-        print(format_date)
         pipline = [
             {'$lookup': {
                 'from': 'feed_history',
@@ -106,7 +104,6 @@ def create_app(test_config=None):
     @app.route('/feedhistorys/monthly/', defaults={'date': datetime.today().strftime('%Y-%m')})
     @app.route('/feedhistorys/monthly/<date>')
     def feedhistoryMonthly(date):
-        print(date)
         pipline = [
             {'$lookup': {
                 'from': 'feed_history',
@@ -132,7 +129,6 @@ def create_app(test_config=None):
         ]
         ponds = Pond.objects().aggregate(pipline)
         response = list(ponds)
-        print(response)
         date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
         return render_template('feedhistory/monthly.html', name='Andri', ponds=enumerate(response, start=1), date=date, date_read=date_read)
 
