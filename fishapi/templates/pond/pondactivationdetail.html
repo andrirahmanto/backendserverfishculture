@@ -49,8 +49,6 @@
                                     <th>Activated at</th>
                                     <th>Diactivated at</th>
                                     <th>Fish</th>
-                                    <th>Water Preparation</th>
-                                    <th>Water Level</th>
                                     <th>Total Fish Harvested</th>
                                     <th>Total Weight Harvested</th>
                                 </tr>
@@ -75,18 +73,6 @@
                                         {% endfor %}
                                         {% endfor %}
                                     </td>
-                                    <td>
-                                        {% if not activation["isWaterPreparation"] %}
-                                        None
-                                        {% else %}
-                                        <p>carbohydrate: {{activation["water_preparation"]["carbohydrate"]}}</p>
-                                        <p>carbohydrate_type: {{activation["water_preparation"]["carbohydrate_type"]}}
-                                        </p>
-                                        <p>salt: {{activation["water_preparation"]["salt"]}}</p>
-                                        <p>calcium: {{activation["water_preparation"]["calcium"]}}</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>{{activation['water_level']}} m</td>
                                     <td>{{activation['total_fish_harvested']}}</td>
                                     <td>{{activation['total_weight_harvested']}} Kg</td>
                                 </tr>
