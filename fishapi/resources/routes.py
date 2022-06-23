@@ -16,7 +16,7 @@ def initialize_routes(api):
     api.add_resource(PondsStatusApi, '/api/ponds/status')
     api.add_resource(PondStatusApi, '/api/ponds/status/<pond_id>')
     api.add_resource(PondActivationApi, '/api/ponds/<pond_id>/activation')
-    api.add_resource(PondDiactivationApi, '/api/ponds/<pond_id>/diactivation')
+    api.add_resource(PondDeactivationApi, '/api/ponds/<pond_id>/deactivation')
 
     # feedtype
     api.add_resource(FeedTypesApi, '/api/feedtypes')

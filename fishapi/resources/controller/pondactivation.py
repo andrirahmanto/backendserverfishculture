@@ -173,7 +173,7 @@ class PondActivationApi(Resource):
         return Response(response, mimetype="application/json", status=200)
 
 
-class PondDiactivationApi(Resource):
+class PondDeactivationApi(Resource):
     def post(self, pond_id):
         pond = Pond.objects.get(id=pond_id)
         if pond.isActive == False:
@@ -185,16 +185,16 @@ class PondDiactivationApi(Resource):
             pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
         # get args form data
         # update pond_activation
-        pond_diactivation_data = {
+        pond_deactivation_data = {
             "isFinish": True,
             "total_fish_harvested": request.form.get("total_fish_harvested", None),
             "total_weight_harvested": request.form.get("total_weight_harvested", None),
-            "diactivated_at": request.form.get("activated_at", datetime.datetime.now())
+            "deactivated_at": request.form.get("activated_at", datetime.datetime.now())
         }
-        pond_activation.update(**pond_diactivation_data)
+        pond_activation.update(**pond_deactivation_data)
         # update pond isActive
         pond.update(**{"isActive": False})
-        response = {"message": "success to diactivation pond"}
+        response = {"message": "success to deactivation pond"}
         response = json.dumps(response, default=str)
         return Response(response, mimetype="application/json", status=200)
         return

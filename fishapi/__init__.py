@@ -304,8 +304,8 @@ def create_app(test_config=None):
                     {"$addFields": {
                         "activated_at": {'$dateToString': {
                             'format': "%d-%m-%Y", 'date': "$activated_at"}},
-                        "diactivated_at": {'$dateToString': {
-                            'format': "%d-%m-%Y", 'date': "$diactivated_at"}},
+                        "deactivated_at": {'$dateToString': {
+                            'format': "%d-%m-%Y", 'date': "$deactivated_at"}},
                         "water_preparation": {"$first": "$water_preparation"}
                     }},
                     {"$project": {

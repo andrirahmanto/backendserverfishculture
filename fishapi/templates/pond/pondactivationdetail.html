@@ -31,7 +31,7 @@
                                             Active</a></td>
                                     {% else %}
                                     <td><a href="#" class="btn btn-icon icon-left btn-danger">
-                                            Diactive</a></td>
+                                            Deactive</a></td>
                                     {% endif %}
                                 </tr>
                                 <tr>
@@ -47,7 +47,7 @@
                                     <th>No</th>
                                     <th>Status</th>
                                     <th>Activated at</th>
-                                    <th>Diactivated at</th>
+                                    <th>Deactivated at</th>
                                     <th>Fish</th>
                                     <th>Total Fish Harvested</th>
                                     <th>Total Weight Harvested</th>
@@ -65,7 +65,7 @@
                                             Unfinish</a></td>
                                     {% endif %}
                                     <td>{{activation['activated_at']}}</td>
-                                    <td>{{activation['diactivated_at']}}</td>
+                                    <td>{{activation['deactivated_at']}}</td>
                                     <td>
                                         {% for fishz in activation['fish'] %}
                                         {% for key in fishz.keys() %}
