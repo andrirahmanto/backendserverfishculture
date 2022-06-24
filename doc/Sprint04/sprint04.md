@@ -1,4 +1,4 @@
-# Sprint 03 (7 Juni - 13 Juni)
+# Sprint 04 (15 Juni - 21 Juni)
 
 - Registrasi kolam: Id kolam (int), bentuk kolam [persegi, bundar], bahan bangunan (kolam tanah, terpal, beton), luas (persegi : Panjang x lebar, bundar : diameter), tinggi (meter), lokasi, photo, tanggal pembuatan
 - REST entry kolam baru
