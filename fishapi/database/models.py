@@ -65,8 +65,8 @@ class FeedHistory(db.Document):
 class FishDeath(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
-    fish_death_amount = db.ReferenceField(FeedType, required=True)
-    image_name = db.IntField(required=True)
-    diagnosis = db.DateTimeField(default=datetime.datetime.now)
+    fish_death_amount = db.ListField(required=True)
+    image_name = db.StringField(required=True)
+    diagnosis = db.StringField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)

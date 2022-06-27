@@ -2,6 +2,7 @@ from .controller.feedhistory import *
 from .controller.pond import *
 from .controller.feedtype import *
 from .controller.pondactivation import *
+from .controller.fishdeath import *
 
 
 def initialize_routes(api):
@@ -29,3 +30,9 @@ def initialize_routes(api):
                      '/api/feedhistorysbypond')
     api.add_resource(FeedHistoryByOnePond,
                      '/api/feedhistorysbyonepond/<id>')
+
+    # fish death
+    api.add_resource(FishDeathsApi, '/api/fishdeath')
+    api.add_resource(FishDeathApi, '/api/fishdeath/<id>')
+    api.add_resource(FishDeathImageApi, '/api/fishdeath/image/<id>')
+    api.add_resource(FishDeathImageApiDummy, '/api/fishdeath/image')

@@ -1,5 +1,5 @@
 from flask import Response, request
-from fishapi.database.models import FeedHistory, Pond, FeedType
+from fishapi.database.models import *
 from flask_restful import Resource
 from fishapi.database.db import db
 import datetime
@@ -75,13 +75,20 @@ class FeedHistorysApi(Resource):
         try:
             pond_id = request.form.get("pond_id", None)
             feed_type_id = request.form.get("feed_type_id", None)
+            pond = Pond.objects.get(id=pond_id)
+            if pond['isActive'] == False:
+                response = {"message": "pond is not active"}
+                response = json.dumps(response, default=str)
+                return Response(response, mimetype="application/json", status=400)
+            pond_activation = PondActivation.objects(
+                pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
+            feed_type = FeedType.objects.get(id=feed_type_id)
             body = {
                 "pond_id": pond_id,
+                "pond_activation_id": pond_activation.id,
                 "feed_type_id": feed_type_id,
                 "feed_dose": request.form.get("feed_dose", None)
             }
-            check_pond = Pond.objects.get(id=pond_id)
-            check_feed_type = FeedType.objects.get(id=feed_type_id)
             feedhistory = FeedHistory(**body).save()
             id = feedhistory.id
             return {'id': str(id), 'message': 'success input'}, 200
