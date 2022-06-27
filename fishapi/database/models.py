@@ -54,8 +54,19 @@ class FeedType(db.Document):
 
 class FeedHistory(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
+    pond_activation_id = db.ReferenceField(PondActivation, required=True)
     feed_type_id = db.ReferenceField(FeedType, required=True)
     feed_dose = db.IntField(required=True)
     feed_history_time = db.DateTimeField(default=datetime.datetime.now)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class FishDeath(db.Document):
+    pond_id = db.ReferenceField(Pond, required=True)
+    pond_activation_id = db.ReferenceField(PondActivation, required=True)
+    fish_death_amount = db.ReferenceField(FeedType, required=True)
+    image_name = db.IntField(required=True)
+    diagnosis = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
