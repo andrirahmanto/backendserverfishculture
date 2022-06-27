@@ -274,7 +274,7 @@ def create_app(test_config=None):
         ]
         ponds = Pond.objects().aggregate(pipeline)
         response = list(ponds)
-        return render_template('pond/pondactivation.html', name='Andri', ponds=enumerate(response, start=1))
+        return render_template('pond/pondlist_active.html', name='Andri', ponds=enumerate(response, start=1))
 
     @app.route('/ponds/activation/<pondid>')
     def pondActivationView(pondid):
@@ -339,6 +339,6 @@ def create_app(test_config=None):
         ponds = list(ponds)
         pond = dict(ponds[0])
         activations = enumerate(pond['pond_activation_list'], start=1)
-        return render_template('pond/pondactivationdetail.html', name='Andri', pond=pond, activations=activations)
+        return render_template('pond/activationlist.html', name='Andri', pond=pond, activations=activations)
 
     return app
