@@ -9,7 +9,7 @@
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="#">Pond</a></div>
                 <div class="breadcrumb-item"><a href="{{url_for('feedhistoryMonthly')}}">Activation</a></div>
-                <div class="breadcrumb-item"><a href="#">Detail</a></div>
+                <div class="breadcrumb-item"><a href="#">List</a></div>
             </div>
         </div>
 
@@ -51,6 +51,7 @@
                                     <th>Fish</th>
                                     <th>Total Fish Harvested</th>
                                     <th>Total Weight Harvested</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,13 +69,15 @@
                                     <td>{{activation['deactivated_at']}}</td>
                                     <td>
                                         {% for fishz in activation['fish'] %}
-                                        {% for key in fishz.keys() %}
-                                        <p>{{key}}: {{fishz[key]}}</p>
-                                        {% endfor %}
+                                        <p>{{fishz['type']}}: {{fishz['amount']}}</p>
                                         {% endfor %}
                                     </td>
                                     <td>{{activation['total_fish_harvested']}}</td>
                                     <td>{{activation['total_weight_harvested']}} Kg</td>
+                                    <td> <a href="{{url_for('pondActivationDetailView', activationid = activation['_id'])}}"
+                                            class="btn btn-icon icon-left btn-info"><i class="fas fa-info-circle"></i>
+                                            Activation</a>
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

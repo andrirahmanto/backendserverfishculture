@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block name %}{{name}}{% endblock %}
+{% block content %}
+<!-- Main Content -->
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Pond Activation Detail</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">Pond</a></div>
+                <div class="breadcrumb-item"><a href="{{url_for('feedhistoryMonthly')}}">Activation</a></div>
+                <div class="breadcrumb-item"><a href="#">Detail</a></div>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="table-responsive p-5">
+                        <br>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th>Alias</th>
+                                    <td>: {{pond['alias']}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fish</th>
+                                    <td>
+                                        {% for fishz in pond["pond_activation"]["fish"] %}
+                                        <p>- {{fishz["type"]}}: {{fishz["amount"]}}</p>
+                                        {% endfor %}
+                                    </td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Water Preparation</th>
+                                    {% if pond["pond_activation"]["isWaterPreparation"] == True %}
+                                    <td>: Yes</td>
+                                    {% else %}
+                                    <td>: No</td>
+                                    {% endif %}
+                                </tr>
+                                {% if pond["pond_activation"]["isWaterPreparation"] == True %}
+                                <tr>
+                                    <th>Carbohydrate Type</th>
+                                    <td>: {{pond["pond_activation"]["water_preparation"]["carbohydrate_type"]}} Gram/ml
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Carbohydrate</th>
+                                    <td>: {{pond["pond_activation"]["water_preparation"]["carbohydrate"]}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Salt</th>
+                                    <td>: {{pond["pond_activation"]["water_preparation"]["salt"]}} Kg</td>
+                                </tr>
+                                <tr>
+                                    <th>Calcium</th>
+                                    <td>: {{pond["pond_activation"]["water_preparation"]["calcium"]}} Gram</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

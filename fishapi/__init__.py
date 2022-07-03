@@ -1,8 +1,8 @@
 import os
-from flask import Flask, render_template, url_for, current_app
+from flask import Flask, render_template, url_for, current_app, Response
 from .database.db import initialize_db
 from flask_restful import Api
-from fishapi.database.models import FeedHistory, Pond, FeedType
+from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation
 from .resources.helper import *
 from .resources.routes import initialize_routes
 import json
@@ -340,5 +340,75 @@ def create_app(test_config=None):
         pond = dict(ponds[0])
         activations = enumerate(pond['pond_activation_list'], start=1)
         return render_template('pond/activationlist.html', name='Andri', pond=pond, activations=activations)
+
+    @app.route('/ponds/activation/detail/<activationid>')
+    def pondActivationDetailView(activationid):
+        pondactivation = PondActivation.objects.get(id=activationid)
+        pondactivation = pondactivation.to_mongo()
+        pond_id = pondactivation["pond_id"]
+        print(pond_id)
+        pipeline = [
+            {'$match': {
+                '$expr': {'$eq': ['$_id', {'$toObjectId': pond_id}]}}},
+            {'$lookup': {
+                'from': 'pond_activation',
+                'let': {"pondid": "$_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$and': [
+                        {'$eq': ['$pond_id', '$$pondid']},
+                        {'$eq': ['$_id', {'$toObjectId': activationid}]},
+                    ]}}},
+                    {'$lookup': {
+                        'from': 'water_preparation',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                        'as': 'water_preparation'
+                    }},
+                    {"$addFields": {
+                        "activated_at": {'$dateToString': {
+                            'format': "%d-%m-%Y", 'date': "$activated_at"}},
+                        "deactivated_at": {'$dateToString': {
+                            'format': "%d-%m-%Y", 'date': "$deactivated_at"}},
+                        "water_preparation": {"$first": "$water_preparation"}
+                    }},
+                    {"$project": {
+                        "pond_id": 0,
+                        "feed_type_id": 0,
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }},
+                ],
+                'as': 'pond_activation_list'
+            }},
+            {"$addFields": {
+                "water_level": {"$round": ["$water_level", 3]},
+                "pond_activation": {"$first": "$pond_activation_list"},
+                "total_activation": {"$size": "$pond_activation_list"},
+            }},
+            {"$project": {
+                "location": 0,
+                "shape": 0,
+                "material": 0,
+                "length": 0,
+                "width": 0,
+                "diameter": 0,
+                "height": 0,
+                "image_name": 0,
+                "pond_activation_list": 0,
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        ponds = Pond.objects().aggregate(pipeline)
+        ponds = list(ponds)
+        pond = dict(ponds[0])
+        return render_template('pond/activationdetail.html', name='Andri', pond=pond)
 
     return app
