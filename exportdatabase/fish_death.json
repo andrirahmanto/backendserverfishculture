@@ -1,0 +1,97 @@
+[{
+  "_id": {
+    "$oid": "62c18f949e187b05fca07757"
+  },
+  "pond_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "pond_activation_id": {
+    "$oid": "62af4c24f6a3ffba25a6be6a"
+  },
+  "fish_death_amount": [
+    {
+      "type": "lele",
+      "amount": 10
+    },
+    {
+      "type": "patin",
+      "amount": 20
+    }
+  ],
+  "image_name": "Mass-fish-death-Menindee_1656852372.jpeg",
+  "diagnosis": "mati karena sakit",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1656877572301"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1656877572301"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62c25a3d800be1042d7a1d78"
+  },
+  "pond_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "pond_activation_id": {
+    "$oid": "62af4c24f6a3ffba25a6be6a"
+  },
+  "fish_death_amount": [
+    {
+      "type": "lele",
+      "amount": 15
+    },
+    {
+      "type": "patin",
+      "amount": 25
+    }
+  ],
+  "image_name": "Mass-fish-death-Menindee_1656904253.jpeg",
+  "diagnosis": "mati karena sakit",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1656929453167"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1656929453167"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62c280ef6777a704364d671f"
+  },
+  "pond_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "pond_activation_id": {
+    "$oid": "62af4c24f6a3ffba25a6be6a"
+  },
+  "fish_death_amount": [
+    {
+      "type": "lele",
+      "amount": 17
+    },
+    {
+      "type": "patin",
+      "amount": 11
+    }
+  ],
+  "image_name": "Mass-fish-death-Menindee_1656914159.jpeg",
+  "diagnosis": "mati karena sakit",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1656939359441"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1656939359441"
+    }
+  }
+}]
