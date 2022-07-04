@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, url_for, current_app, Response
 from .database.db import initialize_db
 from flask_restful import Api
-from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation
+from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath
 from .resources.helper import *
 from .resources.routes import initialize_routes
 import json
@@ -410,5 +410,48 @@ def create_app(test_config=None):
         ponds = list(ponds)
         pond = dict(ponds[0])
         return render_template('pond/activationdetail.html', name='Andri', pond=pond)
+
+    @app.route('/fishdeaths/', defaults={'date': datetime.today().strftime('%Y-%m')})
+    @app.route('/fishdeaths/<date>')
+    def fishDeathRecap(date):
+        url = url_for('fishdeathimageapidummy', _external=True)
+        format_date = "%Y-%m"
+        pipline = [
+            {"$match": {"$expr":
+                        {'$eq': [date, {'$dateToString': {
+                            'format': format_date, 'date': "$created_at"}}]}
+                        }},
+            {"$sort": {"created_at": -1}},
+            {'$lookup': {
+                'from': 'pond',
+                        'let': {"pondid": "$pond_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$eq': ['$_id', '$$pondid']}}},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                'as': 'pond_list'
+            }},
+            {"$addFields": {
+                "pond": {"$first": "$pond_list"},
+                "date": {'$dateToString': {
+                    'format': "%d-%m-%Y", 'date': "$created_at"}},
+                "time": {'$dateToString': {
+                    'format': "%H:%M", 'date': "$created_at"}},
+                "image_link": {"$concat": [url, "/", {"$toString": "$_id"}]}
+            }},
+            {"$project": {
+                "pond_list": 0
+            }}
+        ]
+        fishdeaths = FishDeath.objects().aggregate(pipline)
+        fishdeaths = list(fishdeaths)
+        date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
+        # response = json.dumps(fishdeaths, default=str)
+        # return Response(response, mimetype="application/json", status=200)
+        return render_template('fishdeath/monthly.html', name='Andri', fishdeaths=enumerate(fishdeaths, start=1), date=date, date_read=date_read)
 
     return app
