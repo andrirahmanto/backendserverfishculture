@@ -18,3 +18,10 @@ def allowed_file(filename):
 def pad_timestamp(filename):
     name = filename.split('.')
     return name[0] + '_' + str(round(time.time())) + '.' + name[1]
+
+
+def getAmountFishByType(fishtype, fishlist):
+    for obj in fishlist:
+        if obj['type'] == fishtype:
+            return obj['amount']
+    return 0

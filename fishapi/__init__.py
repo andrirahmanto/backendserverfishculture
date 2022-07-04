@@ -454,4 +454,81 @@ def create_app(test_config=None):
         # return Response(response, mimetype="application/json", status=200)
         return render_template('fishdeath/monthly.html', name='Andri', fishdeaths=enumerate(fishdeaths, start=1), date=date, date_read=date_read)
 
+    @app.route('/ponds/fish')
+    def pondFishView():
+        pipeline = [
+            {'$match': {'$expr': {'$eq': ['$isFinish', False]}}},
+            {'$lookup': {
+                'from': 'pond',
+                'let': {"pondid": "$pond_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$eq': ['$_id', '$$pondid']}}},
+                ],
+                'as': 'pond_list'
+            }},
+            {"$addFields": {
+                "activation_date": {'$dateToString': {
+                    'format': "%d-%m-%Y", 'date': "$activated_at"}},
+                "pond": {"$first": "$pond_list"}
+            }},
+            {"$project": {
+                "pond_list": 0,
+                "created_at": 0,
+                "updated_at": 0,
+            }},
+            {'$lookup': {
+                'from': 'fish_death',
+                'let': {"activationid": "$_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$eq': ['$pond_activation_id', '$$activationid']}}},
+                    {'$unwind': "$fish_death_amount"},
+                    {"$addFields": {
+                        "type": "$fish_death_amount.type",
+                        "amount": "$fish_death_amount.amount"
+                    }},
+                    {"$project": {
+                        "fish_death_amount": 0,
+                    }},
+                    {"$group": {
+                        "_id": "$type",
+                        "type": {"$first": "$type"},
+                        "amount": {"$sum": "$amount"}
+                    }},
+                    {"$project": {
+                        "_id": 0,
+                    }},
+                ],
+                'as': 'fishdeath_recap'
+            }},
+            {"$addFields": {
+                "total_fish_stock": {"$sum": "$fish.amount"},
+                "total_fish_death": {"$sum": "$fishdeath_recap.amount"}
+            }},
+        ]
+        pondactivations = PondActivation.objects().aggregate(pipeline)
+        pondactivations = list(pondactivations)
+        for pondactivation in pondactivations:
+            fishtype_list = list()
+            for index in range(len(pondactivation['fish'])):
+                fishtype_list.append(pondactivation['fish'][index]["type"])
+            list1 = pondactivation['fish']
+            list2 = pondactivation['fishdeath_recap']
+            list3 = []
+            for typefish in fishtype_list:
+                obj = getAmountFishByType(typefish, list1)
+                obj2 = getAmountFishByType(typefish, list2)
+                print(obj2)
+                data = {
+                    "type": typefish,
+                    "amount": obj - obj2
+                }
+                list3.append(data)
+            pondactivation["fish_alive"] = list3
+        # response = json.dumps(pondactivations, default=str)
+        # return Response(response, mimetype="application/json", status=200)
+        pondactivations = enumerate(pondactivations, start=1)
+        return render_template('pond/fish.html', name='Andri', pondactivations=pondactivations)
+
     return app
