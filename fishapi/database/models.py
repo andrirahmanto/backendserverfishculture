@@ -23,7 +23,6 @@ class Pond(db.Document):
 class PondActivation(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
     isFinish = db.BooleanField(required=True, default=False)
-    fish = db.ListField(required=True)
     isWaterPreparation = db.BooleanField(required=True, default=False)
     water_level = db.FloatField(required=True, default=0)
     total_fish_harvested = db.IntField(required=True, default=0)
@@ -65,8 +64,30 @@ class FeedHistory(db.Document):
 class FishDeath(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
-    fish_death_amount = db.ListField(required=True)
     image_name = db.StringField(required=True)
     diagnosis = db.StringField(default=datetime.datetime.now)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class FishTransfer(db.Document):
+    origin_pond_id = db.ReferenceField(Pond, required=True)
+    destination_pond_id = db.ReferenceField(Pond, required=True)
+    origin_activation_id = db.ReferenceField(PondActivation, required=True)
+    destination_activation_id = db.ReferenceField(
+        PondActivation, required=True)
+    sample_weight = db.IntField(required=True)
+    sample_long = db.IntField(required=True)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class FishLog(db.Document):
+    pond_id = db.ReferenceField(Pond, required=True)
+    pond_activation_id = db.ObjectIdField(required=False, default=None)
+    fish_death_id = db.ObjectIdField(required=False, default=None)
+    fish_transfer_id = db.ObjectIdField(required=False, default=None)
+    fish_type = db.StringField(required=True)
+    fish_amount = db.IntField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
