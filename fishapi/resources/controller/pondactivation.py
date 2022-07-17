@@ -78,6 +78,19 @@ class PondStatusApi(Resource):
                         {'$eq': ['$pond_id', '$$pondid']},
                     ]}}},
                     {'$lookup': {
+                        'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                        'as': 'fish'
+                    }},
+                    {'$lookup': {
                         'from': 'water_preparation',
                         'let': {"pond_activation_id": "$_id"},
                         'pipeline': [
