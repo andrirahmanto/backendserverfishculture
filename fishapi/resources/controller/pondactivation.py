@@ -133,8 +133,12 @@ class PondActivationApi(Resource):
             response = {"message": "status pond is already active"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=400)
-        fish = request.form.get("fish", "[]")
-        fish = json.loads(fish)
+        fishes = request.form.get("fish", "[]")
+        fishes = json.loads(fishes)
+        if len(fishes) < 1:
+            response = {"message": "There is no fish"}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
         isWaterPreparation = request.form.get("isWaterPreparation", False)
         if isWaterPreparation == "true":
             isWaterPreparation = True
@@ -146,7 +150,6 @@ class PondActivationApi(Resource):
         pond_activation_data = {
             "pond_id": pond_id,
             "isFinish": False,
-            "fish": fish,
             "isWaterPreparation": isWaterPreparation,
             "water_level": water_level,
             "activated_at": activated_at
@@ -168,6 +171,15 @@ class PondActivationApi(Resource):
             water_preparation = WaterPreparation(
                 **water_preparation_data).save()
         pond.update(**{"isActive": True})
+        for fish in fishes:
+            # save fish log
+            data = {
+                "pond_id": pond_id,
+                "pond_activation_id": pondActivation_id,
+                "fish_type": fish['type'],
+                "fish_amount": fish['amount']
+            }
+            fishlog = FishLog(**data).save()
         response = {"message": "success to activation pond"}
         response = json.dumps(response, default=str)
         return Response(response, mimetype="application/json", status=200)
