@@ -29,6 +29,25 @@ class FishDeathsApi(Resource):
                                     {'$eq': ['$pond_activation_id',
                                              '$$activationid']},
                                 ]}}},
+                                {'$lookup': {
+                                    'from': 'fish_log',
+                                    'let': {"fish_death_id": "$_id"},
+                                    'pipeline': [
+                                        {'$match': {
+                                            '$expr': {'$and': [
+                                                {'$eq': ['$fish_death_id',
+                                                         '$$fish_death_id']},
+                                                {'$eq': ['$type_log',
+                                                         'death']},
+                                            ]}
+                                        }},
+                                        {"$project": {
+                                            "created_at": 0,
+                                            "updated_at": 0,
+                                        }}
+                                    ],
+                                    'as': 'fish'
+                                }},
                                 {"$addFields": {
                                     "image_link": {"$concat": [url, "/", {"$toString": "$_id"}]}
                                 }},
@@ -77,20 +96,17 @@ class FishDeathsApi(Resource):
             return Response(response, mimetype="application/json", status=400)
 
     def post(self):
+        # try:
+        pond_id = request.form.get("pond_id", None)
+        pond = Pond.objects.get(id=pond_id)
+        if pond.isActive == False:
+            response = {"message": "status pond is not active"}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+        pond_activation = PondActivation.objects(
+            pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
         try:
-            pond_id = request.form.get("pond_id", None)
-            pond = Pond.objects.get(id=pond_id)
-            if pond.isActive == False:
-                response = {"message": "status pond is not active"}
-                response = json.dumps(response, default=str)
-                return Response(response, mimetype="application/json", status=400)
-            pond_activation = PondActivation.objects(
-                pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
-            file = request.files['image']
-            if not file:
-                response = {"message": "no file selected"}
-                response = json.dumps(response, default=str)
-                return Response(response, mimetype="application/json", status=400)
+            file = request.files['image', None]
             if not allowed_file(file.filename):
                 response = {"message": "file type not allowed"}
                 response = json.dumps(response, default=str)
@@ -105,24 +121,40 @@ class FishDeathsApi(Resource):
                 pass
             filepath = os.path.join(path, filename)
             file.save(filepath)
-            fish_death_amount = request.form.get("fish_death_amount", "[]")
-            fish_death_amount = json.loads(fish_death_amount)
-            body = {
-                "pond_id": pond.id,
-                "pond_activation_id": pond_activation.id,
-                "fish_death_amount": fish_death_amount,
-                "image_name": filename,
-                "diagnosis": request.form.get("diagnosis", None),
-            }
-            fishdeath = FishDeath(**body).save()
-            id = fishdeath.id
-            response = {"message": "success add fishdeath", "id": id}
-            response = json.dumps(response, default=str)
-            return Response(response, mimetype="application/json", status=200)
-        except Exception as e:
-            response = {"message": str(e)}
+        except:
+            filename = "default.jpg"
+        fish_death_amount = request.form.get("fish_death_amount", "[]")
+        fish_death_amount = json.loads(fish_death_amount)
+        if len(fish_death_amount) < 1:
+            response = {"message": "There is no fish"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=400)
+        body = {
+            "pond_id": pond.id,
+            "pond_activation_id": pond_activation.id,
+            "image_name": filename,
+            "diagnosis": request.form.get("diagnosis", None),
+        }
+        fishdeath = FishDeath(**body).save()
+        id = fishdeath.id
+        for fish in fish_death_amount:
+            # save fish log
+            data = {
+                "pond_id": pond_id,
+                "pond_activation_id": pond_activation.id,
+                "fish_death_id": id,
+                "type_log": "death",
+                "fish_type": fish['type'],
+                "fish_amount": fish['amount'] * -1
+            }
+            fishlog = FishLog(**data).save()
+        response = {"message": "success add fishdeath"}
+        response = json.dumps(response, default=str)
+        return Response(response, mimetype="application/json", status=200)
+        # except Exception as e:
+        #     response = {"message": str(e)}
+        #     response = json.dumps(response, default=str)
+        #     return Response(response, mimetype="application/json", status=400)
 
 
 class FishDeathApi(Resource):

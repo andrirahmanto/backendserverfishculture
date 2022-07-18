@@ -54,8 +54,8 @@
                                     <td>{{fishdeath["time"]}} WIB</td>
                                     <td>{{fishdeath["pond"]["alias"]}}</td>
                                     <td>
-                                        {% for fishz in fishdeath['fish_death_amount'] %}
-                                        <p>{{fishz['type']}}: {{fishz['amount']}}</p>
+                                        {% for fishz in fishdeath['fish'] %}
+                                        <p>{{fishz['fish_type']}}: {{fishz['fish_amount']}}</p>
                                         {% endfor %}
                                     </td>
                                     <td>{{fishdeath["diagnosis"]}}</td>

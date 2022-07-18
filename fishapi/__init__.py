@@ -471,6 +471,43 @@ def create_app(test_config=None):
                         ],
                 'as': 'pond_list'
             }},
+            {'$lookup': {
+                'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                             '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'activation']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                'as': 'fish'
+            }},
+            {'$lookup': {
+                'from': 'fish_log',
+                'let': {"fish_death_id": "$_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$and': [
+                            {'$eq': ['$fish_death_id',
+                                     '$$fish_death_id']},
+                            {'$eq': ['$type_log',
+                                     'death']},
+                        ]}
+                    }},
+                    {"$project": {
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'fish'
+            }},
             {"$addFields": {
                 "pond": {"$first": "$pond_list"},
                 "date": {'$dateToString': {
@@ -514,54 +551,95 @@ def create_app(test_config=None):
                 "updated_at": 0,
             }},
             {'$lookup': {
-                'from': 'fish_death',
-                'let': {"activationid": "$_id"},
+                'from': 'fish_log',
+                'let': {"pond_activation_id": "$_id"},
                 'pipeline': [
                     {'$match': {
-                        '$expr': {'$eq': ['$pond_activation_id', '$$activationid']}}},
-                    {'$unwind': "$fish_death_amount"},
-                    {"$addFields": {
-                        "type": "$fish_death_amount.type",
-                        "amount": "$fish_death_amount.amount"
+                        '$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                            {'$eq': ['$type_log',
+                                     'activation']},
+                        ]}
                     }},
+                    {"$sort": {"fish_type": -1}},
                     {"$project": {
-                        "fish_death_amount": 0,
+                        "created_at": 0,
+                        "updated_at": 0,
                     }},
                     {"$group": {
-                        "_id": "$type",
-                        "type": {"$first": "$type"},
-                        "amount": {"$sum": "$amount"}
+                        "_id": "$fish_type",
+                        "fish_type": {"$first": "$fish_type"},
+                        "fish_amount": {"$sum": "$fish_amount"}
                     }},
                     {"$project": {
                         "_id": 0,
                     }},
                 ],
-                'as': 'fishdeath_recap'
+                'as': 'fish_stock'
+            }},
+            {'$lookup': {
+                'from': 'fish_log',
+                'let': {"pond_activation_id": "$_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                            {'$eq': ['$type_log',
+                                     'death']},
+                        ]}
+                    }},
+                    {"$sort": {"fish_type": -1}},
+                    {"$project": {
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }},
+                    {"$group": {
+                        "_id": "$fish_type",
+                        "fish_type": {"$first": "$fish_type"},
+                        "fish_amount": {"$sum": "$fish_amount"}
+                    }},
+                    {"$project": {
+                        "_id": 0,
+                    }},
+                ],
+                'as': 'fish_death_recap'
+            }},
+            {'$lookup': {
+                'from': 'fish_log',
+                'let': {"pond_activation_id": "$_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                        ]}
+                    }},
+                    {"$sort": {"fish_type": -1}},
+                    {"$project": {
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }},
+                    {"$group": {
+                        "_id": "$fish_type",
+                        "fish_type": {"$first": "$fish_type"},
+                        "fish_amount": {"$sum": "$fish_amount"}
+                    }},
+                    {"$project": {
+                        "_id": 0,
+                    }},
+                ],
+                'as': 'fish_in_pond'
             }},
             {"$addFields": {
-                "total_fish_stock": {"$sum": "$fish.amount"},
-                "total_fish_death": {"$sum": "$fishdeath_recap.amount"}
+                "total_fish_stock": {"$sum": "$fish_stock.fish_amount"},
+                "total_fish_death": {"$sum": "$fish_death_recap.fish_amount"},
+                "total_fish_in_pond": {"$sum": "$fish_in_pond.fish_amount"}
             }},
         ]
         pondactivations = PondActivation.objects().aggregate(pipeline)
         pondactivations = list(pondactivations)
-        for pondactivation in pondactivations:
-            fishtype_list = list()
-            for index in range(len(pondactivation['fish'])):
-                fishtype_list.append(pondactivation['fish'][index]["type"])
-            list1 = pondactivation['fish']
-            list2 = pondactivation['fishdeath_recap']
-            list3 = []
-            for typefish in fishtype_list:
-                obj = getAmountFishByType(typefish, list1)
-                obj2 = getAmountFishByType(typefish, list2)
-                print(obj2)
-                data = {
-                    "type": typefish,
-                    "amount": obj - obj2
-                }
-                list3.append(data)
-            pondactivation["fish_alive"] = list3
         # response = json.dumps(pondactivations, default=str)
         # return Response(response, mimetype="application/json", status=200)
         pondactivations = enumerate(pondactivations, start=1)

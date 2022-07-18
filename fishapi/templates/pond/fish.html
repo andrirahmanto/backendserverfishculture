@@ -34,24 +34,22 @@
                                     <td>{{pondactivation["pond"]["alias"]}}</td>
                                     <td>{{pondactivation["activation_date"]}}</td>
                                     <td>
-                                        {% for fishz in pondactivation["fish"] %}
-                                        <p>- {{fishz["type"]}}: {{fishz["amount"]}}</p>
+                                        {% for fishz in pondactivation["fish_stock"] %}
+                                        <p>- {{fishz["fish_type"]}}: {{fishz["fish_amount"]}}</p>
                                         {% endfor %}
                                         <p>Total: {{pondactivation['total_fish_stock']}}</p>
                                     </td>
                                     <td>
-                                        {% for fishz in pondactivation["fishdeath_recap"] %}
-                                        <p>- {{fishz["type"]}}: {{fishz["amount"]}}</p>
+                                        {% for fishz in pondactivation["fish_death_recap"] %}
+                                        <p>- {{fishz["fish_type"]}}: {{fishz["fish_amount"]}}</p>
                                         {% endfor %}
                                         <p>Total: {{pondactivation['total_fish_death']}}</p>
                                     </td>
                                     <td>
-                                        {% for fishz in pondactivation["fish_alive"] %}
-                                        <p>- {{fishz["type"]}}: {{fishz["amount"]}}</p>
+                                        {% for fishz in pondactivation["fish_in_pond"] %}
+                                        <p>- {{fishz["fish_type"]}}: {{fishz["fish_amount"]}}</p>
                                         {% endfor %}
-                                        <p>Total:
-                                            {{pondactivation['total_fish_stock']-pondactivation['total_fish_death']}}
-                                        </p>
+                                        <p>Total: {{pondactivation['total_fish_in_pond']}}</p>
                                     </td>
                                 </tr>
                                 {% endfor %}
