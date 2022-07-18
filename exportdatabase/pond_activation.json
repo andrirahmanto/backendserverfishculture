@@ -1,117 +1,55 @@
 [{
   "_id": {
-    "$oid": "62af3d637cf22faa567235ad"
+    "$oid": "62d3f2180d7265ab60f9cb83"
   },
   "pond_id": {
-    "$oid": "625d7026a9a73e090c65cda1"
-  },
-  "isFinish": true,
-  "fish": [
-    {
-      "type": "lele",
-      "amount": 100
-    },
-    {
-      "type": "patin",
-      "amount": 200
-    }
-  ],
-  "isWaterPreparation": true,
-  "water_level": 1.23,
-  "total_fish_harvested": 300,
-  "total_weight_harvested": 3000,
-  "activated_at": {
-    "$date": {
-      "$numberLong": "1655676883952"
-    }
-  },
-  "created_at": {
-    "$date": {
-      "$numberLong": "1655676883952"
-    }
-  },
-  "updated_at": {
-    "$date": {
-      "$numberLong": "1655676883952"
-    }
-  },
-  "deactivated_at": {
-    "$date": {
-      "$numberLong": "1655680203469"
-    }
-  }
-},{
-  "_id": {
-    "$oid": "62af4c24f6a3ffba25a6be6a"
-  },
-  "pond_id": {
-    "$oid": "625d7026a9a73e090c65cda1"
+    "$oid": "62a62163e445ffb9c5f746f3"
   },
   "isFinish": false,
-  "fish": [
-    {
-      "type": "lele",
-      "amount": 100
-    },
-    {
-      "type": "patin",
-      "amount": 200
-    }
-  ],
-  "isWaterPreparation": false,
-  "water_level": 1.34,
+  "isWaterPreparation": true,
+  "water_level": 100,
   "total_fish_harvested": 0,
   "total_weight_harvested": 0,
   "activated_at": {
     "$date": {
-      "$numberLong": "1655680660501"
+      "$numberLong": "1658082440511"
     }
   },
   "created_at": {
     "$date": {
-      "$numberLong": "1655680660501"
+      "$numberLong": "1658082440511"
     }
   },
   "updated_at": {
     "$date": {
-      "$numberLong": "1655680660501"
+      "$numberLong": "1658082440511"
     }
   }
 },{
   "_id": {
-    "$oid": "62b6b2f1a8a50041ee6350a4"
+    "$oid": "62d562e676d3a668927c511f"
   },
   "pond_id": {
     "$oid": "625d7033a9a73e090c65cda2"
   },
   "isFinish": false,
-  "fish": [
-    {
-      "type": "lele",
-      "amount": 100
-    },
-    {
-      "type": "patin",
-      "amount": 200
-    }
-  ],
   "isWaterPreparation": false,
   "water_level": 100,
   "total_fish_harvested": 0,
   "total_weight_harvested": 0,
   "activated_at": {
     "$date": {
-      "$numberLong": "1656165729881"
+      "$numberLong": "1658176854795"
     }
   },
   "created_at": {
     "$date": {
-      "$numberLong": "1656165729881"
+      "$numberLong": "1658176854796"
     }
   },
   "updated_at": {
     "$date": {
-      "$numberLong": "1656165729881"
+      "$numberLong": "1658176854796"
     }
   }
 }]
