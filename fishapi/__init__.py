@@ -293,7 +293,12 @@ def create_app(test_config=None):
                         'let': {"pond_activation_id": "$_id"},
                         'pipeline': [
                             {'$match': {
-                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                             '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'activation']},
+                                ]}
+                            }},
                             {"$project": {
                                 "created_at": 0,
                                 "updated_at": 0,
@@ -376,7 +381,12 @@ def create_app(test_config=None):
                         'let': {"pond_activation_id": "$_id"},
                         'pipeline': [
                             {'$match': {
-                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                             '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'activation']},
+                                ]}
+                            }},
                             {"$project": {
                                 "created_at": 0,
                                 "updated_at": 0,

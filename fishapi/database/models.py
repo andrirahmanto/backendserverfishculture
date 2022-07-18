@@ -87,6 +87,7 @@ class FishLog(db.Document):
     pond_activation_id = db.ObjectIdField(required=False, default=None)
     fish_death_id = db.ObjectIdField(required=False, default=None)
     fish_transfer_id = db.ObjectIdField(required=False, default=None)
+    type_log = db.StringField(required=True)
     fish_type = db.StringField(required=True)
     fish_amount = db.IntField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)

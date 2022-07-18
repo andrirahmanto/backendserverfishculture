@@ -82,7 +82,12 @@ class PondStatusApi(Resource):
                         'let': {"pond_activation_id": "$_id"},
                         'pipeline': [
                             {'$match': {
-                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                             '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'activation']},
+                                ]}
+                            }},
                             {"$project": {
                                 "created_at": 0,
                                 "updated_at": 0,
@@ -189,6 +194,7 @@ class PondActivationApi(Resource):
             data = {
                 "pond_id": pond_id,
                 "pond_activation_id": pondActivation_id,
+                "type_log": "activation",
                 "fish_type": fish['type'],
                 "fish_amount": fish['amount']
             }
