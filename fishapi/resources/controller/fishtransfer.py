@@ -94,6 +94,7 @@ class FishTransfersApi(Resource):
                 return Response(response, mimetype="application/json", status=400)
             destination_activation = PondActivation.objects(
                 pond_id=destination_pond_id, isFinish=False).order_by('-activated_at').first()
+            transfer_type = request.form.get("transfer_type", None)
             sample_weight = request.form.get("sample_weight", None)
             sample_long = request.form.get("sample_long", None)
             fishes = request.form.get("fish", "[]")
@@ -108,6 +109,7 @@ class FishTransfersApi(Resource):
                 "destination_pond_id": destination_pond_id,
                 "origin_activation_id": origin_activation.id,
                 "destination_activation_id": destination_activation.id,
+                "transfer_type": transfer_type,
                 "sample_weight": sample_weight,
                 "sample_long": sample_long
             }

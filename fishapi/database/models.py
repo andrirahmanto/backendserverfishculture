@@ -76,6 +76,7 @@ class FishTransfer(db.Document):
     origin_activation_id = db.ReferenceField(PondActivation, required=True)
     destination_activation_id = db.ReferenceField(
         PondActivation, required=True)
+    transfer_type = db.StringField(required=True)
     sample_weight = db.IntField(required=True)
     sample_long = db.IntField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)
