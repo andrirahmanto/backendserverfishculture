@@ -3,6 +3,7 @@ from .controller.pond import *
 from .controller.feedtype import *
 from .controller.pondactivation import *
 from .controller.fishdeath import *
+from .controller.fishtransfer import *
 
 
 def initialize_routes(api):
@@ -36,3 +37,7 @@ def initialize_routes(api):
     api.add_resource(FishDeathApi, '/api/fishdeath/<id>')
     api.add_resource(FishDeathImageApi, '/api/fishdeath/image/<id>')
     api.add_resource(FishDeathImageApiDummy, '/api/fishdeath/image')
+
+    # fish transfer
+    api.add_resource(FishTransfersApi, '/api/fishtransfer')
+    api.add_resource(FishTransferApi, '/api/fishtransfer/<id>')
