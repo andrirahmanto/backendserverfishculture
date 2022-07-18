@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, url_for, current_app, Response
 from .database.db import initialize_db
 from flask_restful import Api
-from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath
+from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath, FishTransfer
 from .resources.helper import *
 from .resources.routes import initialize_routes
 import json
@@ -632,10 +632,68 @@ def create_app(test_config=None):
                 ],
                 'as': 'fish_in_pond'
             }},
+            {'$lookup': {
+                'from': 'fish_log',
+                'let': {"pond_activation_id": "$_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                            {'$eq': ['$type_log',
+                                     'transfer_out']},
+                        ]}
+                    }},
+                    {"$sort": {"fish_type": -1}},
+                    {"$project": {
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }},
+                    {"$group": {
+                        "_id": "$fish_type",
+                        "fish_type": {"$first": "$fish_type"},
+                        "fish_amount": {"$sum": "$fish_amount"}
+                    }},
+                    {"$project": {
+                        "_id": 0,
+                    }},
+                ],
+                'as': 'fish_transfer_out'
+            }},
+            {'$lookup': {
+                'from': 'fish_log',
+                'let': {"pond_activation_id": "$_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                            {'$eq': ['$type_log',
+                                     'transfer_in']},
+                        ]}
+                    }},
+                    {"$sort": {"fish_type": -1}},
+                    {"$project": {
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }},
+                    {"$group": {
+                        "_id": "$fish_type",
+                        "fish_type": {"$first": "$fish_type"},
+                        "fish_amount": {"$sum": "$fish_amount"}
+                    }},
+                    {"$project": {
+                        "_id": 0,
+                    }},
+                ],
+                'as': 'fish_transfer_in'
+            }},
             {"$addFields": {
                 "total_fish_stock": {"$sum": "$fish_stock.fish_amount"},
                 "total_fish_death": {"$sum": "$fish_death_recap.fish_amount"},
-                "total_fish_in_pond": {"$sum": "$fish_in_pond.fish_amount"}
+                "total_fish_in_pond": {"$sum": "$fish_in_pond.fish_amount"},
+                "total_fish_transfer_out": {"$sum": "$fish_transfer_out.fish_amount"},
+                "total_fish_transfer_in": {"$sum": "$fish_transfer_in.fish_amount"},
             }},
         ]
         pondactivations = PondActivation.objects().aggregate(pipeline)
@@ -644,5 +702,81 @@ def create_app(test_config=None):
         # return Response(response, mimetype="application/json", status=200)
         pondactivations = enumerate(pondactivations, start=1)
         return render_template('pond/fish.html', name='Andri', pondactivations=pondactivations)
+
+    @app.route('/fishtransfers/', defaults={'date': datetime.today().strftime('%Y-%m')})
+    @app.route('/fishtransfers/<date>')
+    def fishTransferRecap(date):
+        url = url_for('fishdeathimageapidummy', _external=True)
+        format_date = "%Y-%m"
+        pipline = [
+            {"$match": {"$expr":
+                        {'$eq': [date, {'$dateToString': {
+                            'format': format_date, 'date': "$created_at"}}]}
+                        }},
+            {"$sort": {"created_at": -1}},
+            {'$lookup': {
+                'from': 'pond',
+                'let': {"pondid": "$origin_pond_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$eq': ['$_id', '$$pondid']}}},
+                    {"$project": {
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'origin_pond'
+            }},
+            {'$lookup': {
+                'from': 'pond',
+                'let': {"pondid": "$destination_pond_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$eq': ['$_id', '$$pondid']}}},
+                    {"$project": {
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'destination_pond'
+            }},
+            {"$addFields": {
+                "origin_pond": {"$first": "$origin_pond"},
+                "destination_pond": {"$first": "$destination_pond"},
+            }},
+            {'$lookup': {
+                'from': 'fish_log',
+                'let': {"fish_transfer_id": "$_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$and': [
+                            {'$eq': ['$fish_transfer_id',
+                                     '$$fish_transfer_id']},
+                            {'$eq': ['$type_log',
+                                     'transfer_out']},
+                        ]}
+                    }},
+                    {"$project": {
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'fish'
+            }},
+            {"$addFields": {
+                "date": {'$dateToString': {
+                    'format': "%d-%m-%Y %H:%M", 'date': "$created_at"}},
+            }},
+            {"$project": {
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        fishtransfers = FishTransfer.objects().aggregate(pipline)
+        fishtransfers = list(fishtransfers)
+        date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
+        # response = json.dumps(fishtransfers, default=str)
+        # return Response(response, mimetype="application/json", status=200)
+        return render_template('fishtransfer/monthly.html', name='Andri', fishtransfers=enumerate(fishtransfers, start=1), date=date, date_read=date_read)
 
     return app
