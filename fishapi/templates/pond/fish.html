@@ -23,6 +23,8 @@
                                     <th>Pond</th>
                                     <th>Activation Date</th>
                                     <th>Fish Stock</th>
+                                    <th>Fish Transfer In</th>
+                                    <th>Fish Transfer Out</th>
                                     <th>Fish Death</th>
                                     <th>Fish Alive</th>
                                 </tr>
@@ -39,6 +41,17 @@
                                         {% endfor %}
                                         <p>Total: {{pondactivation['total_fish_stock']}}</p>
                                     </td>
+                                    <td>
+                                        {% for fishz in pondactivation["fish_transfer_in"] %}
+                                        <p>- {{fishz["fish_type"]}}: {{fishz["fish_amount"]}}</p>
+                                        {% endfor %}
+                                        <p>Total: {{pondactivation['total_fish_transfer_in']}}</p>
+                                    </td>
+                                    <td>
+                                        {% for fishz in pondactivation["fish_transfer_out"] %}
+                                        <p>- {{fishz["fish_type"]}}: {{fishz["fish_amount"]}}</p>
+                                        {% endfor %}
+                                        <p>Total: {{pondactivation['total_fish_transfer_out']}}</p>
                                     <td>
                                         {% for fishz in pondactivation["fish_death_recap"] %}
                                         <p>- {{fishz["fish_type"]}}: {{fishz["fish_amount"]}}</p>
