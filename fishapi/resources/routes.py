@@ -4,6 +4,7 @@ from .controller.feedtype import *
 from .controller.pondactivation import *
 from .controller.fishdeath import *
 from .controller.fishtransfer import *
+from .controller.fishgrading import *
 
 
 def initialize_routes(api):
@@ -41,3 +42,7 @@ def initialize_routes(api):
     # fish transfer
     api.add_resource(FishTransfersApi, '/api/fishtransfer')
     api.add_resource(FishTransferApi, '/api/fishtransfer/<id>')
+
+    # fish grading
+    api.add_resource(FishGradingsApi, '/api/fishgradings')
+    api.add_resource(FishGradingApi, '/api/fishgradings/<id>')
