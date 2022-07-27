@@ -162,25 +162,25 @@ class FishTransferApi(Resource):
         return
 
     def delete(self, id):
-        # try:
-        fishtransfer = FishTransfer.objects.get(id=id)
-        # delete fish
-        fishes = FishLog.objects.aggregate([
-            {'$match': {
-                '$expr': {'$eq': ['$fish_transfer_id', {'$toObjectId': id}]}}},
-        ])
-        for fish in fishes:
-            fishlog = FishLog.objects.get(id=fish['_id'])
-            fishlog.delete()
-        # delete data
-        fishtransfer.delete()
-        response = {"message": "success delete fishtransfer"}
-        response = json.dumps(response, default=str)
-        return Response(response, mimetype="application/json", status=200)
-        # except Exception as e:
-        #     response = {"message": str(e)}
-        #     response = json.dumps(response, default=str)
-        #     return Response(response, mimetype="application/json", status=400)
+        try:
+            fishtransfer = FishTransfer.objects.get(id=id)
+            # delete fish
+            fishes = FishLog.objects.aggregate([
+                {'$match': {
+                    '$expr': {'$eq': ['$fish_transfer_id', {'$toObjectId': id}]}}},
+            ])
+            for fish in fishes:
+                fishlog = FishLog.objects.get(id=fish['_id'])
+                fishlog.delete()
+            # delete data
+            fishtransfer.delete()
+            response = {"message": "success delete fishtransfer"}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
 
     def get(self, id):
         try:
