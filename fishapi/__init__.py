@@ -812,7 +812,7 @@ def create_app(test_config=None):
                         '$expr': {'$eq': ['$_id', '$$activationid']}}},
                     {"$addFields": {
                         "date": {'$dateToString': {
-                            'format': "%d-%m-%Y %H:%M", 'date': "$activated_at"}},
+                            'format': "%d-%m-%Y", 'date': "$activated_at"}},
                     }},
                     {"$project": {
                         "_id": 1,
@@ -827,7 +827,7 @@ def create_app(test_config=None):
             }},
             {"$addFields": {
                 "date": {'$dateToString': {
-                    'format': "%d-%m-%Y %H:%M", 'date': "$created_at"}},
+                    'format': "%d-%m-%Y", 'date': "$created_at"}},
                 "pond": {"$first": "$pond"},
                 "pond_activation": {"$first": "$pond_activation"},
             }},
