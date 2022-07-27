@@ -159,7 +159,6 @@ class FishTransferApi(Resource):
             response = {"message": str(e)}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=400)
-        return
 
     def delete(self, id):
         try:
