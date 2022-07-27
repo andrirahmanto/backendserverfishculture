@@ -7,3 +7,4 @@ mongoimport --db fishapi --collection water_preparation --type json --file /var/
 mongoimport --db fishapi --collection fish_transfer --type json --file /var/www/html/fishapi/exportdatabase/fish_transfer.json --jsonArray
 mongoimport --db fishapi --collection fish_log --type json --file /var/www/html/fishapi/exportdatabase/fish_log.json --jsonArray
 mongoimport --db fishapi --collection mongoengine.counters --type json --file /var/www/html/fishapi/exportdatabase/mongoengine.counters.json --jsonArray
+mongoimport --db fishapi --collection fish_grading --type json --file /var/www/html/fishapi/exportdatabase/fish_grading.json --jsonArray
