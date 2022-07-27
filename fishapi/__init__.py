@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, url_for, current_app, Response
 from .database.db import initialize_db
 from flask_restful import Api
-from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath, FishTransfer
+from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath, FishTransfer, FishGrading
 from .resources.helper import *
 from .resources.routes import initialize_routes
 import json
@@ -778,5 +778,69 @@ def create_app(test_config=None):
         # response = json.dumps(fishtransfers, default=str)
         # return Response(response, mimetype="application/json", status=200)
         return render_template('fishtransfer/monthly.html', name='Andri', fishtransfers=enumerate(fishtransfers, start=1), date=date, date_read=date_read)
+
+    @app.route('/fishgradings/', defaults={'date': datetime.today().strftime('%Y-%m')})
+    @app.route('/fishgradings/<date>')
+    def fishGradingRecap(date):
+        format_date = "%Y-%m"
+        pipline = [
+            {"$match": {"$expr":
+                        {'$eq': [date, {'$dateToString': {
+                            'format': format_date, 'date': "$created_at"}}]}
+                        }},
+            {"$sort": {"created_at": -1}},
+            {'$lookup': {
+                'from': 'pond',
+                'let': {"pondid": "$pond_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$eq': ['$_id', '$$pondid']}}},
+                    {"$project": {
+                        "_id": 1,
+                        "alias": 1,
+                        "location": 1,
+                        "build_at": 1,
+                        "isActive": 1,
+                    }}
+                ],
+                'as': 'pond'
+            }},
+            {'$lookup': {
+                'from': 'pond_activation',
+                'let': {"activationid": "$pond_activation_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$eq': ['$_id', '$$activationid']}}},
+                    {"$addFields": {
+                        "date": {'$dateToString': {
+                            'format': "%d-%m-%Y %H:%M", 'date': "$activated_at"}},
+                    }},
+                    {"$project": {
+                        "_id": 1,
+                        "isFinish": 1,
+                        "isWaterPreparation": 1,
+                        "water_level": 1,
+                        "activated_at": 1,
+                        "date": 1,
+                    }}
+                ],
+                'as': 'pond_activation'
+            }},
+            {"$addFields": {
+                "date": {'$dateToString': {
+                    'format': "%d-%m-%Y %H:%M", 'date': "$created_at"}},
+                "pond": {"$first": "$pond"},
+                "pond_activation": {"$first": "$pond_activation"},
+            }},
+            {"$project": {
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        fishgradings = FishGrading.objects.aggregate(pipline)
+        fishgradings = list(fishgradings)
+        date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
+        # response = json.dumps(fishgradings, default=str)
+        # return Response(response, mimetype="application/json", status=200)
+        return render_template('fishgrading/monthly.html', name='Andri', fishgradings=enumerate(fishgradings, start=1), date=date, date_read=date_read)
 
     return app
