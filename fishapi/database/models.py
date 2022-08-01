@@ -107,3 +107,46 @@ class FishGrading(db.Document):
     amount_undersize_fish = db.IntField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class FishGrading(db.Document):
+    pond_id = db.ReferenceField(Pond, required=True)
+    pond_activation_id = db.ReferenceField(PondActivation, required=True)
+    fish_type = db.StringField(required=True)
+    sampling_amount = db.IntField(required=True)
+    avg_fish_weight = db.FloatField(required=True)
+    avg_fish_long = db.FloatField(required=True)
+    amount_normal_fish = db.IntField(required=True)
+    amount_oversize_fish = db.IntField(required=True)
+    amount_undersize_fish = db.IntField(required=True)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class DailyWaterQuality(db.Document):
+    pond_id = db.ReferenceField(Pond, required=True)
+    pond_activation_id = db.ReferenceField(PondActivation, required=True)
+    ph = db.IntField(required=True)
+    do = db.FloatField(required=True)
+    temperature = db.IntField(required=True)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class WeeklyWaterQuality(db.Document):
+    pond_id = db.ReferenceField(Pond, required=True)
+    pond_activation_id = db.ReferenceField(PondActivation, required=True)
+    floc = db.StringField(required=True)
+    nitrite = db.IntField(required=True)
+    nitrate = db.IntField(required=True)
+    ammonia = db.FloatField(required=True)
+    hardness = db.IntField(required=True)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+
+class OptionTable(db.Document):
+    type = db.StringField(required=True)
+    option = db.StringField(required=True)
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)

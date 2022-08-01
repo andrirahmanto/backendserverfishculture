@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, url_for, current_app, Response
 from .database.db import initialize_db
 from flask_restful import Api
-from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath, FishTransfer, FishGrading
+from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath, FishTransfer, FishGrading, OptionTable
 from .resources.helper import *
 from .resources.routes import initialize_routes
 import json
@@ -842,5 +842,14 @@ def create_app(test_config=None):
         # response = json.dumps(fishgradings, default=str)
         # return Response(response, mimetype="application/json", status=200)
         return render_template('fishgrading/monthly.html', name='Andri', fishgradings=enumerate(fishgradings, start=1), date=date, date_read=date_read)
+
+    @app.route('/getoption/')
+    def getOption():
+        body = {
+            "type": "pond/shape",
+            "option": str(["bundar", "persegi"])
+        }
+        optiontable_list = OptionTable(**body).save()
+        return
 
     return app
