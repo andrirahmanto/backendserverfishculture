@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, url_for, current_app, Response
 from .database.db import initialize_db
 from flask_restful import Api
-from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath, FishTransfer, FishGrading, OptionTable
+from fishapi.database.models import FeedHistory, Pond, FeedType, PondActivation, FishDeath, FishTransfer, FishGrading, OptionTable, DailyWaterQuality, WeeklyWaterQuality
 from .resources.helper import *
 from .resources.routes import initialize_routes
 import json
@@ -851,5 +851,109 @@ def create_app(test_config=None):
         }
         optiontable_list = OptionTable(**body).save()
         return
+
+    @app.route('/dailywaterquality/', defaults={'date': datetime.today().strftime('%Y-%m')})
+    @app.route('/dailywaterquality/<date>')
+    def dailyWaterQualityRecap(date):
+        format_date = "%Y-%m"
+        pipeline = [
+            {"$match": {"$expr":
+                        {'$eq': [date, {'$dateToString': {
+                            'format': format_date, 'date': "$created_at"}}]}
+                        }},
+            {"$sort": {"created_at": -1}},
+            {'$lookup': {
+                'from': 'pond',
+                'let': {"pondid": "$pond_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$eq': ['$_id', '$$pondid']}}},
+                    {"$project": {
+                        "_id": 1,
+                        "alias": 1,
+                        "location": 1,
+                        "build_at": 1,
+                        "isActive": 1,
+                    }}
+                ],
+                'as': 'pond'
+            }},
+            {'$lookup': {
+                'from': 'pond_activation',
+                'let': {"activationid": "$pond_activation_id"},
+                'pipeline': [
+                    {'$match': {
+                        '$expr': {'$eq': ['$_id', '$$activationid']}}},
+                    {"$addFields": {
+                        "activation_date": {'$dateToString': {
+                            'format': "%d-%m-%Y", 'date': "$activated_at"}},
+                    }},
+                    {"$project": {
+                        "_id": 1,
+                        "isFinish": 1,
+                        "isWaterPreparation": 1,
+                        "water_level": 1,
+                        "activated_at": 1,
+                        "activation_date": 1
+                    }}
+                ],
+                'as': 'pond_activation'
+            }},
+            {"$addFields": {
+                "pond": {"$first": "$pond"},
+                "pond_activation": {"$first": "$pond_activation"},
+                "date": {'$dateToString': {
+                    'format': "%d-%m-%Y", 'date': "$created_at"}},
+                "ph_desc": {
+                    "$switch":
+                    {
+                        "branches": [
+                            {
+                                "case": {"$lt": ["$ph", 6]},
+                                "then": "berbahaya"
+                            },
+                            {
+                                "case": {"$gt": ["$ph", 8]},
+                                "then": "berbahaya"
+                            }
+                        ],
+                        "default": "normal"
+                    }
+                },
+                "do_desc": {
+                    "$switch":
+                    {
+                        "branches": [
+                            {
+                                "case": {"$or": [
+                                    {"$lt": ["$do", 3]},
+                                    {"$gt": ["$do", 7.5]}
+                                ]},
+                                "then": "berbahaya"
+                            },
+                            {
+                                "case": {"$or": [
+                                    {"$and": [{"$gte": ["$do", 3]}, {
+                                        "$lte": ["$do", 4]}]},
+                                    {"$and": [{"$gt": ["$do", 6]}, {
+                                        "$lte": ["$do", 7.5]}]}
+                                ]},
+                                "then": "semi berbahaya"
+                            }
+                        ],
+                        "default": "normal"
+                    }
+                }
+            }},
+            {"$project": {
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        dailyquality_list = DailyWaterQuality.objects.aggregate(pipeline)
+        dailyquality_list = list(dailyquality_list)
+        date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
+        # response = json.dumps(dailyquality_list, default=str)
+        # return Response(response, mimetype="application/json", status=200)
+        return render_template('waterquality/daily.html', name='Andri', dailyquality_list=enumerate(dailyquality_list, start=1), date=date, date_read=date_read)
 
     return app
