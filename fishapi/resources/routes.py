@@ -5,6 +5,8 @@ from .controller.pondactivation import *
 from .controller.fishdeath import *
 from .controller.fishtransfer import *
 from .controller.fishgrading import *
+from .controller.dailywaterquality import *
+from .controller.weeklywaterquality import *
 
 
 def initialize_routes(api):
@@ -46,3 +48,11 @@ def initialize_routes(api):
     # fish grading
     api.add_resource(FishGradingsApi, '/api/fishgradings')
     api.add_resource(FishGradingApi, '/api/fishgradings/<id>')
+
+    # daily water
+    api.add_resource(DailyWaterQualitysApi, '/api/dailywaterquality')
+    api.add_resource(DailyWaterQualityApi, '/api/dailywaterquality/<id>')
+
+    # weekly water
+    api.add_resource(WeeklyWaterQualitysApi, '/api/weeklywaterquality')
+    api.add_resource(WeeklyWaterQualityApi, '/api/weeklywaterquality/<id>')

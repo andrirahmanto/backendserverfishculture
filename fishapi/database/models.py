@@ -4,10 +4,12 @@ from bson import json_util
 
 
 class Pond(db.Document):
+    shape_option = ("bundar", "persegi")
+
     id_int = db.SequenceField(required=True)
     alias = db.StringField(required=True)
     location = db.StringField(required=True)
-    shape = db.StringField(required=True)
+    shape = db.StringField(required=True, choices=shape_option)
     material = db.StringField(required=True)
     length = db.FloatField(required=True, default=0)
     width = db.FloatField(required=True, default=0)
@@ -34,16 +36,21 @@ class PondActivation(db.Document):
 
 
 class WaterPreparation(db.Document):
+    carbohydrate_type_option = ("gula", "molase", "terigu", "tapioka")
+
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     carbohydrate = db.IntField(required=True)
-    carbohydrate_type = db.StringField(required=True)
+    carbohydrate_type = db.StringField(
+        required=True, choices=carbohydrate_type_option)
     salt = db.IntField(required=True)
     calcium = db.IntField(required=True)
 
 
 class FeedType(db.Document):
+    feed_type_option = ("pelet", "sayuran")
+
     name = db.StringField(required=True)
-    feed_type = db.StringField(required=True)
+    feed_type = db.StringField(required=True, choices=feed_type_option)
     protein = db.IntField(required=True)
     carbohydrate = db.IntField(required=True)
     desc = db.StringField()
@@ -71,12 +78,14 @@ class FishDeath(db.Document):
 
 
 class FishTransfer(db.Document):
+    transfer_type_option = ("basah", "kering")
+
     origin_pond_id = db.ReferenceField(Pond, required=True)
     destination_pond_id = db.ReferenceField(Pond, required=True)
     origin_activation_id = db.ReferenceField(PondActivation, required=True)
     destination_activation_id = db.ReferenceField(
         PondActivation, required=True)
-    transfer_type = db.StringField(required=True)
+    transfer_type = db.StringField(required=True, choices=transfer_type_option)
     sample_weight = db.IntField(required=True)
     sample_long = db.IntField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)
@@ -84,12 +93,14 @@ class FishTransfer(db.Document):
 
 
 class FishLog(db.Document):
+    fish_type_option = ("nila hitam", "nila merah", "lele", "patin", "mas")
+
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ObjectIdField(required=False, default=None)
     fish_death_id = db.ObjectIdField(required=False, default=None)
     fish_transfer_id = db.ObjectIdField(required=False, default=None)
     type_log = db.StringField(required=True)
-    fish_type = db.StringField(required=True)
+    fish_type = db.StringField(required=True, choices=fish_type_option)
     fish_amount = db.IntField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
@@ -134,13 +145,19 @@ class DailyWaterQuality(db.Document):
 
 
 class WeeklyWaterQuality(db.Document):
+    floc_option = ('0-10', '11-30', '31-50', '51-100', '101-300', '>300')
+    nitrite_option = (0, 1, 5, 10, 20, 40, 80)
+    nitrate_option = (0, 10, 25, 50, 100, 250, 500)
+    ammonia_option = (0, 0.25, 1.5, 3, 5)
+    hardness_option = (0, 25, 50, 125, 250, 425)
+
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
-    floc = db.StringField(required=True)
-    nitrite = db.IntField(required=True)
-    nitrate = db.IntField(required=True)
-    ammonia = db.FloatField(required=True)
-    hardness = db.IntField(required=True)
+    floc = db.StringField(required=True, choices=floc_option)
+    nitrite = db.IntField(required=True, choices=nitrite_option)
+    nitrate = db.IntField(required=True, choices=nitrate_option)
+    ammonia = db.FloatField(required=True, choices=ammonia_option)
+    hardness = db.IntField(required=True, choices=hardness_option)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
