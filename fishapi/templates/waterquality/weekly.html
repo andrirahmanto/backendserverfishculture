@@ -9,10 +9,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Fish Gradings Recap</h1>
+            <h1>Weekly Water Quality</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Fish Gradings Recap</a></div>
-                <div class="breadcrumb-item"><a href="#">Monthly</a></div>
+                <div class="breadcrumb-item active"><a href="#">Weekly Water Quality</a></div>
+                <div class="breadcrumb-item"><a href="#">Weekly</a></div>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
                     <div class="table-responsive p-5">
                         <div class="row">
                             <div class="col-lg-6">
-                                <label>Monthly</label>
+                                <label>Month</label>
                                 <input id="form-date" type="text" class="form-control datepicker" value="{{date}}">
                                 <input id="link-root" type="text" class="form-control"
                                     value="{{url_for('fishDeathRecap')}}" hidden>
@@ -38,35 +38,47 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Grading Date</th>
+                                    <th>Check Date</th>
                                     <th>Pond</th>
                                     <th>Activation Date</th>
-                                    <th>Fish Type</th>
-                                    <th>Sampling Amount</th>
-                                    <th>Avg Fish Weight</th>
-                                    <th>Avg Fish Long</th>
-                                    <th>Sizeing</th>
+                                    <th>Status</th>
+                                    <th>Floc</th>
+                                    <th>Nitrite</th>
+                                    <th>Nitrate</th>
+                                    <th>Ammonia</th>
+                                    <th>Hardness</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for index, fishgrading in fishgradings %}
+                                {% for index, weeklyquality in weeklyquality_list %}
                                 <tr>
                                     <td>{{index}}</td>
-                                    <td>{{fishgrading["date"]}}</td>
-                                    <td>{{fishgrading["pond"]["alias"]}}</td>
-                                    <td>{{fishgrading["pond_activation"]["date"]}}</td>
-                                    <td>{{fishgrading["fish_type"]}}</td>
-                                    <td>{{fishgrading["sampling_amount"]}}</td>
-                                    <td>{{fishgrading["avg_fish_weight"]}}</td>
-                                    <td>{{fishgrading["avg_fish_long"]}}</td>
-                                    <td>
-                                        <p>undersize: {{fishgrading['amount_undersize_fish']}}</p>
-                                        <p>normal: {{fishgrading['amount_normal_fish']}}</p>
-                                        <p>oversize: {{fishgrading['amount_oversize_fish']}}</p>
-                                    </td>
+                                    <td>{{weeklyquality["date"]}}</td>
+                                    <td>{{weeklyquality["pond"]["alias"]}}</td>
+                                    <td>{{weeklyquality["pond_activation"]["activation_date"]}}</td>
+                                    <td>{{weeklyquality["pond_activation"]["isFinish"]}}</td>
+                                    <td>{{weeklyquality["floc"]}} ({{weeklyquality["floc_desc"]}})</td>
+                                    <td>{{weeklyquality["nitrite"]}} ({{weeklyquality["nitrite_desc"]}})</td>
+                                    <td>{{weeklyquality["nitrate"]}} ({{weeklyquality["nitrate_desc"]}})</td>
+                                    <td>{{weeklyquality["ammonia"]}} ({{weeklyquality["ammonia_desc"]}})</td>
+                                    <td>{{weeklyquality["hardness"]}} ({{weeklyquality["hardness_desc"]}})</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Check Date</th>
+                                    <th>Pond</th>
+                                    <th>Activation Date</th>
+                                    <th>Status</th>
+                                    <th>Floc</th>
+                                    <th>Nitrite</th>
+                                    <th>Nitrate</th>
+                                    <th>Ammonia</th>
+                                    <th>Hardness</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -80,5 +92,5 @@
     src="{{url_for('static', filename='node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 {% endblock %}
 {% block page_js %}
-<script src="{{url_for('static', filename='js/custom_page/fishgrading/monthly.js')}}"></script>
+<script src="{{url_for('static', filename='js/custom_page/waterquality/weekly.js')}}"></script>
 {% endblock %}
