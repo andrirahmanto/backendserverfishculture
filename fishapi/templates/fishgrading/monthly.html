@@ -43,8 +43,9 @@
                                     <th>Activation Date</th>
                                     <th>Fish Type</th>
                                     <th>Sampling Amount</th>
-                                    <th>Avg Fish Weight</th>
                                     <th>Avg Fish Long</th>
+                                    <th>Avg Fish Weight</th>
+                                    <th>Weight Limit</th>
                                     <th>Sizeing</th>
                                 </tr>
                             </thead>
@@ -57,8 +58,17 @@
                                     <td>{{fishgrading["pond_activation"]["date"]}}</td>
                                     <td>{{fishgrading["fish_type"]}}</td>
                                     <td>{{fishgrading["sampling_amount"]}}</td>
-                                    <td>{{fishgrading["avg_fish_weight"]}}</td>
-                                    <td>{{fishgrading["avg_fish_long"]}}</td>
+                                    <td>{{fishgrading["avg_fish_long"]}} cm</td>
+                                    <td>{{fishgrading["avg_fish_weight"]}} Gram</td>
+                                    <td>
+                                        <p>undersize: <
+                                                {{fishgrading['avg_fish_weight']*fishgrading['constanta_undersize']}}
+                                                Gram</p>
+                                                <p>undersize: >=
+                                                    {{fishgrading['avg_fish_weight']*fishgrading['constanta_oversize']}}
+                                                    Gram
+                                                </p>
+                                    </td>
                                     <td>
                                         <p>undersize: {{fishgrading['amount_undersize_fish']}}</p>
                                         <p>normal: {{fishgrading['amount_normal_fish']}}</p>
@@ -67,6 +77,20 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Grading Date</th>
+                                    <th>Pond</th>
+                                    <th>Activation Date</th>
+                                    <th>Fish Type</th>
+                                    <th>Sampling Amount</th>
+                                    <th>Avg Fish Long</th>
+                                    <th>Avg Fish Weight</th>
+                                    <th>Weight Limit</th>
+                                    <th>Sizeing</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

@@ -71,6 +71,8 @@ class FishGradingsApi(Resource):
             body = {
                 "pond_id": pond.id,
                 "pond_activation_id": pond_activation.id,
+                "constanta_oversize": request.form.get("constanta_oversize", None),
+                "constanta_undersize": request.form.get("constanta_undersize", None),
                 "fish_type": request.form.get("fish_type", None),
                 "sampling_amount": request.form.get("sampling_amount", None),
                 "avg_fish_weight": request.form.get("avg_fish_weight", None),
