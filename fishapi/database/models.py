@@ -125,20 +125,6 @@ class FishGrading(db.Document):
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 
-class FishGrading(db.Document):
-    pond_id = db.ReferenceField(Pond, required=True)
-    pond_activation_id = db.ReferenceField(PondActivation, required=True)
-    fish_type = db.StringField(required=True)
-    sampling_amount = db.IntField(required=True)
-    avg_fish_weight = db.FloatField(required=True)
-    avg_fish_long = db.FloatField(required=True)
-    amount_normal_fish = db.IntField(required=True)
-    amount_oversize_fish = db.IntField(required=True)
-    amount_undersize_fish = db.IntField(required=True)
-    created_at = db.DateTimeField(default=datetime.datetime.now)
-    updated_at = db.DateTimeField(default=datetime.datetime.now)
-
-
 class DailyWaterQuality(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
