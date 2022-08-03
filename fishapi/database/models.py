@@ -85,6 +85,7 @@ class FishTransfer(db.Document):
     origin_activation_id = db.ReferenceField(PondActivation, required=True)
     destination_activation_id = db.ReferenceField(
         PondActivation, required=True)
+    fish_grading_id = db.ObjectIdField(required=True, default=None)
     transfer_type = db.StringField(required=True, choices=transfer_type_option)
     sample_weight = db.IntField(required=True)
     sample_long = db.IntField(required=True)
@@ -109,6 +110,10 @@ class FishLog(db.Document):
 class FishGrading(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
+    isOversizeTransferred = db.BooleanField(required=True, default=False)
+    isUndersizeTransferred = db.BooleanField(required=True, default=False)
+    constanta_oversize = db.FloatField(required=True, default=1.3)
+    constanta_undersize = db.FloatField(required=True, default=0.7)
     fish_type = db.StringField(required=True)
     sampling_amount = db.IntField(required=True)
     avg_fish_weight = db.FloatField(required=True)
