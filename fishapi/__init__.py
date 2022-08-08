@@ -889,6 +889,7 @@ def create_app(test_config=None):
                     }},
                     {"$project": {
                         "_id": 1,
+                        "id_int": 1,
                         "isFinish": 1,
                         "isWaterPreparation": 1,
                         "water_level": 1,
@@ -993,6 +994,7 @@ def create_app(test_config=None):
                     }},
                     {"$project": {
                         "_id": 1,
+                        "id_int": 1,
                         "isFinish": 1,
                         "isWaterPreparation": 1,
                         "water_level": 1,

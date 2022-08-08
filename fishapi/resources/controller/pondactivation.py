@@ -147,6 +147,7 @@ class PondStatusApi(Resource):
 class PondActivationApi(Resource):
     def post(self, pond_id):
         pond = Pond.objects.get(id=pond_id)
+        id_int = len(PondActivation.objects.filter(pond_id=pond_id)) + 1
         if pond.isActive == True:
             response = {"message": "status pond is already active"}
             response = json.dumps(response, default=str)
@@ -166,6 +167,7 @@ class PondActivationApi(Resource):
         activated_at = request.form.get(
             "activated_at", datetime.datetime.now())
         pond_activation_data = {
+            "id_int": id_int,
             "pond_id": pond_id,
             "isFinish": False,
             "isWaterPreparation": isWaterPreparation,

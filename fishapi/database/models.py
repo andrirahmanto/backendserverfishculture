@@ -23,6 +23,7 @@ class Pond(db.Document):
 
 
 class PondActivation(db.Document):
+    id_int = db.IntField(required=True)
     pond_id = db.ReferenceField(Pond, required=True)
     isFinish = db.BooleanField(required=True, default=False)
     isWaterPreparation = db.BooleanField(required=True, default=False)
