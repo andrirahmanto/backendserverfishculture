@@ -40,7 +40,7 @@
                                     <th>No</th>
                                     <th>Check Date</th>
                                     <th>Pond</th>
-                                    <th>Activation Date</th>
+                                    <th>Culture Season</th>
                                     <th>Status</th>
                                     <th>Ph</th>
                                     <th>Do</th>
@@ -53,11 +53,10 @@
                                     <td>{{index}}</td>
                                     <td>{{dailyquality["date"]}}</td>
                                     <td>{{dailyquality["pond"]["alias"]}}</td>
-                                    <td>{{dailyquality["pond_activation"]["activation_date"]}}
-                                        ({{dailyquality["pond_activation"]["id_int"]}})</td>
+                                    <td>{{dailyquality["pond_activation"]["id_int"]}}</td>
                                     <td>{{dailyquality["pond_activation"]["isFinish"]}}</td>
-                                    <td>{{dailyquality["ph"]}} ({{dailyquality["ph_desc"]}})</td>
-                                    <td>{{dailyquality["do"]}} ({{dailyquality["do_desc"]}})</td>
+                                    <td>{{dailyquality["ph"]}}</td>
+                                    <td>{{dailyquality["do"]}}</td>
                                     <td>{{dailyquality["temperature"]}}</td>
                                 </tr>
                                 {% endfor %}
@@ -67,7 +66,7 @@
                                     <th>No</th>
                                     <th>Check Date</th>
                                     <th>Pond</th>
-                                    <th>Activation Date</th>
+                                    <th>Culture Season</th>
                                     <th>Status</th>
                                     <th>Ph</th>
                                     <th>Do</th>
