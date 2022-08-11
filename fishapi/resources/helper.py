@@ -25,3 +25,8 @@ def getAmountFishByType(fishtype, fishlist):
         if obj['type'] == fishtype:
             return obj['amount']
     return 0
+
+
+def getYearToday():
+    current_year = dt.today().year
+    return str(current_year)

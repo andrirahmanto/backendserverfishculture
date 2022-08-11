@@ -112,7 +112,8 @@ class FishTransfersApi(Resource):
                     "isFinish": True,
                     "total_fish_harvested": request.form.get("total_fish_harvested", None),
                     "total_weight_harvested": request.form.get("total_weight_harvested", None),
-                    "deactivated_at": request.form.get("deactivated_at", datetime.datetime.now())
+                    "deactivated_at": request.form.get("deactivated_at", datetime.datetime.now()),
+                    "deactivation_description": "Sortir Kering"
                 }
                 origin_activation.update(**pond_deactivation_data)
             # update fish grading [optional]
