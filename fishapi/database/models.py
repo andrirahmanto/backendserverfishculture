@@ -172,6 +172,8 @@ class PondTreatment(db.Document):
     carbohydrate_type = db.StringField(
         required=True, choices=carbohydrate_type_option, default="")
     description = db.StringField(default="")
+    created_at = db.DateTimeField(default=datetime.datetime.now)
+    updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 
 class OptionTable(db.Document):
