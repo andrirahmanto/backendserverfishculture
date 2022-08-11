@@ -2,6 +2,7 @@ from flask import Response, request
 from fishapi.database.models import *
 from flask_restful import Resource
 from fishapi.database.db import db
+from fishapi.resources.helper import getYearToday
 import datetime
 import json
 from bson.json_util import dumps
@@ -147,7 +148,15 @@ class PondStatusApi(Resource):
 class PondActivationApi(Resource):
     def post(self, pond_id):
         pond = Pond.objects.get(id=pond_id)
-        id_int = len(PondActivation.objects.filter(pond_id=pond_id)) + 1
+        pipeline_year = {'$match': {'$expr': {'$and': [
+                        {'$eq': ['$pond_id', {'$toObjectId': pond_id}]},
+                        {'$eq': [{'$dateToString': {
+                            'format': "%Y", 'date': "$created_at"}}, getYearToday()]},
+        ]
+        }}}
+        list_pond_year = PondActivation.objects.aggregate(pipeline_year)
+        list_pond_year = list(list_pond_year)
+        id_int = len(list_pond_year) + 1
         if pond.isActive == True:
             response = {"message": "status pond is already active"}
             response = json.dumps(response, default=str)
@@ -222,7 +231,8 @@ class PondDeactivationApi(Resource):
             "isFinish": True,
             "total_fish_harvested": request.form.get("total_fish_harvested", None),
             "total_weight_harvested": request.form.get("total_weight_harvested", None),
-            "deactivated_at": request.form.get("deactivated_at", datetime.datetime.now())
+            "deactivated_at": request.form.get("deactivated_at", datetime.datetime.now()),
+            "deactivation_description": "Normal"
         }
         pond_activation.update(**pond_deactivation_data)
         # update pond isActive
