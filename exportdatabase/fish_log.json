@@ -402,4 +402,102 @@
       "$numberLong": "1658185403491"
     }
   }
+},{
+  "_id": {
+    "$oid": "62ea334c7ae8f9222eb5480e"
+  },
+  "pond_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "pond_activation_id": {
+    "$oid": "62ea334c7ae8f9222eb5480d"
+  },
+  "type_log": "activation",
+  "fish_type": "nila merah",
+  "fish_amount": 300,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1659540924956"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1659540924956"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62ea334c7ae8f9222eb5480f"
+  },
+  "pond_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "pond_activation_id": {
+    "$oid": "62ea334c7ae8f9222eb5480d"
+  },
+  "type_log": "activation",
+  "fish_type": "patin",
+  "fish_amount": 200,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1659540924958"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1659540924958"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62f4b9a1ba4f7231de8dd515"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "62d3f2180d7265ab60f9cb83"
+  },
+  "fish_transfer_id": {
+    "$oid": "62f4b9a1ba4f7231de8dd514"
+  },
+  "type_log": "transfer_out",
+  "fish_type": "lele",
+  "fish_amount": -1,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1660230673214"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1660230673214"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62f4b9a1ba4f7231de8dd516"
+  },
+  "pond_id": {
+    "$oid": "625d7033a9a73e090c65cda2"
+  },
+  "pond_activation_id": {
+    "$oid": "62d562e676d3a668927c511f"
+  },
+  "fish_transfer_id": {
+    "$oid": "62f4b9a1ba4f7231de8dd514"
+  },
+  "type_log": "transfer_in",
+  "fish_type": "lele",
+  "fish_amount": 1,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1660230673216"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1660230673216"
+    }
+  }
 }]

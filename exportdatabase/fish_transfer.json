@@ -14,7 +14,7 @@
   "destination_activation_id": {
     "$oid": "62d562e676d3a668927c511f"
   },
-  "transfer_type": "basah",
+  "transfer_method": "basah",
   "sample_weight": 20,
   "sample_long": 50,
   "created_at": {
@@ -43,7 +43,7 @@
   "destination_activation_id": {
     "$oid": "62d562e676d3a668927c511f"
   },
-  "transfer_type": "kering",
+  "transfer_method": "kering",
   "sample_weight": 20,
   "sample_long": 50,
   "created_at": {
@@ -54,6 +54,38 @@
   "updated_at": {
     "$date": {
       "$numberLong": "1658185403487"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "62f4b9a1ba4f7231de8dd514"
+  },
+  "origin_pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "destination_pond_id": {
+    "$oid": "625d7033a9a73e090c65cda2"
+  },
+  "origin_activation_id": {
+    "$oid": "62d3f2180d7265ab60f9cb83"
+  },
+  "destination_activation_id": {
+    "$oid": "62d562e676d3a668927c511f"
+  },
+  "fish_grading_id": {
+    "$oid": "62e9ce1f758bb39be581eb85"
+  },
+  "transfer_type": "oversized_transfer",
+  "transfer_method": "basah",
+  "sample_weight": 20,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1660230673209"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1660230673209"
     }
   }
 }]

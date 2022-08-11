@@ -2,14 +2,15 @@
   "_id": {
     "$oid": "62d3f2180d7265ab60f9cb83"
   },
+  "id_int": 1,
   "pond_id": {
     "$oid": "62a62163e445ffb9c5f746f3"
   },
-  "isFinish": false,
+  "isFinish": true,
   "isWaterPreparation": true,
   "water_level": 100,
-  "total_fish_harvested": 0,
-  "total_weight_harvested": 0,
+  "total_fish_harvested": 200,
+  "total_weight_harvested": 200,
   "activated_at": {
     "$date": {
       "$numberLong": "1658082440511"
@@ -24,11 +25,18 @@
     "$date": {
       "$numberLong": "1658082440511"
     }
-  }
+  },
+  "deactivated_at": {
+    "$date": {
+      "$numberLong": "1660260004090"
+    }
+  },
+  "deactivated_description": "karantina total"
 },{
   "_id": {
     "$oid": "62d562e676d3a668927c511f"
   },
+  "id_int": 1,
   "pond_id": {
     "$oid": "625d7033a9a73e090c65cda2"
   },
@@ -52,4 +60,38 @@
       "$numberLong": "1658176854796"
     }
   }
+},{
+  "_id": {
+    "$oid": "62ea334c7ae8f9222eb5480d"
+  },
+  "id_int": 1,
+  "pond_id": {
+    "$oid": "625d7026a9a73e090c65cda1"
+  },
+  "isFinish": true,
+  "isWaterPreparation": false,
+  "water_level": 100,
+  "total_fish_harvested": 300,
+  "total_weight_harvested": 3000,
+  "activated_at": {
+    "$date": {
+      "$numberLong": "1659540924939"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1659540924939"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1659540924939"
+    }
+  },
+  "deactivated_at": {
+    "$date": {
+      "$numberLong": "1659558790631"
+    }
+  },
+  "deactivated_description": "normal"
 }]

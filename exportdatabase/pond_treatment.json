@@ -1,6 +1,6 @@
 [{
   "_id": {
-    "$oid": "62d4d741ac080a2534b0a545"
+    "$oid": "62f5248cae2842f914ee7797"
   },
   "pond_id": {
     "$oid": "62a62163e445ffb9c5f746f3"
@@ -8,21 +8,24 @@
   "pond_activation_id": {
     "$oid": "62d3f2180d7265ab60f9cb83"
   },
-  "image_name": "default.jpg",
-  "diagnosis": "mati karena sakit",
+  "treatment_type": "ringan",
+  "probiotic_culture": 20,
+  "carbohydrate": 20,
+  "carbohydrate_type": "molase",
+  "salt": 20,
   "created_at": {
     "$date": {
-      "$numberLong": "1658141105666"
+      "$numberLong": "1659436935491"
     }
   },
   "updated_at": {
     "$date": {
-      "$numberLong": "1658141105667"
+      "$numberLong": "1659436935491"
     }
   }
 },{
   "_id": {
-    "$oid": "62d4e37f7290b20e7bd77ee9"
+    "$oid": "62f52c34307b0c2008380309"
   },
   "pond_id": {
     "$oid": "62a62163e445ffb9c5f746f3"
@@ -30,16 +33,17 @@
   "pond_activation_id": {
     "$oid": "62d3f2180d7265ab60f9cb83"
   },
-  "image_name": "default.jpg",
-  "diagnosis": "mati karena sakit",
+  "treatment_type": "berat",
+  "carbohydrate_type": "",
+  "description": "penyakit ikan sekolam",
   "created_at": {
     "$date": {
-      "$numberLong": "1658144239014"
+      "$numberLong": "1659436935491"
     }
   },
   "updated_at": {
     "$date": {
-      "$numberLong": "1658144239014"
+      "$numberLong": "1659436935491"
     }
   }
 }]
