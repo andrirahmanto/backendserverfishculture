@@ -29,9 +29,12 @@
                                     {% if pond["isActive"] == True %}
                                     <td><a href="#" class="btn btn-icon icon-left btn-success">
                                             Active</a></td>
-                                    {% else %}
+                                    {% elif len_activation == 0 %}
                                     <td><a href="#" class="btn btn-icon icon-left btn-danger">
                                             Not Active</a></td>
+                                    {% else %}
+                                    <td><a href="#" class="btn btn-icon icon-left btn-warning">
+                                            Closed</a></td>
                                     {% endif %}
                                 </tr>
                                 <tr>
@@ -46,8 +49,8 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Status</th>
-                                    <th>Activated at</th>
-                                    <th>Deactivated at</th>
+                                    <th>Start Season</th>
+                                    <th>End Season</th>
                                     <th>Fish</th>
                                     <th>Total Fish Harvested</th>
                                     <th>Total Weight Harvested</th>
@@ -66,7 +69,11 @@
                                             Unfinish</a></td>
                                     {% endif %}
                                     <td>{{activation['activated_at']}}</td>
-                                    <td>{{activation['deactivated_at']}}</td>
+                                    <td>
+                                        <p>{{activation['deactivated_at']}}</p>
+                                        <p>Cause: {{activation['deactivated_description']}}
+                                    </td>p>
+                                    </td>
                                     <td>
                                         {% for fishz in activation['fish'] %}
                                         <p>{{fishz['fish_type']}}: {{fishz['fish_amount']}}</p>

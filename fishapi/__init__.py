@@ -357,7 +357,7 @@ def create_app(test_config=None):
         ponds = list(ponds)
         pond = dict(ponds[0])
         activations = enumerate(pond['pond_activation_list'], start=1)
-        return render_template('pond/activationlist.html', name='Andri', pond=pond, activations=activations)
+        return render_template('pond/activationlist.html', name='Andri', pond=pond, activations=activations, len_activation=len(pond['pond_activation_list']))
 
     @app.route('/ponds/activation/detail/<activationid>')
     def pondActivationDetailView(activationid):
