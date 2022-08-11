@@ -22,10 +22,20 @@
                     <div class="table-responsive p-5">
                         <div class="row">
                             <div class="col-lg-6">
+                                <label>Select Pond</label>
+                                <br>
+                                <input type="radio" id="all" name="pond" value="all/" checked>
+                                <label>all</label><br>
+                                {% for pond in ponds %}
+                                <input type="radio" id="{{pond['_id']['$oid']}}" name="pond"
+                                    value="{{pond['_id']['$oid']}}/">
+                                <label>{{pond['alias']}}</label><br>
+                                {% endfor %}
+                                <br><br><br>
                                 <label>Month</label>
                                 <input id="form-date" type="text" class="form-control datepicker" value="{{date}}">
                                 <input id="link-root" type="text" class="form-control"
-                                    value="{{url_for('fishDeathRecap')}}" hidden>
+                                    value="{{url_for('dailyWaterQualityRecap')}}" hidden>
                                 <br>
                                 <button type="button" class="btn btn-success btn-block"
                                     onclick="setDate()">Search</button>

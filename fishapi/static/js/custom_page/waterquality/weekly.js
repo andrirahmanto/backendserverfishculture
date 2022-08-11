@@ -40,7 +40,8 @@ $(document).ready(function () {
 
 
 function setDate() {
+    var selectedVal = $('input[name="pond"]:checked').val();
     let date = document.getElementById("form-date").value;
     let link = document.getElementById("link-root").value;
-    window.location.href = `${link}${date}`
+    window.location.href = `${link}${selectedVal}${date}`
 }

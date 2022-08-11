@@ -22,10 +22,20 @@
                     <div class="table-responsive p-5">
                         <div class="row">
                             <div class="col-lg-6">
+                                <label>Select Pond</label>
+                                <br>
+                                <input type="radio" id="all" name="pond" value="all/" checked>
+                                <label>all</label><br>
+                                {% for pond in ponds %}
+                                <input type="radio" id="{{pond['_id']['$oid']}}" name="pond"
+                                    value="{{pond['_id']['$oid']}}/">
+                                <label>{{pond['alias']}}</label><br>
+                                {% endfor %}
+                                <br><br><br>
                                 <label>Month</label>
                                 <input id="form-date" type="text" class="form-control datepicker" value="{{date}}">
                                 <input id="link-root" type="text" class="form-control"
-                                    value="{{url_for('fishDeathRecap')}}" hidden>
+                                    value="{{url_for('pondTreatmentRecap')}}" hidden>
                                 <br>
                                 <button type="button" class="btn btn-success btn-block"
                                     onclick="setDate()">Search</button>
@@ -86,5 +96,5 @@
     src="{{url_for('static', filename='node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 {% endblock %}
 {% block page_js %}
-<script src="{{url_for('static', filename='js/custom_page/waterquality/daily.js')}}"></script>
+<script src="{{url_for('static', filename='js/custom_page/pondtreatment/month.js')}}"></script>
 {% endblock %}

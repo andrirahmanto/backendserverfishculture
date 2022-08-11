@@ -852,15 +852,21 @@ def create_app(test_config=None):
         optiontable_list = OptionTable(**body).save()
         return
 
-    @app.route('/dailywaterquality/', defaults={'date': datetime.today().strftime('%Y-%m')})
-    @app.route('/dailywaterquality/<date>')
-    def dailyWaterQualityRecap(date):
+    @app.route('/dailywaterquality/', defaults={'date': datetime.today().strftime('%Y-%m'), 'pond': 'all'})
+    @app.route('/dailywaterquality/<pond>/<date>')
+    def dailyWaterQualityRecap(pond, date):
         format_date = "%Y-%m"
+        if pond == "all":
+            query_pond = {}
+        else:
+            query_pond = {'$eq': ['$pond_id', {'$toObjectId': str(pond)}]}
         pipeline = [
-            {"$match": {"$expr":
+            {'$match': {'$expr': {'$and': [
                         {'$eq': [date, {'$dateToString': {
-                            'format': format_date, 'date': "$created_at"}}]}
-                        }},
+                            'format': format_date, 'date': "$created_at"}}]},
+                        query_pond,
+                        ]
+            }}},
             {"$sort": {"created_at": 1}},
             {'$lookup': {
                 'from': 'pond',
@@ -953,19 +959,27 @@ def create_app(test_config=None):
         dailyquality_list = DailyWaterQuality.objects.aggregate(pipeline)
         dailyquality_list = list(dailyquality_list)
         date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
+        ponds = Pond.objects.to_json()
+        ponds = json.loads(ponds)
         # response = json.dumps(dailyquality_list, default=str)
         # return Response(response, mimetype="application/json", status=200)
-        return render_template('waterquality/daily.html', name='Andri', dailyquality_list=enumerate(dailyquality_list, start=1), date=date, date_read=date_read)
+        return render_template('waterquality/daily.html', name='Andri', dailyquality_list=enumerate(dailyquality_list, start=1), date=date, date_read=date_read, ponds=ponds, checked_pond=pond)
 
-    @app.route('/weeklywaterquality/', defaults={'date': datetime.today().strftime('%Y-%m')})
-    @app.route('/weeklywaterquality/<date>')
-    def weeklyWaterQualityRecap(date):
+    @app.route('/weeklywaterquality/', defaults={'date': datetime.today().strftime('%Y-%m'), 'pond': 'all'})
+    @app.route('/weeklywaterquality/<pond>/<date>')
+    def weeklyWaterQualityRecap(pond, date):
         format_date = "%Y-%m"
+        if pond == "all":
+            query_pond = {}
+        else:
+            query_pond = {'$eq': ['$pond_id', {'$toObjectId': str(pond)}]}
         pipeline = [
-            {"$match": {"$expr":
+            {'$match': {'$expr': {'$and': [
                         {'$eq': [date, {'$dateToString': {
-                            'format': format_date, 'date': "$created_at"}}]}
-                        }},
+                            'format': format_date, 'date': "$created_at"}}]},
+                        query_pond,
+                        ]
+            }}},
             {"$sort": {"created_at": 1}},
             {'$lookup': {
                 'from': 'pond',
@@ -1120,19 +1134,27 @@ def create_app(test_config=None):
         weeklyquality_list = WeeklyWaterQuality.objects.aggregate(pipeline)
         weeklyquality_list = list(weeklyquality_list)
         date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
+        ponds = Pond.objects.to_json()
+        ponds = json.loads(ponds)
         # response = json.dumps(weeklyquality_list, default=str)
         # return Response(response, mimetype="application/json", status=200)
-        return render_template('waterquality/weekly.html', name='Andri', weeklyquality_list=enumerate(weeklyquality_list, start=1), date=date, date_read=date_read)
+        return render_template('waterquality/weekly.html', name='Andri', weeklyquality_list=enumerate(weeklyquality_list, start=1), date=date, date_read=date_read, ponds=ponds, checked_pond=pond)
 
-    @app.route('/pondtreatment/', defaults={'date': datetime.today().strftime('%Y-%m')})
-    @app.route('/pondtreatment/<date>')
-    def pondTreatmentRecap(date):
+    @app.route('/pondtreatment/', defaults={'date': datetime.today().strftime('%Y-%m'), 'pond': 'all'})
+    @app.route('/pondtreatment/<pond>/<date>')
+    def pondTreatmentRecap(pond, date):
         format_date = "%Y-%m"
+        if pond == "all":
+            query_pond = {}
+        else:
+            query_pond = {'$eq': ['$pond_id', {'$toObjectId': str(pond)}]}
         pipeline = [
-            {"$match": {"$expr":
+            {'$match': {'$expr': {'$and': [
                         {'$eq': [date, {'$dateToString': {
-                            'format': format_date, 'date': "$created_at"}}]}
-                        }},
+                            'format': format_date, 'date': "$created_at"}}]},
+                        query_pond,
+                        ]
+            }}},
             {"$sort": {"created_at": 1}},
             {'$lookup': {
                 'from': 'pond',
@@ -1184,8 +1206,10 @@ def create_app(test_config=None):
         pondtreatments = PondTreatment.objects.aggregate(pipeline)
         pondtreatments = list(pondtreatments)
         date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
+        ponds = Pond.objects.to_json()
+        ponds = json.loads(ponds)
         # response = json.dumps(pondtreatments, default=str)
         # return Response(response, mimetype="application/json", status=200)
-        return render_template('pondtreatment/month.html', name='Andri', pondtreatments=enumerate(pondtreatments, start=1), date=date, date_read=date_read)
+        return render_template('pondtreatment/month.html', name='Andri', pondtreatments=enumerate(pondtreatments, start=1), date=date, date_read=date_read, ponds=ponds, checked_pond=pond)
 
     return app
