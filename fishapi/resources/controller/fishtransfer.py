@@ -94,7 +94,9 @@ class FishTransfersApi(Resource):
                 return Response(response, mimetype="application/json", status=400)
             destination_activation = PondActivation.objects(
                 pond_id=destination_pond_id, isFinish=False).order_by('-activated_at').first()
+            fish_grading_id = request.form.get("fish_grading_id", None)
             transfer_type = request.form.get("transfer_type", None)
+            transfer_method = request.form.get("transfer_method", None)
             sample_weight = request.form.get("sample_weight", None)
             sample_long = request.form.get("sample_long", None)
             fishes = request.form.get("fish", "[]")
@@ -103,12 +105,34 @@ class FishTransfersApi(Resource):
                 response = {"message": "There is no fish"}
                 response = json.dumps(response, default=str)
                 return Response(response, mimetype="application/json", status=400)
+            # if transfer method is "kering" deactived pond
+            if transfer_method == "kering":
+                # update activation
+                pond_deactivation_data = {
+                    "isFinish": True,
+                    "total_fish_harvested": request.form.get("total_fish_harvested", None),
+                    "total_weight_harvested": request.form.get("total_weight_harvested", None),
+                    "deactivated_at": request.form.get("deactivated_at", datetime.datetime.now())
+                }
+                origin_activation.update(**pond_deactivation_data)
+            # update fish grading [optional]
+            if fish_grading_id and transfer_method != "kering":
+                # pengecekan fish_grading
+                fish_grading = FishGrading.objects.get(id=fish_grading_id)
+                # update fishgrading
+                if transfer_type == "oversized_transfer":
+                    fish_grading.update(**{"isOversizeTransferred": True})
+                else:
+                    fish_grading.update(**{"isUndersizeTransferred": True})
             # save data
             data = {
                 "origin_pond_id": origin_pond_id,
                 "destination_pond_id": destination_pond_id,
                 "origin_activation_id": origin_activation.id,
                 "destination_activation_id": destination_activation.id,
+                "fish_grading_id": None if transfer_method == "kering" else fish_grading_id,
+                "transfer_type": None if transfer_method == "kering" else transfer_type,
+                "transfer_method": transfer_method,
                 "transfer_type": transfer_type,
                 "sample_weight": sample_weight,
                 "sample_long": sample_long

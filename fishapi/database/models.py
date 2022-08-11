@@ -79,7 +79,8 @@ class FishDeath(db.Document):
 
 
 class FishTransfer(db.Document):
-    transfer_type_option = ("basah", "kering")
+    transfer_method_option = ("basah", "kering")
+    transfer_type_option = (None, "oversized_transfer", "undersized_transfer")
 
     origin_pond_id = db.ReferenceField(Pond, required=True)
     destination_pond_id = db.ReferenceField(Pond, required=True)
@@ -87,9 +88,11 @@ class FishTransfer(db.Document):
     destination_activation_id = db.ReferenceField(
         PondActivation, required=True)
     fish_grading_id = db.ObjectIdField(required=True, default=None)
-    transfer_type = db.StringField(required=True, choices=transfer_type_option)
+    transfer_type = db.StringField(choices=transfer_type_option)
+    transfer_method = db.StringField(
+        required=True, choices=transfer_method_option)
     sample_weight = db.IntField(required=True)
-    sample_long = db.IntField(required=True)
+    sample_long = db.IntField(default=None)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
