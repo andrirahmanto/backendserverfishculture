@@ -861,7 +861,7 @@ def create_app(test_config=None):
                         {'$eq': [date, {'$dateToString': {
                             'format': format_date, 'date': "$created_at"}}]}
                         }},
-            {"$sort": {"created_at": -1}},
+            {"$sort": {"created_at": 1}},
             {'$lookup': {
                 'from': 'pond',
                 'let': {"pondid": "$pond_id"},
@@ -966,7 +966,7 @@ def create_app(test_config=None):
                         {'$eq': [date, {'$dateToString': {
                             'format': format_date, 'date': "$created_at"}}]}
                         }},
-            {"$sort": {"created_at": -1}},
+            {"$sort": {"created_at": 1}},
             {'$lookup': {
                 'from': 'pond',
                 'let': {"pondid": "$pond_id"},
