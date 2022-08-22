@@ -42,6 +42,7 @@
                                     <th>Kolam</th>
                                     <th>Masa Budidaya</th>
                                     <th>Tipe Treatment</th>
+                                    <th>Pergantian Air</th>
                                     <th>Dosis Garam</th>
                                     <th>Kultur Probiotik</th>
                                     <th>Karbon</th>
@@ -55,9 +56,28 @@
                                     <td>{{pondtreatment["pond"]["alias"]}}</td>
                                     <td>{{pondtreatment["pond_activation"]["id_int"]}}</td>
                                     <td>{{pondtreatment["treatment_type"]}}</td>
-                                    <td>{{pondtreatment["salt"]}} Kg</td>
-                                    <td>{{pondtreatment["probiotic_culture"]}} G/ml</td>
-                                    <td>{{pondtreatment["carbohydrate"]}} ({{pondtreatment["carbohydrate_type"]}})</td>
+                                    <td>{{pondtreatment["water_change"]}}%</td>
+                                    <td>
+                                        {% if pondtreatment["salt"] %}
+                                        {{pondtreatment["salt"]}} Kg
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if pondtreatment["probiotic_culture"] %}
+                                        {{pondtreatment["probiotic_culture"]}} G/ml
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if pondtreatment["probiotic_culture"] %}
+                                        {{pondtreatment["carbohydrate"]}} ({{pondtreatment["carbohydrate_type"]}})
+                                        {% else %}
+                                        -
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

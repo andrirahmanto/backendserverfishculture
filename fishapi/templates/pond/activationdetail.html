@@ -59,6 +59,12 @@
                                     <th>Dosis Kapur</th>
                                     <td>: {{pond["pond_activation"]["water_preparation"]["calcium"]}} Gram</td>
                                 </tr>
+                                {% else %}
+                                <tr>
+                                    <th>Keterangan</th>
+                                    <td>: Pemindahan air dari kolam yang sedang aktif
+                                    </td>
+                                </tr>
                                 {% endif %}
                             </tbody>
                         </table>

@@ -33,13 +33,16 @@
                                     <td>{{pond["alias"]}}</td>
                                     <td>{{pond["total_activation"]}} X</td>
                                     {% if pond["isActive"] == True %}
-                                    <td><a href="#" class="btn btn-icon icon-left btn-success btn-block rounded-pill">
+                                    <td class="text-center"><a href="#"
+                                            class="btn btn-icon icon-left btn-success rounded-pill">
                                             Active</a></td>
                                     {% elif pond["total_activation"] == 0 %}
-                                    <td><a href="#" class="btn btn-icon icon-left btn-danger btn-block rounded-pill">
+                                    <td class="text-center"><a href="#"
+                                            class="btn btn-icon icon-left btn-danger rounded-pill">
                                             Not Active</a></td>
                                     {% else %}
-                                    <td><a href="#" class="btn btn-icon icon-left btn-warning btn-block rounded-pill">
+                                    <td class="text-center"><a href="#"
+                                            class="btn btn-icon icon-left btn-warning rounded-pill">
                                             Closed</a></td>
                                     {% endif %}
                                     <td> <a href="{{url_for('pondActivationView', pondid = pond['_id'])}}"

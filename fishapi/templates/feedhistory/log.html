@@ -20,20 +20,24 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Tanggal</th>
+                                    <th>Waktu</th>
                                     <th>Kolam</th>
+                                    <th>Masa Budidaya</th>
                                     <th>Tipe Pakan</th>
                                     <th>Dosis Pakan</th>
-                                    <th>Waktu Pemberian</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for index, feedhistory in feedhistorys %}
                                 <tr>
                                     <td>{{index}}</td>
+                                    <td>{{feedhistory["date"]}}</td>
+                                    <td>{{feedhistory["time"]}}</td>
                                     <td>{{feedhistory["pond"]["alias"]}}</td>
+                                    <td>{{feedhistory["pond_activation"]["id_int"]}}</td>
                                     <td>{{feedhistory["feed_type"]["name"]}}</td>
                                     <td>{{feedhistory["feed_dose"]}} gram</td>
-                                    <td>{{feedhistory["feed_history_time"]}}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

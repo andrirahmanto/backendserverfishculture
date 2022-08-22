@@ -159,13 +159,14 @@ class WeeklyWaterQuality(db.Document):
 
 
 class PondTreatment(db.Document):
-    treatment_type_option = ("ringan", "berat")
+    treatment_type_option = ("ringan", "karantina", "pergantian air")
     carbohydrate_type_option = ("", "gula", "molase", "terigu", "tapioka")
 
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     treatment_type = db.StringField(
         required=True, choices=treatment_type_option)
+    water_change = db.IntField()
     salt = db.IntField()
     probiotic_culture = db.IntField()
     carbohydrate = db.IntField()

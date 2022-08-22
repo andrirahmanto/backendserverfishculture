@@ -167,3 +167,16 @@ class FishGradingApi(Resource):
             response = {"message": str(e)}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=400)
+
+
+class FishGradingGraphApi(Resource):
+    def get(self):
+        response = {
+            "nila merah": [0.4, 1.1, 2, 2.1, 3.2, 3.4, 4, 4.3],
+            "nila hitam": [0.4, 0.6, 3, 3.1, 3.8, 4, 4.3, 4.6],
+            "lele": [1, 1.5, 2.1, 2.3, 2.6, 3.1, 4, 4.2],
+            "mas": [0.1, 0.4, 0.8, 1.2, 3, 4, 5, 5.5],
+            "patin": [0, 0, 0, 0, 0, 0, 0, 0],
+        }
+        response = json.dumps(response, default=str)
+        return Response(response, mimetype="application/json", status=200)

@@ -70,11 +70,12 @@ class PondTreatmentsApi(Resource):
             pond_activation = PondActivation.objects(
                 pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
             treatment_type = request.form.get("treatment_type", None)
-            if treatment_type == "berat":
+            if treatment_type == "karantina":
                 body = {
                     "pond_id": pond_id,
                     "pond_activation_id": pond_activation.id,
                     "treatment_type": treatment_type,
+                    "water_change": 100,
                     "description": request.form.get("description", None),
                 }
                 pondtreatment = PondTreatment(**body).save()
@@ -96,10 +97,20 @@ class PondTreatmentsApi(Resource):
                     "pond_id": pond_id,
                     "pond_activation_id": pond_activation.id,
                     "treatment_type": treatment_type,
+                    "water_change": 0,
                     "salt": request.form.get("salt_dose", None),
                     "probiotic_culture": request.form.get("probiotic_culture", None),
                     "carbohydrate": request.form.get("carbohydrate", None),
                     "carbohydrate_type": request.form.get("carbohydrate_type", None),
+                }
+                pondtreatment = PondTreatment(**body).save()
+                id = pondtreatment.id
+            elif treatment_type == "pergantian air":
+                body = {
+                    "pond_id": pond_id,
+                    "pond_activation_id": pond_activation.id,
+                    "treatment_type": treatment_type,
+                    "water_change": request.form.get("water_change", 0)
                 }
                 pondtreatment = PondTreatment(**body).save()
                 id = pondtreatment.id
