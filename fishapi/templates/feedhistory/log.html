@@ -5,10 +5,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Log Feed History</h1>
+            <h1>Pemberian Pakan Keseluruhan</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Feed History</a></div>
-                <div class="breadcrumb-item"><a href="#">Log</a></div>
+                <div class="breadcrumb-item active"><a href="#">Pemberian Pakan</a></div>
+                <div class="breadcrumb-item"><a href="#">Keseluruhan</a></div>
             </div>
         </div>
 
@@ -20,10 +20,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Pond</th>
-                                    <th>Feed type</th>
-                                    <th>Feed dose</th>
-                                    <th>Feed time</th>
+                                    <th>Kolam</th>
+                                    <th>Tipe Pakan</th>
+                                    <th>Dosis Pakan</th>
+                                    <th>Waktu Pemberian</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -32,7 +32,7 @@
                                     <td>{{index}}</td>
                                     <td>{{feedhistory["pond"]["alias"]}}</td>
                                     <td>{{feedhistory["feed_type"]["name"]}}</td>
-                                    <td>{{feedhistory["feed_dose"]}} gr</td>
+                                    <td>{{feedhistory["feed_dose"]}} gram</td>
                                     <td>{{feedhistory["feed_history_time"]}}</td>
                                 </tr>
                                 {% endfor %}

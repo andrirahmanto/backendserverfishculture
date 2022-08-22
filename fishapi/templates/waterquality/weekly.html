@@ -9,10 +9,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Weekly Water Quality</h1>
+            <h1>Pengukuran Kulaitas Air Bulanan</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Weekly Water Quality</a></div>
-                <div class="breadcrumb-item"><a href="#">Weekly</a></div>
+                <div class="breadcrumb-item active"><a href="#">Pengukuran Kulaitas Air</a></div>
+                <div class="breadcrumb-item"><a href="#">Bulanan</a></div>
             </div>
         </div>
 
@@ -22,17 +22,7 @@
                     <div class="table-responsive p-5">
                         <div class="row">
                             <div class="col-lg-6">
-                                <label>Select Pond</label>
-                                <br>
-                                <input type="radio" id="all" name="pond" value="all/" checked>
-                                <label>all</label><br>
-                                {% for pond in ponds %}
-                                <input type="radio" id="{{pond['_id']['$oid']}}" name="pond"
-                                    value="{{pond['_id']['$oid']}}/">
-                                <label>{{pond['alias']}}</label><br>
-                                {% endfor %}
-                                <br><br><br>
-                                <label>Month</label>
+                                <label>Pilih Bulan</label>
                                 <input id="form-date" type="text" class="form-control datepicker" value="{{date}}">
                                 <input id="link-root" type="text" class="form-control"
                                     value="{{url_for('weeklyWaterQualityRecap')}}" hidden>
@@ -42,21 +32,21 @@
                             </div>
                         </div>
                         <br>
-                        <h5>Result for {{date_read}}</h5>
+                        <h5>Hasil untuk Bulan {{date_read}}</h5>
                         <br>
                         <table id="mainTable" class="table table-striped table-md">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Check Date</th>
-                                    <th>Pond</th>
-                                    <th>Culture Season</th>
+                                    <th>Tanggal Pengukuran</th>
+                                    <th>Kolam</th>
+                                    <th>Masa Budidaya</th>
                                     <th>Status</th>
-                                    <th>Floc</th>
-                                    <th>Nitrite</th>
-                                    <th>Nitrate</th>
+                                    <th>Kadar Flok</th>
+                                    <th>Kadar Nitrit</th>
+                                    <th>Kadar Nitrat</th>
                                     <th>Ammonia</th>
-                                    <th>Hardness</th>
+                                    <th>Nilai Hardness</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -5,10 +5,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Pond Activation</h1>
+            <h1>Masa Budidaya Kolam</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Pond</a></div>
-                <div class="breadcrumb-item"><a href="#">Pond Activation</a></div>
+                <div class="breadcrumb-item active"><a href="#">Kolam</a></div>
+                <div class="breadcrumb-item"><a href="#">Masa Budidaya</a></div>
             </div>
         </div>
 
@@ -20,10 +20,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Alias</th>
-                                    <th>Total Activation</th>
+                                    <th>Kolam</th>
+                                    <th>Total Masa Budidaya</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    <th>List Masa Budidaya</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -31,20 +31,20 @@
                                 <tr>
                                     <td>{{index}}</td>
                                     <td>{{pond["alias"]}}</td>
-                                    <td>{{pond["total_activation"]}}</td>
+                                    <td>{{pond["total_activation"]}} X</td>
                                     {% if pond["isActive"] == True %}
-                                    <td><a href="#" class="btn btn-icon icon-left btn-success">
+                                    <td><a href="#" class="btn btn-icon icon-left btn-success btn-block rounded-pill">
                                             Active</a></td>
                                     {% elif pond["total_activation"] == 0 %}
-                                    <td><a href="#" class="btn btn-icon icon-left btn-danger">
+                                    <td><a href="#" class="btn btn-icon icon-left btn-danger btn-block rounded-pill">
                                             Not Active</a></td>
                                     {% else %}
-                                    <td><a href="#" class="btn btn-icon icon-left btn-warning">
+                                    <td><a href="#" class="btn btn-icon icon-left btn-warning btn-block rounded-pill">
                                             Closed</a></td>
                                     {% endif %}
                                     <td> <a href="{{url_for('pondActivationView', pondid = pond['_id'])}}"
                                             class="btn btn-icon icon-left btn-info"><i class="fas fa-info-circle"></i>
-                                            Activation</a></td>
+                                            Detail</a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

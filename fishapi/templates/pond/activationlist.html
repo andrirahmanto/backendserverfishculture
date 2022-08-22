@@ -5,10 +5,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Pond Activation Detail</h1>
+            <h1>List Masa Budidaya Kolam</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Pond</a></div>
-                <div class="breadcrumb-item"><a href="{{url_for('feedhistoryMonthly')}}">Activation</a></div>
+                <div class="breadcrumb-item active"><a href="#">Kolam</a></div>
+                <div class="breadcrumb-item"><a href="{{url_for('feedhistoryMonthly')}}">Masa Budidaya</a></div>
                 <div class="breadcrumb-item"><a href="#">List</a></div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                         <table class="table table-sm">
                             <tbody>
                                 <tr>
-                                    <th>Alias</th>
+                                    <th>Kolam</th>
                                     <td>: {{pond['alias']}}</td>
                                 </tr>
                                 <tr>
@@ -38,8 +38,8 @@
                                     {% endif %}
                                 </tr>
                                 <tr>
-                                    <th>Total Activation</th>
-                                    <td>: {{pond['total_activation']}} gr</td>
+                                    <th>Total Masa Budidaya</th>
+                                    <td>: {{pond['total_activation']}} X</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -49,12 +49,12 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Status</th>
-                                    <th>Start Season</th>
-                                    <th>End Season</th>
-                                    <th>Fish</th>
-                                    <th>Total Fish Harvested</th>
-                                    <th>Total Weight Harvested</th>
-                                    <th>Action</th>
+                                    <th>Mulai Tanggal</th>
+                                    <th>Selesai Tanggal</th>
+                                    <th>Ikan</th>
+                                    <th>Jumlah Ikan Panen</th>
+                                    <th>Berat Ikan Panen</th>
+                                    <th>Detail Persiapan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,18 +72,18 @@
                                     <td>
                                         <p>{{activation['deactivated_at']}}</p>
                                         <p>Cause: {{activation['deactivated_description']}}
-                                    </td>p>
+                                    </td>
                                     </td>
                                     <td>
                                         {% for fishz in activation['fish'] %}
-                                        <p>{{fishz['fish_type']}}: {{fishz['fish_amount']}}</p>
+                                        <p class="">{{fishz['fish_type']}}: {{fishz['fish_amount']}}</p>
                                         {% endfor %}
                                     </td>
                                     <td>{{activation['total_fish_harvested']}}</td>
                                     <td>{{activation['total_weight_harvested']}} Kg</td>
                                     <td> <a href="{{url_for('pondActivationDetailView', activationid = activation['_id'])}}"
                                             class="btn btn-icon icon-left btn-info"><i class="fas fa-info-circle"></i>
-                                            Activation</a>
+                                            Detail</a>
                                     </td>
                                 </tr>
                                 {% endfor %}

@@ -5,10 +5,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Pond List</h1>
+            <h1>Detail Kolam</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Pond</a></div>
-                <div class="breadcrumb-item"><a href="#">Pond List</a></div>
+                <div class="breadcrumb-item active"><a href="#">Kolam</a></div>
+                <div class="breadcrumb-item"><a href="#">Detail</a></div>
             </div>
         </div>
 
@@ -20,14 +20,14 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Alias</th>
-                                    <th>Shape</th>
-                                    <th>Dimension</th>
-                                    <th>Height</th>
-                                    <th>Area</th>
-                                    <th>volume</th>
+                                    <th>Kolam</th>
+                                    <th>Bentuk</th>
+                                    <th>Dimensi</th>
+                                    <th>Tinggi</th>
+                                    <th>Luas</th>
+                                    <th>Volume</th>
                                     <th>Material</th>
-                                    <th>Build at</th>
+                                    <th>Dibangun Pada</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -37,13 +37,13 @@
                                     <td>{{pond["alias"]}}</td>
                                     <td>{{pond["shape"]}}</td>
                                     {% if pond["shape"] == "persegi" %}
-                                    <td>{{pond["length"]}}X{{pond["width"]}} m (PxL)</td>
+                                    <td>{{pond["length"]}} m X {{pond["width"]}} m (PxL)</td>
                                     {% else %}
                                     <td>{{pond["diameter"]}} m (D)</td>
                                     {% endif %}
-                                    <td>{{pond["height"]}} m</td>
-                                    <td>{{pond["area"]}} m2</td>
-                                    <td>{{pond["volume"]}} m3</td>
+                                    <td class="text-right">{{pond["height"]}} m</td>
+                                    <td class="text-right">{{pond["area"]}} m<sup>2</sup></td>
+                                    <td class="text-right">{{pond["volume"]}} m<sup>3</sup></td>
                                     <td>{{pond["material"]}}</td>
                                     <td>{{pond["build_at"]}}</td>
                                 </tr>

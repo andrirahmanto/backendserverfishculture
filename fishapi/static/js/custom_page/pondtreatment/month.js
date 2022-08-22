@@ -17,17 +17,25 @@ $(document).ready(function () {
     // DataTable
     var table = $('#mainTable').DataTable({
         initComplete: function () {
-            // Apply the search
             this.api()
                 .columns()
                 .every(function () {
-                    var that = this;
+                    var column = this;
+                    var select = $('<select><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
 
-                    $('input', this.footer()).on('keyup change clear', function () {
-                        if (that.search() !== this.value) {
-                            that.search(this.value).draw();
-                        }
-                    });
+                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                        });
+
+                    column
+                        .data()
+                        .unique()
+                        .sort()
+                        .each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>');
+                        });
                 });
         },
     });
@@ -40,8 +48,7 @@ $(document).ready(function () {
 
 
 function setDate() {
-    var selectedVal = $('input[name="pond"]:checked').val();
     let date = document.getElementById("form-date").value;
     let link = document.getElementById("link-root").value;
-    window.location.href = `${link}${selectedVal}${date}`
+    window.location.href = `${link}${date}`
 }

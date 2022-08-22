@@ -5,11 +5,11 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Pond Activation Detail</h1>
+            <h1>Detail Persiapan Masa Budidaya</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Pond</a></div>
-                <div class="breadcrumb-item"><a href="{{url_for('feedhistoryMonthly')}}">Activation</a></div>
-                <div class="breadcrumb-item"><a href="#">Detail</a></div>
+                <div class="breadcrumb-item active"><a href="#">Kolam</a></div>
+                <div class="breadcrumb-item"><a href="{{url_for('feedhistoryMonthly')}}">Masa Budidaya</a></div>
+                <div class="breadcrumb-item"><a href="#">Persiapan</a></div>
             </div>
         </div>
 
@@ -21,11 +21,11 @@
                         <table class="table table-sm">
                             <tbody>
                                 <tr>
-                                    <th>Alias</th>
+                                    <th>Kolam</th>
                                     <td>: {{pond['alias']}}</td>
                                 </tr>
                                 <tr>
-                                    <th>Fish</th>
+                                    <th>Ikan</th>
                                     <td>
                                         {% for fishz in pond["pond_activation"]["fish"] %}
                                         <p>- {{fishz["fish_type"]}}: {{fishz["fish_amount"]}}</p>
@@ -34,7 +34,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Water Preparation</th>
+                                    <th>Persiapan Air</th>
                                     {% if pond["pond_activation"]["isWaterPreparation"] == True %}
                                     <td>: Yes</td>
                                     {% else %}
@@ -43,20 +43,20 @@
                                 </tr>
                                 {% if pond["pond_activation"]["isWaterPreparation"] == True %}
                                 <tr>
-                                    <th>Carbohydrate Type</th>
-                                    <td>: {{pond["pond_activation"]["water_preparation"]["carbohydrate_type"]}} Gram/ml
+                                    <th>Jenis Karbon</th>
+                                    <td>: {{pond["pond_activation"]["water_preparation"]["carbohydrate_type"]}}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>Carbohydrate</th>
-                                    <td>: {{pond["pond_activation"]["water_preparation"]["carbohydrate"]}}</td>
+                                    <th>Dosis Karbon</th>
+                                    <td>: {{pond["pond_activation"]["water_preparation"]["carbohydrate"]}} Gram/ml</td>
                                 </tr>
                                 <tr>
-                                    <th>Salt</th>
+                                    <th>Dosis Garam</th>
                                     <td>: {{pond["pond_activation"]["water_preparation"]["salt"]}} Kg</td>
                                 </tr>
                                 <tr>
-                                    <th>Calcium</th>
+                                    <th>Dosis Kapur</th>
                                     <td>: {{pond["pond_activation"]["water_preparation"]["calcium"]}} Gram</td>
                                 </tr>
                                 {% endif %}
