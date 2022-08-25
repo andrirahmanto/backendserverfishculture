@@ -8,6 +8,7 @@ from .controller.fishgrading import *
 from .controller.dailywaterquality import *
 from .controller.weeklywaterquality import *
 from .controller.pondtreatment import *
+from .controller.statistic import *
 
 
 def initialize_routes(api):
@@ -63,3 +64,6 @@ def initialize_routes(api):
     # pond treatment
     api.add_resource(PondTreatmentsApi, '/api/pondtreatment')
     api.add_resource(PondTreatmentApi, '/api/pondtreatment/<id>')
+
+    # StatisticAPI
+    api.add_resource(StatisticApi, '/api/statistic')
