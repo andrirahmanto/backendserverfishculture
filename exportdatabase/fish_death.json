@@ -42,4 +42,48 @@
       "$numberLong": "1658144239014"
     }
   }
+},{
+  "_id": {
+    "$oid": "63071d3ef582500ed8e48a12"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "image_name": "default.jpg",
+  "diagnosis": "mati karena sakit",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435822784"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435822784"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63071d49f582500ed8e48a15"
+  },
+  "pond_id": {
+    "$oid": "625d7033a9a73e090c65cda2"
+  },
+  "pond_activation_id": {
+    "$oid": "62d562e676d3a668927c511f"
+  },
+  "image_name": "default.jpg",
+  "diagnosis": "mati karena sakit",
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435833976"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435833976"
+    }
+  }
 }]

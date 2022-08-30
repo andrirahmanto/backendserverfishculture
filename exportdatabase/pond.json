@@ -27,7 +27,7 @@
     }
   },
   "image_name": "kolam_1656312365.jpeg",
-  "isActive": false
+  "isActive": true
 },{
   "_id": {
     "$oid": "625d7033a9a73e090c65cda2"

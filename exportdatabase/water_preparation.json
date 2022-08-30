@@ -9,4 +9,15 @@
   "carbohydrate_type": "gula",
   "salt": 100,
   "calcium": 100
+},{
+  "_id": {
+    "$oid": "63071b850dd3b5e109a565c5"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "carbohydrate": 80,
+  "carbohydrate_type": "gula",
+  "salt": 90,
+  "calcium": 60
 }]

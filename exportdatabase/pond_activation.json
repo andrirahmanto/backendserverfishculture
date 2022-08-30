@@ -94,4 +94,32 @@
     }
   },
   "deactivated_description": "normal"
+},{
+  "_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "id_int": 2,
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "isFinish": false,
+  "isWaterPreparation": true,
+  "water_level": 100,
+  "total_fish_harvested": 0,
+  "total_weight_harvested": 0,
+  "activated_at": {
+    "$date": {
+      "$numberLong": "1661435381857"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435381857"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435381857"
+    }
+  }
 }]

@@ -90,4 +90,73 @@
       "$numberLong": "1659503433051"
     }
   }
+},{
+  "_id": {
+    "$oid": "63072f7444e0dcf20ddf3b80"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "ph": 7,
+  "do": 5,
+  "temperature": 20,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661440484557"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661440484557"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63072f8d44e0dcf20ddf3b81"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "ph": 7,
+  "do": 3,
+  "temperature": 20,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661440509813"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661440509813"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63072f9844e0dcf20ddf3b82"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "ph": 7,
+  "do": 5,
+  "temperature": 20,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661440520747"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661440520747"
+    }
+  }
 }]

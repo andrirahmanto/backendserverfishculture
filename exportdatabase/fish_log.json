@@ -500,4 +500,154 @@
       "$numberLong": "1660230673216"
     }
   }
+},{
+  "_id": {
+    "$oid": "63071b850dd3b5e109a565c6"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "type_log": "activation",
+  "fish_type": "lele",
+  "fish_amount": 100,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435381873"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435381873"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63071b850dd3b5e109a565c7"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "type_log": "activation",
+  "fish_type": "patin",
+  "fish_amount": 200,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435381876"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435381876"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63071d3ef582500ed8e48a13"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "fish_death_id": {
+    "$oid": "63071d3ef582500ed8e48a12"
+  },
+  "type_log": "death",
+  "fish_type": "lele",
+  "fish_amount": -20,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435822789"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435822789"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63071d3ef582500ed8e48a14"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "fish_death_id": {
+    "$oid": "63071d3ef582500ed8e48a12"
+  },
+  "type_log": "death",
+  "fish_type": "patin",
+  "fish_amount": -20,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435822790"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435822790"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63071d49f582500ed8e48a16"
+  },
+  "pond_id": {
+    "$oid": "625d7033a9a73e090c65cda2"
+  },
+  "pond_activation_id": {
+    "$oid": "62d562e676d3a668927c511f"
+  },
+  "fish_death_id": {
+    "$oid": "63071d49f582500ed8e48a15"
+  },
+  "type_log": "death",
+  "fish_type": "lele",
+  "fish_amount": -20,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435833977"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435833977"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63071d49f582500ed8e48a17"
+  },
+  "pond_id": {
+    "$oid": "625d7033a9a73e090c65cda2"
+  },
+  "pond_activation_id": {
+    "$oid": "62d562e676d3a668927c511f"
+  },
+  "fish_death_id": {
+    "$oid": "63071d49f582500ed8e48a15"
+  },
+  "type_log": "death",
+  "fish_type": "patin",
+  "fish_amount": -20,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661435833977"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661435833977"
+    }
+  }
 }]

@@ -73,4 +73,29 @@
       "$numberLong": "1659504935633"
     }
   }
+},{
+  "_id": {
+    "$oid": "63072fb744e0dcf20ddf3b83"
+  },
+  "pond_id": {
+    "$oid": "62a62163e445ffb9c5f746f3"
+  },
+  "pond_activation_id": {
+    "$oid": "63071b850dd3b5e109a565c4"
+  },
+  "floc": "11-30",
+  "nitrite": 20,
+  "nitrate": 100,
+  "ammonia": 1.5,
+  "hardness": 125,
+  "created_at": {
+    "$date": {
+      "$numberLong": "1661440551128"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1661440551128"
+    }
+  }
 }]
