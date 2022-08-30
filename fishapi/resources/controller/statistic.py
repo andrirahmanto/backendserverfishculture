@@ -11,6 +11,8 @@ import json
 class StatisticApi(Resource):
     def get(self):
         # try:
+        # total pond
+        total_pond = len(Pond.objects())
         # active pond
         active_pond = Pond.objects(isActive=True)
         active_culture_season = PondActivation.objects(isFinish=False)
@@ -87,6 +89,7 @@ class StatisticApi(Resource):
         abnormal_floc = len(active_culture_season) - normal_floc
 
         response = {
+            "total_pond": total_pond,
             "active_pond": total_active_pond,
             "fish_live": total_fish_live,
             "fish_death": total_fish_death,
