@@ -874,9 +874,10 @@ def create_app(test_config=None):
         fishgradings = FishGrading.objects.aggregate(pipline)
         fishgradings = list(fishgradings)
         date_read = reformatStringDate(date, '%Y-%m', '%B %Y')
+        link_graph = url_for('api.graph', _external=True)
         # response = json.dumps(fishgradings, default=str)
         # return Response(response, mimetype="application/json", status=200)
-        return render_template('fishgrading/monthly.html', name='Andri', fishgradings=enumerate(fishgradings, start=1), date=date, date_read=date_read)
+        return render_template('fishgrading/monthly.html', name='Andri', fishgradings=enumerate(fishgradings, start=1), date=date, date_read=date_read, link_graph=link_graph)
 
     @app.route('/getoption/')
     def getOption():

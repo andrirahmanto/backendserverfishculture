@@ -14,7 +14,7 @@ var masData = [];
 var patinData = [];
 
 async function getGradingData() {
-    const apiUrl = "http://127.0.0.1:5000/api/fishgradings/graph"
+    var apiUrl = document.getElementById("link-graph").value;
 
     const response = await fetch(apiUrl)
     const gradingData = await response.json()

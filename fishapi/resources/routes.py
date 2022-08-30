@@ -51,7 +51,8 @@ def initialize_routes(api):
     api.add_resource(FishGradingsApi, '/api/fishgradings')
     api.add_resource(FishGradingApi, '/api/fishgradings/<id>')
     # graph
-    api.add_resource(FishGradingGraphApi, '/api/fishgradings/graph')
+    api.add_resource(FishGradingGraphApi,
+                     '/api/fishgradings/graph', endpoint='api.graph')
 
     # daily water
     api.add_resource(DailyWaterQualitysApi, '/api/dailywaterquality')
