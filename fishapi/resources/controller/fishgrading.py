@@ -171,6 +171,123 @@ class FishGradingApi(Resource):
 
 class FishGradingGraphApi(Resource):
     def get(self):
+        # setup months
+        year = datetime.datetime.today().year
+        months = ["01", "02", "03", "04", "05",
+                  "06", "07", "08", "09", "10", "11", "12"]
+        for i in range(len(months)):
+            months[i] = str(year) + "-" + months[i]
+
+        # set empty list
+        nilamerah = []
+        nilahitam = []
+        lele = []
+        mas = []
+        patin = []
+
+        # get weight fish in this month
+        # nila hitam
+        for i in range(len(months)):
+            grading_nilahitam = FishGrading.objects.aggregate([
+                {'$match': {'$expr': {'$and': [
+                    {'$eq': [months[i], {'$dateToString': {
+                            'format': '%Y-%m', 'date': "$created_at"}}]},
+                    {'$eq': ['$fish_type', 'nila hitam']}
+                ]
+                }}},
+            ])
+            grading_nilahitam = list(grading_nilahitam)
+            if len(grading_nilahitam) < 1:
+                nilahitam.append(0)
+                continue
+            weight_nilahitam = 0
+            for grd_nilahitam in grading_nilahitam:
+                weight_nilahitam += grd_nilahitam["avg_fish_weight"]
+            nilahitam.append(weight_nilahitam/len(grading_nilahitam))
+
+        # nila merah
+        for i in range(len(months)):
+            grading_nilamerah = FishGrading.objects.aggregate([
+                {'$match': {'$expr': {'$and': [
+                    {'$eq': [months[i], {'$dateToString': {
+                            'format': '%Y-%m', 'date': "$created_at"}}]},
+                    {'$eq': ['$fish_type', 'nila merah']}
+                ]
+                }}},
+            ])
+            grading_nilamerah = list(grading_nilamerah)
+            if len(grading_nilamerah) < 1:
+                nilamerah.append(0)
+                continue
+            weight_nilamerah = 0
+            for grd_nilamerah in grading_nilamerah:
+                weight_nilamerah += grd_nilamerah["avg_fish_weight"]
+            nilamerah.append(weight_nilamerah/len(grading_nilamerah))
+
+        # lele
+        for i in range(len(months)):
+            grading_lele = FishGrading.objects.aggregate([
+                {'$match': {'$expr': {'$and': [
+                    {'$eq': [months[i], {'$dateToString': {
+                            'format': '%Y-%m', 'date': "$created_at"}}]},
+                    {'$eq': ['$fish_type', 'lele']}
+                ]
+                }}},
+            ])
+            grading_lele = list(grading_lele)
+            if len(grading_lele) < 1:
+                lele.append(0)
+                continue
+            weight_lele = 0
+            for grd_lele in grading_lele:
+                weight_lele += grd_lele["avg_fish_weight"]
+            lele.append(weight_lele/len(grading_lele))
+
+        # mas
+        for i in range(len(months)):
+            grading_mas = FishGrading.objects.aggregate([
+                {'$match': {'$expr': {'$and': [
+                    {'$eq': [months[i], {'$dateToString': {
+                            'format': '%Y-%m', 'date': "$created_at"}}]},
+                    {'$eq': ['$fish_type', 'mas']}
+                ]
+                }}},
+            ])
+            grading_mas = list(grading_mas)
+            if len(grading_mas) < 1:
+                mas.append(0)
+                continue
+            weight_mas = 0
+            for grd_mas in grading_mas:
+                weight_mas += grd_mas["avg_fish_weight"]
+            mas.append(weight_mas/len(grading_mas))
+
+        # patin
+        for i in range(len(months)):
+            grading_patin = FishGrading.objects.aggregate([
+                {'$match': {'$expr': {'$and': [
+                    {'$eq': [months[i], {'$dateToString': {
+                            'format': '%Y-%m', 'date': "$created_at"}}]},
+                    {'$eq': ['$fish_type', 'patin']}
+                ]
+                }}},
+            ])
+            grading_patin = list(grading_patin)
+            if len(grading_patin) < 1:
+                patin.append(0)
+                continue
+            weight_patin = 0
+            for grd_patin in grading_patin:
+                weight_patin += grd_patin["avg_fish_weight"]
+            patin.append(weight_patin/len(grading_patin))
+
+        response = {
+            "nila merah": nilamerah,
+            "nila hitam": nilahitam,
+            "lele": lele,
+            "mas": mas,
+            "patin": patin,
+        }
         response = {
             "nila merah": [0.4, 1.1, 2, 2.1, 3.2, 3.4, 4, 4.3],
             "nila hitam": [0.4, 0.6, 3, 3.1, 3.8, 4, 4.3, 4.6],
