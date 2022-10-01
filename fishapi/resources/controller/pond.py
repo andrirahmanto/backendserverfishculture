@@ -13,6 +13,56 @@ class PondsApi(Resource):
         try:
             url = url_for('pondimageapidummy', _external=True)
             pipeline = [
+                {'$lookup': {
+                    'from': 'pond_activation',
+                    'let': {"pondid": "$_id"},
+                    'pipeline': [
+                        {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_id', '$$pondid']},
+                        ]}}},
+                        {"$sort": {"activated_at": -1}},
+                        {'$lookup': {
+                            'from': 'fish_log',
+                            'let': {"pond_activation_id": "$_id"},
+                            'pipeline': [
+                                {'$match': {
+                                    '$expr': {'$and': [
+                                        {'$eq': ['$pond_activation_id',
+                                                 '$$pond_activation_id']},
+                                    ]}
+                                }},
+                                {"$project": {
+                                    "created_at": 0,
+                                    "updated_at": 0,
+                                }},
+                                {"$group": {
+                                    "_id": "$fish_type",
+                                    "fish_type": {"$first": "$fish_type"},
+                                    "fish_amount": {"$sum": "$fish_amount"}
+                                }},
+                                {"$sort": {"fish_type": -1}},
+                                {"$project": {
+                                    "_id": 0,
+                                }},
+                            ],
+                            'as': 'fish_alive'
+                        }},
+                        {"$addFields": {
+                            "activated_at": {'$dateToString': {
+                                'format': "%d-%m-%Y", 'date': "$activated_at"}},
+                            "deactivated_at": {'$dateToString': {
+                                'format': "%d-%m-%Y", 'date': "$deactivated_at"}},
+                            "total_fish_alive": {"$sum": "$fish_alive.fish_amount"}
+                        }},
+                        {"$project": {
+                            "pond_id": 0,
+                            "feed_type_id": 0,
+                            "created_at": 0,
+                            "updated_at": 0,
+                        }},
+                    ],
+                    'as': 'pond_activation_list'
+                }},
                 {"$addFields": {
                     "area": {"$cond": {
                         "if": {"$eq": ["$shape", "persegi"]},
@@ -25,13 +75,40 @@ class PondsApi(Resource):
                     "image_link":{"$concat": [url, "/", {"$toString": "$_id"}]}
                 }},
                 {"$addFields": {
-                    "volume": {"$multiply": ["$area", "$height"]}
+                    "volume": {"$multiply": ["$area", "$height"]},
+                    "last_activation": {"$first": "$pond_activation_list"},
+                    "status": {
+                        "$switch":
+                        {
+                            "branches": [
+                                {
+                                    "case": {"$eq": ["$isActive", True]},
+                                    "then": "Aktif"
+                                },
+                                {
+                                    "case": {"$and": [
+                                        {"$eq": ["$isActive", False]},
+                                        {"$lt": [
+                                            {"$size": "$pond_activation_list"}, 1]}
+                                    ]},
+                                    "then": "Tidak Aktif"
+                                }
+                            ],
+                            "default": "Panen"
+                        }
+                    },
+                }},
+                {"$addFields": {
+                    "activation_date": "$last_activation.activated_at",
+                    "fish_alive": "$last_activation.total_fish_alive",
                 }},
                 {"$project": {
                     "pond_id": 0,
                     "feed_type_id": 0,
                     "created_at": 0,
                     "updated_at": 0,
+                    "pond_activation_list": 0,
+                    "last_activation": 0,
                 }}
             ]
             ponds = Pond.objects.aggregate(pipeline)
