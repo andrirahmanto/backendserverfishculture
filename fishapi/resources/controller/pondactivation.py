@@ -78,6 +78,7 @@ class PondStatusApi(Resource):
                     {'$match': {'$expr': {'$and': [
                         {'$eq': ['$pond_id', '$$pondid']},
                     ]}}},
+                    {"$sort": {"activated_at": -1}},
                     {'$lookup': {
                         'from': 'fish_log',
                         'let': {"pond_activation_id": "$_id"},
@@ -85,14 +86,22 @@ class PondStatusApi(Resource):
                             {'$match': {
                                 '$expr': {'$and': [
                                     {'$eq': ['$pond_activation_id',
-                                             '$$pond_activation_id']},
-                                    {'$eq': ['$type_log', 'activation']},
+                                     '$$pond_activation_id']},
                                 ]}
                             }},
                             {"$project": {
                                 "created_at": 0,
                                 "updated_at": 0,
-                            }}
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"}
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},
                         ],
                         'as': 'fish'
                     }},
@@ -110,7 +119,8 @@ class PondStatusApi(Resource):
                         'as': 'water_preparation'
                     }},
                     {"$addFields": {
-                        "water_preparation": {"$first": "$water_preparation"}
+                        "water_preparation": {"$first": "$water_preparation"},
+                        "total_fish": {"$sum": "$fish.fish_amount"},
                     }},
                     {"$project": {
                         "pond_id": 0,

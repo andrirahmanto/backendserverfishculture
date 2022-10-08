@@ -3,6 +3,7 @@ from fishapi.database.models import *
 from flask_restful import Resource
 from fishapi.database.db import db
 import datetime
+import calendar
 import json
 from bson.json_util import dumps
 
@@ -83,11 +84,16 @@ class FeedHistorysApi(Resource):
             pond_activation = PondActivation.objects(
                 pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
             feed_type = FeedType.objects.get(id=feed_type_id)
+            feed_history_time = request.form.get("feed_history_time", None)
+            if feed_history_time != None:
+                feed_history_time = datetime.datetime.fromisoformat(
+                    feed_history_time)
             body = {
                 "pond_id": pond_id,
                 "pond_activation_id": pond_activation.id,
                 "feed_type_id": feed_type_id,
-                "feed_dose": request.form.get("feed_dose", None)
+                "feed_dose": request.form.get("feed_dose", None),
+                "feed_history_time": feed_history_time
             }
             feedhistory = FeedHistory(**body).save()
             id = feedhistory.id
@@ -329,6 +335,163 @@ class FeedHistoryByOnePond(Resource):
             data = list(data)
             data = dict(data[0])
             response = json.dumps(data, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+
+
+class FeedHistoryMonthByActivation(Resource):
+
+    def get(self, activation_id):
+        try:
+            pipeline = [
+                {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id', {
+                                '$toObjectId': activation_id}]},
+                            ]}}},
+                {"$addFields": {
+                    "month": {"$month": "$feed_history_time"},
+                    "year": {"$year": "$feed_history_time"},
+                }},
+                {"$group": {
+                    "_id": "$month",
+                    "year": {"$first": "$year"},
+                    "total_feed": {"$sum": "$feed_dose"},
+                    "total_feedhistory": {"$sum": 1}
+                }},
+                {"$sort": {"year": 1, "_id": 1}},
+            ]
+            feedHistorys = FeedHistory.objects.aggregate(pipeline)
+            response = list(feedHistorys)
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+
+
+class FeedHistoryWeekByActivation(Resource):
+
+    def get(self, activation_id, month):
+        try:
+            # get weeks
+            weeks = []
+            dateStart = datetime.datetime.strptime(month, "%Y-%m")
+            daysInMonth = calendar.monthrange(
+                dateStart.year, dateStart.month)[1]
+            daysDelta = datetime.timedelta(days=daysInMonth)
+            dateEnd = dateStart + daysDelta
+            for i in range(daysInMonth+1):
+                day = dateStart + datetime.timedelta(days=i)
+                week = day.strftime("%W")
+                if int(week) not in weeks:
+                    weeks.append(int(week))
+            print(weeks)
+            pipeline = [
+                {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id', {
+                                '$toObjectId': activation_id}]},
+                            {"$in": [{"$week": "$feed_history_time"}, weeks]},
+                            ]}}},
+                {"$addFields": {
+                    "week": {"$week": "$feed_history_time"},
+                    "month": {"$month": "$feed_history_time"},
+                    "year": {"$year": "$feed_history_time"},
+                }},
+                {"$group": {
+                    "_id": "$week",
+                    "month": {"$first": "$month"},
+                    "year": {"$first": "$year"},
+                    "total_feed": {"$sum": "$feed_dose"},
+                    "total_feedhistory": {"$sum": 1}
+                }},
+                {"$sort": {"year": 1, "_id": 1}},
+            ]
+            feedHistorys = FeedHistory.objects.aggregate(pipeline)
+            response = list(feedHistorys)
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+
+
+class FeedHistoryDayByActivation(Resource):
+
+    def get(self, activation_id, week):
+        try:
+            pipeline = [
+                {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id', {
+                                '$toObjectId': activation_id}]},
+                            {"$eq": [
+                                {"$week": "$feed_history_time"}, int(week)]},
+                            ]}}},
+                {"$addFields": {
+                    "week": {"$week": "$feed_history_time"},
+                    "day": {"$dayOfMonth": "$feed_history_time"},
+                    "month": {"$month": "$feed_history_time"},
+                    "year": {"$year": "$feed_history_time"},
+                }},
+                {"$group": {
+                    "_id": "$day",
+                    "month": {"$first": "$month"},
+                    "year": {"$first": "$year"},
+                    "total_feed": {"$sum": "$feed_dose"},
+                    "total_feedhistory": {"$sum": 1}
+                }},
+                {"$sort": {"year": 1, "month": 1, "_id": 1}},
+            ]
+            feedHistorys = FeedHistory.objects.aggregate(pipeline)
+            response = list(feedHistorys)
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+
+
+class FeedHistoryHourByActivation(Resource):
+
+    def get(self, activation_id, day):
+        try:
+            pipeline = [
+                {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_activation_id', {
+                                '$toObjectId': activation_id}]},
+                            {"$eq": [
+                                {'$dateToString': {
+                                    'format': "%Y-%m-%d", 'date': "$feed_history_time"}}, day]},
+                            ]}}},
+                {"$addFields": {
+                    "week": {"$week": "$feed_history_time"},
+                    "day": {"$dayOfMonth": "$feed_history_time"},
+                    "month": {"$month": "$feed_history_time"},
+                    "year": {"$year": "$feed_history_time"},
+                }},
+                {"$sort": {"year": 1, "month": 1, "_id": 1}},
+                {'$lookup': {
+                    'from': 'feed_type',
+                            'let': {"feedid": "$feed_type_id"},
+                            'pipeline': [
+                                {'$match': {
+                                    '$expr': {'$eq': ['$_id', '$$feedid']}}},
+                                {"$project": {
+                                    "created_at": 0,
+                                    "updated_at": 0,
+                                }}
+                            ],
+                    'as': 'feed_type'
+                }},
+            ]
+            feedHistorys = FeedHistory.objects.aggregate(pipeline)
+            response = list(feedHistorys)
+            response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
         except Exception as e:
             response = {"message": str(e)}

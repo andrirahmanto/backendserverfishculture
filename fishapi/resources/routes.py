@@ -32,6 +32,14 @@ def initialize_routes(api):
     # feedhistory
     api.add_resource(FeedHistorysApi, '/api/feedhistorys')
     api.add_resource(FeedHistoryApi, '/api/feedhistorys/<id>')
+    api.add_resource(FeedHistoryMonthByActivation,
+                     '/api/feedhistorys/month/<activation_id>')
+    api.add_resource(FeedHistoryWeekByActivation,
+                     '/api/feedhistorys/week/<activation_id>/<month>')
+    api.add_resource(FeedHistoryDayByActivation,
+                     '/api/feedhistorys/day/<activation_id>/<week>')
+    api.add_resource(FeedHistoryHourByActivation,
+                     '/api/feedhistorys/hour/<activation_id>/<day>')
     api.add_resource(FeedHistoryByPond,
                      '/api/feedhistorysbypond')
     api.add_resource(FeedHistoryByOnePond,
