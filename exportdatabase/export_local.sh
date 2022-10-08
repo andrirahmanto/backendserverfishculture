@@ -1,0 +1,1 @@
+mongodump -d fishapi -o /Users/andrirahmanto/flask/fishapi/exportdatabase/new
