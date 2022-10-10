@@ -1,0 +1,7 @@
+MongoDB shell version v5.0.6
+connecting to: mongodb://db.dropDatabase%28%29:27017/test?compressors=disabled&gssapiServiceName=mongodb
+Error: couldn't connect to server db.dropDatabase():27017, connection attempt failed: HostNotFound: Could not find address for db.dropDatabase():27017: SocketException: Host not found (authoritative) :
+connect@src/mongo/shell/mongo.js:372:17
+@(connect):2:6
+exception: connect failed
+exiting with code 1
