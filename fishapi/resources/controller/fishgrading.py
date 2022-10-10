@@ -297,3 +297,39 @@ class FishGradingGraphApi(Resource):
         }
         response = json.dumps(response, default=str)
         return Response(response, mimetype="application/json", status=200)
+
+
+class FishGradingApiByActivation(Resource):
+    def get(self, activation_id):
+        try:
+            pipeline = [
+                {'$match': {
+                    '$expr': {'$eq': ['$pond_activation_id', {'$toObjectId': activation_id}]}}},
+                {'$lookup': {
+                    'from': 'pond_activation',
+                    'let': {"activationid": "$pond_activation_id"},
+                    'pipeline': [
+                        {'$match': {
+                            '$expr': {'$eq': ['$_id', '$$activationid']}}},
+                    ],
+                    'as': 'pond_activation'
+                }},
+                {"$addFields": {
+                    "constanta_oversize": {"$first": "$pond_activation.constanta_oversize"},
+                    "constanta_undersize": {"$first": "$pond_activation.constanta_undersize"},
+                }},
+                {"$project": {
+                    "pond_activation": 0,
+                    "updated_at": 0,
+                    "created_at": 0,
+                }},
+                {"$sort": {"grading_at": -1}}
+            ]
+            fishgrading = FishGrading.objects.aggregate(pipeline)
+            list_fishgradings = list(fishgrading)
+            response = json.dumps(list_fishgradings, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)

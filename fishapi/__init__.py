@@ -853,6 +853,8 @@ def create_app(test_config=None):
                         "_id": 1,
                         "isFinish": 1,
                         "isWaterPreparation": 1,
+                        "constanta_oversize": 1,
+                        "constanta_undersize": 1,
                         "water_level": 1,
                         "activated_at": 1,
                         "date": 1,
@@ -865,6 +867,12 @@ def create_app(test_config=None):
                     'format': "%d-%m-%Y", 'date': "$created_at"}},
                 "pond": {"$first": "$pond"},
                 "pond_activation": {"$first": "$pond_activation"},
+            }},
+            {"$addFields": {
+                "date": {'$dateToString': {
+                    'format': "%d-%m-%Y", 'date': "$created_at"}},
+                "constanta_oversize": "$pond_activation.constanta_oversize",
+                "constanta_undersize": "$pond_activation.constanta_undersize",
             }},
             {"$project": {
                 "updated_at": 0,

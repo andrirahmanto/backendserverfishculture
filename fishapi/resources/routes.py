@@ -48,6 +48,8 @@ def initialize_routes(api):
     # fish death
     api.add_resource(FishDeathsApi, '/api/fishdeath')
     api.add_resource(FishDeathApi, '/api/fishdeath/<id>')
+    api.add_resource(FishDeathsApiByActivation,
+                     '/api/fishdeath/activation/<activation_id>')
     api.add_resource(FishDeathImageApi, '/api/fishdeath/image/<id>')
     api.add_resource(FishDeathImageApiDummy, '/api/fishdeath/image')
 
@@ -58,6 +60,8 @@ def initialize_routes(api):
     # fish grading
     api.add_resource(FishGradingsApi, '/api/fishgradings')
     api.add_resource(FishGradingApi, '/api/fishgradings/<id>')
+    api.add_resource(FishGradingApiByActivation,
+                     '/api/fishgradings/activation/<activation_id>')
     # graph
     api.add_resource(FishGradingGraphApi,
                      '/api/fishgradings/graph', endpoint='api.graph')

@@ -201,3 +201,45 @@ class FishDeathImageApi(Resource):
         path = os.path.join(current_app.instance_path,
                             current_app.config['UPLOAD_DIR'])
         return send_from_directory(path, fishdeath['image_name'])
+
+
+class FishDeathsApiByActivation(Resource):
+    def get(self, activation_id):
+        try:
+            print(activation_id)
+            url = url_for('fishdeathimageapidummy', _external=True)
+            pipeline = [
+                {'$match': {'$expr': {'$and': [
+                    {'$eq': ['$pond_activation_id',
+                             {"$toObjectId": activation_id}]},
+                ]}}},
+                {'$lookup': {
+                    'from': 'fish_log',
+                    'let': {"fish_death_id": "$_id"},
+                    'pipeline': [
+                        {'$match': {
+                            '$expr': {'$and': [
+                                {'$eq': ['$fish_death_id',
+                                         '$$fish_death_id']},
+                                {'$eq': ['$type_log',
+                                         'death']},
+                            ]}
+                        }},
+                        {"$project": {
+                            "created_at": 0,
+                            "updated_at": 0,
+                        }}
+                    ],
+                    'as': 'fish'
+                }},
+                {"$unwind": "$fish"},
+                {"$sort": {"death_at": -1}}
+            ]
+            fishdeaths = FishDeath.objects.aggregate(pipeline)
+            fishdeaths = list(fishdeaths)
+            response = json.dumps(fishdeaths, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)

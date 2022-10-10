@@ -103,7 +103,34 @@ class PondStatusApi(Resource):
                                 "_id": 0,
                             }},
                         ],
-                        'as': 'fish'
+                        'as': 'fish_live'
+                    }},
+                    {'$lookup': {
+                        'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                             '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'death']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"}
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},
+                        ],
+                        'as': 'fish_death'
                     }},
                     {'$lookup': {
                         'from': 'water_preparation',

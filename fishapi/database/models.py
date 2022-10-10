@@ -33,6 +33,8 @@ class PondActivation(db.Document):
     activated_at = db.DateTimeField(default=datetime.datetime.now)
     deactivated_at = db.DateTimeField(default=None)
     deactivated_description = db.StringField(default=None)
+    constanta_oversize = db.FloatField(required=True, default=1.3)
+    constanta_undersize = db.FloatField(required=True, default=0.7)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
@@ -75,6 +77,7 @@ class FishDeath(db.Document):
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     image_name = db.StringField(required=True)
     diagnosis = db.StringField(default=datetime.datetime.now)
+    death_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
@@ -117,8 +120,6 @@ class FishGrading(db.Document):
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     isOversizeTransferred = db.BooleanField(required=True, default=False)
     isUndersizeTransferred = db.BooleanField(required=True, default=False)
-    constanta_oversize = db.FloatField(required=True, default=1.3)
-    constanta_undersize = db.FloatField(required=True, default=0.7)
     fish_type = db.StringField(required=True)
     sampling_amount = db.IntField(required=True)
     avg_fish_weight = db.FloatField(required=True)
@@ -126,6 +127,7 @@ class FishGrading(db.Document):
     amount_normal_fish = db.IntField(required=True)
     amount_oversize_fish = db.IntField(required=True)
     amount_undersize_fish = db.IntField(required=True)
+    grading_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
