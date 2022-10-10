@@ -111,6 +111,7 @@ class FishLog(db.Document):
     type_log = db.StringField(required=True)
     fish_type = db.StringField(required=True, choices=fish_type_option)
     fish_amount = db.IntField(required=True)
+    fish_total_weight = db.IntField(default=None)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 

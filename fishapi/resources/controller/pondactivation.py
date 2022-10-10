@@ -147,7 +147,7 @@ class PondStatusApi(Resource):
                     }},
                     {"$addFields": {
                         "water_preparation": {"$first": "$water_preparation"},
-                        "total_fish": {"$sum": "$fish.fish_amount"},
+                        "total_fish": {"$sum": "$fish_live.fish_amount"},
                     }},
                     {"$project": {
                         "pond_id": 0,
@@ -244,7 +244,8 @@ class PondActivationApi(Resource):
                 "pond_activation_id": pondActivation_id,
                 "type_log": "activation",
                 "fish_type": fish['type'],
-                "fish_amount": fish['amount']
+                "fish_amount": fish['amount'],
+                "fish_total_weight": fish['weight']
             }
             fishlog = FishLog(**data).save()
         response = {"message": "success to activation pond"}
