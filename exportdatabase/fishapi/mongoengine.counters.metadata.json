@@ -1,1 +1,1 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"6fcf1b254b084d748983077b4b762c2a","collectionName":"mongoengine.counters","type":"collection"}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"f9fe4aa4120546dfa52ce76a717d683e","collectionName":"mongoengine.counters","type":"collection"}
