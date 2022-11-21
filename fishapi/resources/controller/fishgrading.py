@@ -77,7 +77,9 @@ class FishGradingsApi(Resource):
                 "avg_fish_long": request.form.get("avg_fish_long", None),
                 "amount_normal_fish": request.form.get("amount_normal_fish", None),
                 "amount_oversize_fish": request.form.get("amount_oversize_fish", None),
-                "amount_undersize_fish": request.form.get("amount_undersize_fish", None)
+                "amount_undersize_fish": request.form.get("amount_undersize_fish", None),
+                "created_at": created_at,
+                "grading_at": created_at,
             }
             fishgrading = FishGrading(**body).save()
             id = fishgrading.id

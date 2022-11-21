@@ -19,6 +19,7 @@ class StatisticApi(Resource):
         id_active_culture_season = []
         for obj in active_culture_season:
             id_active_culture_season.append(obj.id)
+        print(id_active_culture_season)
         total_active_pond = len(active_pond)
 
         # fish live
@@ -54,12 +55,13 @@ class StatisticApi(Resource):
         ]
         for i in range(len(fish_weight)):
             # get last check
+            print(fish_weight[i]["type"])
             last_check = FishGrading.objects(
                 pond_activation_id__in=id_active_culture_season, fish_type=fish_weight[i]["type"]).order_by(
                 "-created_at").first()
+            print(last_check)
             if last_check:
                 fish_weight[i]["amount"] = last_check.avg_fish_weight
-
         # water quality
         normal_ph = 0
         normal_do = 0

@@ -75,6 +75,7 @@ class FeedHistorysApi(Resource):
     def post(self):
         try:
             pond_id = request.form.get("pond_id", None)
+            print(pond_id)
             feed_type_id = request.form.get("feed_type_id", None)
             pond = Pond.objects.get(id=pond_id)
             if pond['isActive'] == False:

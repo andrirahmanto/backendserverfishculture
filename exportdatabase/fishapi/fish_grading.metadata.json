@@ -1,1 +1,1 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"48c20d64e00e4add8bff662fb825001a","collectionName":"fish_grading","type":"collection"}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"c8285af293f14398bcd009f019e0e91b","collectionName":"fish_grading","type":"collection"}

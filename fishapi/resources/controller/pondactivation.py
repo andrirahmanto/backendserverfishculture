@@ -87,6 +87,35 @@ class PondStatusApi(Resource):
                                 '$expr': {'$and': [
                                     {'$eq': ['$pond_activation_id',
                                      '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'activation']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"},
+                                "fish_total_weight": {"$sum": "$fish_total_weight"}
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},
+                        ],
+                        'as': 'fish_stock'
+                    }},
+                    {'$lookup': {
+                        'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                                    {'$ne': ['$type_log', 'deactivation']},
                                 ]}
                             }},
                             {"$project": {
@@ -133,6 +162,47 @@ class PondStatusApi(Resource):
                         'as': 'fish_death'
                     }},
                     {'$lookup': {
+                        'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'deactivation']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"},
+                                "fish_total_weight": {"$sum": "$fish_total_weight"},
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},
+                        ],
+                        'as': 'fish_harvested'
+                    }},
+                    {'$lookup': {
+                        'from': 'feed_history',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                             '$$pond_activation_id']},
+                                ]}
+                            }},
+                        ],
+                        'as': 'feed_history'
+                    }},
+                    {'$lookup': {
                         'from': 'water_preparation',
                         'let': {"pond_activation_id": "$_id"},
                         'pipeline': [
@@ -148,9 +218,27 @@ class PondStatusApi(Resource):
                     {"$addFields": {
                         "water_preparation": {"$first": "$water_preparation"},
                         "total_fish": {"$sum": "$fish_live.fish_amount"},
+                        "survival_rate": {"$cond": [
+                            {"$eq": [{"$sum": "$fish_stock.fish_amount"}, 0]},
+                            0,
+                            {"$multiply": [{"$divide": [{"$sum": "$fish_live.fish_amount"}, {
+                                "$sum": "$fish_stock.fish_amount"}]}, 100]}
+                        ]},
+                        "weight_growth": {"$subtract": [{"$sum": "$fish_harvested.fish_total_weight"}, {"$sum": "$fish_stock.fish_total_weight"}]},
+                        "total_dose": {"$sum": "$feed_history.feed_dose"},
+                        # "fcr": {"$sum": {"$divide": [{"$sum": "$fish_live.fish_amount"}, {"$sum": "$fish_stock.fish_amount"}]}},
+                    }},
+                    {"$addFields": {
+                        "fcr": {"$cond": [
+                            {"$eq": [{"$sum": "$total_dose"}, 0]},
+                            0,
+                            {"$sum": {"$divide": [
+                                "$weight_growth", "$total_dose"]}}
+                        ]},
                     }},
                     {"$project": {
                         "pond_id": 0,
+                        "feed_history": 0,
                         "feed_type_id": 0,
                         "created_at": 0,
                         "updated_at": 0,
@@ -160,7 +248,8 @@ class PondStatusApi(Resource):
             }},
             {"$addFields": {
                 "total_activation": {"$size": "$pond_activation_list"},
-                "pond_activation_list": '$pond_activation_list'
+                "pond_activation_list": '$pond_activation_list',
+
             }},
             {"$project": {
                 "location": 0,
@@ -263,14 +352,34 @@ class PondDeactivationApi(Resource):
         # get last pond_activation
         pond_activation = PondActivation.objects(
             pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
+        fishes = request.form.get("fish", "[]")
+        fishes = json.loads(fishes)
+        total_fish_harvested = 0
+        total_weight_harvested = 0
+        for fish in fishes:
+            # save fish log
+            data = {
+                "pond_id": pond_id,
+                "pond_activation_id": pond_activation.id,
+                "type_log": "deactivation",
+                "fish_type": fish['type'],
+                "fish_amount": fish['amount'],
+                "fish_total_weight": fish['weight']
+            }
+            total_fish_harvested += fish['amount']
+            total_weight_harvested += fish['weight']
+            fishlog = FishLog(**data).save()
+            print(data)
+        print(total_fish_harvested)
+        print(total_weight_harvested)
         # get args form data
         # update pond_activation
         pond_deactivation_data = {
             "isFinish": True,
-            "total_fish_harvested": request.form.get("total_fish_harvested", None),
-            "total_weight_harvested": request.form.get("total_weight_harvested", None),
+            "total_fish_harvested": total_fish_harvested,
+            "total_weight_harvested": total_weight_harvested,
             "deactivated_at": request.form.get("deactivated_at", datetime.datetime.now()),
-            "deactivation_description": "Normal"
+            "deactivated_description": "Normal"
         }
         pond_activation.update(**pond_deactivation_data)
         # update pond isActive
@@ -278,4 +387,3 @@ class PondDeactivationApi(Resource):
         response = {"message": "success to deactivation pond"}
         response = json.dumps(response, default=str)
         return Response(response, mimetype="application/json", status=200)
-        return
