@@ -13,10 +13,16 @@ class Pond(db.Document):
     material = db.StringField(required=True)
     length = db.FloatField(required=True, default=0)
     width = db.FloatField(required=True, default=0)
+    status = db.StringField(required=True)
     diameter = db.FloatField(required=True, default=0)
     height = db.FloatField(required=True, default=0)
     image_name = db.StringField(required=True, default='default.jpg')
     isActive = db.BooleanField(required=True, default=False)
+    pondPhDesc = db.StringField(default="Belum Diukur")
+    pondPh = db.IntField(default=None)
+    pondDoDesc = db.StringField(default="Belum Diukur")
+    pondDo = db.FloatField(default=None)
+    pondTemp = db.IntField(default=None)
     build_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
@@ -30,6 +36,7 @@ class PondActivation(db.Document):
     water_level = db.FloatField(required=True, default=0)
     total_fish_harvested = db.IntField(required=True, default=0)
     total_weight_harvested = db.IntField(required=True, default=0)
+    # fish_harvested = db.ArrayField(default=None)
     activated_at = db.DateTimeField(default=datetime.datetime.now)
     deactivated_at = db.DateTimeField(default=None)
     deactivated_description = db.StringField(default=None)
@@ -162,7 +169,7 @@ class WeeklyWaterQuality(db.Document):
 
 
 class PondTreatment(db.Document):
-    treatment_type_option = ("ringan", "karantina", "pergantian air")
+    treatment_type_option = ("ringan", "berat", "pergantian air")
     carbohydrate_type_option = ("", "gula", "molase", "terigu", "tapioka")
 
     pond_id = db.ReferenceField(Pond, required=True)
@@ -176,6 +183,7 @@ class PondTreatment(db.Document):
     carbohydrate_type = db.StringField(
         required=True, choices=carbohydrate_type_option, default="")
     description = db.StringField(default="")
+    treatment_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 

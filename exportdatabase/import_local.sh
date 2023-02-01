@@ -1,2 +1,2 @@
 # mongo <fishapi> --eval "db.dropDatabase()"
-mongorestore -d fishapi /Users/andrirahmanto/flask/fishapi/exportdatabase/fishapi
+mongorestore -d fishapi /c/Users/chies/Desktop/aqua_breeding_backend/backendserverfishculture/exportdatabase/fishapi

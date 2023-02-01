@@ -9,7 +9,7 @@ class PondTreatmentsApi(Resource):
     def get(self):
         try:
             pipeline = [
-                {"$sort": {"created_at": 1}},
+                {"$sort": {"created_at": -1}},
                 {'$lookup': {
                     'from': 'pond',
                     'let': {"pondid": "$pond_id"},
@@ -70,7 +70,9 @@ class PondTreatmentsApi(Resource):
             pond_activation = PondActivation.objects(
                 pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
             treatment_type = request.form.get("treatment_type", None)
-            if treatment_type == "karantina":
+            if treatment_type == "berat":
+                fishes = request.form.get("fish", "[]")
+                fishes = json.loads(fishes)
                 body = {
                     "pond_id": pond_id,
                     "pond_activation_id": pond_activation.id,
@@ -91,17 +93,33 @@ class PondTreatmentsApi(Resource):
                 pond_activation = PondActivation.objects(
                     pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
                 pond_activation.update(**pond_deactivation_data)
-                pond.update(**{"isActive": False})
+                pond.update(**{"isActive": False, "status": "Panen"})
+                for fish in fishes:
+            # save fish log
+                    data = {
+                        "pond_id": pond_id,
+                        "pond_activation_id": pond_activation.id,
+                        "type_log": "deactivation",
+                        "fish_type": fish['type'],
+                        "fish_amount": fish['amount'],
+                        "fish_total_weight": fish['weight']
+                    }
+                    # total_fish_harvested += fish['amount']
+                    # total_weight_harvested += fish['weight']
+                    fishlog = FishLog(**data).save()
+                    print(data)
             elif treatment_type == "ringan":
                 body = {
                     "pond_id": pond_id,
                     "pond_activation_id": pond_activation.id,
                     "treatment_type": treatment_type,
-                    "water_change": 0,
-                    "salt": request.form.get("salt_dose", None),
+                    "description": request.form.get("description", None),
+                    "water_change": request.form.get("water_change", 0),
+                    "salt": request.form.get("salt", None),
                     "probiotic_culture": request.form.get("probiotic_culture", None),
                     "carbohydrate": request.form.get("carbohydrate", None),
                     "carbohydrate_type": request.form.get("carbohydrate_type", None),
+                    "treatment_at": request.form.get("treatment_at", datetime.datetime.now())
                 }
                 pondtreatment = PondTreatment(**body).save()
                 id = pondtreatment.id

@@ -294,6 +294,7 @@ class PondActivationApi(Resource):
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=400)
         isWaterPreparation = request.form.get("isWaterPreparation", False)
+        # fish_harvested = request.form.get("fish_harvested", None)
         if isWaterPreparation == "true":
             isWaterPreparation = True
         else:
@@ -325,7 +326,8 @@ class PondActivationApi(Resource):
             }
             water_preparation = WaterPreparation(
                 **water_preparation_data).save()
-        pond.update(**{"isActive": True})
+        pond.update(**{"isActive": True,
+        "status": "Aktif",  "pondDoDesc": "Belum Diukur", "pondPhDesc": "Belum Diukur", "pondPh": None, "pondDo": None, "pondTemp": None})
         for fish in fishes:
             # save fish log
             data = {
@@ -354,8 +356,9 @@ class PondDeactivationApi(Resource):
             pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
         fishes = request.form.get("fish", "[]")
         fishes = json.loads(fishes)
-        total_fish_harvested = 0
-        total_weight_harvested = 0
+        total_fish_harvested = request.form.get("total_fish_harvested", None)
+        total_weight_harvested = request.form.get("total_weight_harvested", None)
+        # fish_harvested = request.form.get("fish_harvested", None)
         for fish in fishes:
             # save fish log
             data = {
@@ -366,8 +369,8 @@ class PondDeactivationApi(Resource):
                 "fish_amount": fish['amount'],
                 "fish_total_weight": fish['weight']
             }
-            total_fish_harvested += fish['amount']
-            total_weight_harvested += fish['weight']
+            # total_fish_harvested += fish['amount']
+            # total_weight_harvested += fish['weight']
             fishlog = FishLog(**data).save()
             print(data)
         print(total_fish_harvested)
@@ -383,7 +386,7 @@ class PondDeactivationApi(Resource):
         }
         pond_activation.update(**pond_deactivation_data)
         # update pond isActive
-        pond.update(**{"isActive": False})
+        pond.update(**{"isActive": False,"status": "Panen"})
         response = {"message": "success to deactivation pond"}
         response = json.dumps(response, default=str)
         return Response(response, mimetype="application/json", status=200)

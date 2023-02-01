@@ -1,1 +1,1 @@
-mongodump -d fishapi -o /Users/andrirahmanto/flask/fishapi/exportdatabase
+mongodump -d fishapi -o /Users/chies/Desktop/aqua_breeding_backend/backendserverfishculture/exportdatabase

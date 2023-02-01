@@ -13,6 +13,7 @@ class PondsApi(Resource):
         try:
             url = url_for('pondimageapidummy', _external=True)
             pipeline = [
+                {"$sort": {"status": 1,"alias": 1}},
                 {'$lookup': {
                     'from': 'pond_activation',
                     'let': {"pondid": "$_id"},
@@ -129,6 +130,7 @@ class PondsApi(Resource):
                 "material": request.form.get("material", None),
                 "length": request.form.get("length", None),
                 "width": request.form.get("width", None),
+                "status": request.form.get("status",None),
                 "diameter": request.form.get("diameter", None),
                 "height": request.form.get("height", None),
                 "build_at": request.form.get("build_at", None),
