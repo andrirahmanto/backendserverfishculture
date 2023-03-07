@@ -98,12 +98,13 @@ class FishTransfer(db.Document):
     origin_activation_id = db.ReferenceField(PondActivation, required=True)
     destination_activation_id = db.ReferenceField(
         PondActivation, required=True)
-    fish_grading_id = db.ObjectIdField(required=True, default=None)
+    # fish_grading_id = db.ObjectIdField(required=True, default=None)
     transfer_type = db.StringField(choices=transfer_type_option, default="")
     transfer_method = db.StringField(
         required=True, choices=transfer_method_option)
-    sample_weight = db.IntField(required=True)
-    sample_long = db.IntField(default=None)
+    sample_weight = db.FloatField(required=True)
+    sample_long = db.FloatField(default=None)
+    transfer_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
@@ -143,27 +144,26 @@ class FishGrading(db.Document):
 class DailyWaterQuality(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
-    ph = db.IntField(required=True)
+    ph = db.FloatField(required=True)
     do = db.FloatField(required=True)
-    temperature = db.IntField(required=True)
+    temperature = db.FloatField(required=True)
+    week = db.IntField(defauit=None)
+    dailywater_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 
 class WeeklyWaterQuality(db.Document):
-    floc_option = ('0-10', '11-30', '31-50', '51-100', '101-300', '>300')
-    nitrite_option = (0, 1, 5, 10, 20, 40, 80)
-    nitrate_option = (0, 10, 25, 50, 100, 250, 500)
-    ammonia_option = (0, 0.25, 1.5, 3, 5)
-    hardness_option = (0, 25, 50, 125, 250, 425)
 
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
-    floc = db.StringField(required=True, choices=floc_option)
-    nitrite = db.IntField(required=True, choices=nitrite_option)
-    nitrate = db.IntField(required=True, choices=nitrate_option)
-    ammonia = db.FloatField(required=True, choices=ammonia_option)
-    hardness = db.IntField(required=True, choices=hardness_option)
+    floc = db.IntField(required=True)
+    nitrite = db.IntField(Default=None)
+    nitrate = db.IntField(Default=None)
+    ammonia = db.FloatField(Default=None)
+    hardness = db.IntField(Default=None)
+    week = db.IntField(Default=None)
+    weeklywater_at= db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 

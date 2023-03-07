@@ -114,20 +114,22 @@ class DailyWaterQualitysApi(Resource):
                 "pond_activation_id": pond_activation.id,
                 "ph": request.form.get("ph", None),
                 "do": request.form.get("do", None),
+                "week": request.form.get("week", None),
                 "temperature": request.form.get("temperature", None),
+                "dailywater_at": request.form.get("dailywater_at", datetime.datetime.now())
             }
             print(body)
-            if int(request.form.get("ph")) < 6 or int(request.form.get("ph")) > 8:
-                pond.update(**{"pondPhDesc": "berbahaya", "pondPh": int(request.form.get("ph"))})
+            if float(request.form.get("ph")) < 6 or float(request.form.get("ph")) > 8:
+                pond.update(**{"pondPhDesc": "berbahaya", "pondPh": float(request.form.get("ph"))})
             else:
-                pond.update(**{"pondPhDesc": "normal", "pondPh": int(request.form.get("ph"))})
+                pond.update(**{"pondPhDesc": "normal", "pondPh": float(request.form.get("ph"))})
             if float(request.form.get("do")) < 3 or float(request.form.get("do")) > 7.5:
                 pond.update(**{"pondDoDesc": "berbahaya", "pondDo": float(request.form.get("do"))})
             elif float(request.form.get("do")) >= 3 and float(request.form.get("do")) <= 4 or float(request.form.get("do")) >= 6 and float(request.form.get("Do")) <= 7.5:
                 pond.update(**{"pondDoDesc": "semi berbahaya", "pondDo": float(request.form.get("do"))})
             else:
                 pond.update(**{"pondDoDesc": "normal", "pondDo": float(request.form.get("do"))})
-            pond.update(**{"pondTemp": int(request.form.get("temperature"))})
+            pond.update(**{"pondTemp": float(request.form.get("temperature"))})
             dailywaterquality = DailyWaterQuality(**body).save()
             id = dailywaterquality.id
             response = {
