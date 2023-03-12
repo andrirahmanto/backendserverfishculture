@@ -1,1 +1,1 @@
-from fishapi import create_app as application
+from fishapiv2 import create_app as application

@@ -1,1 +1,1 @@
-mongodump -d fishapi -o /Users/chies/Desktop/aqua_breeding_backend/backendserverfishculture/exportdatabase
+mongodump -d fishapi -o /c/Users/chies/Desktop/aqua_breeding_backend/backendserverfishculture/exportdatabase
