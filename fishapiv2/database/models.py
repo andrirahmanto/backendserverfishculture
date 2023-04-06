@@ -3,9 +3,16 @@ import datetime
 from bson import json_util
 
 
+class Farm(db.Document):
+    farm_name = db.StringField(required=True)
+    address = db.StringField(required=True)
+    breeder = db.StringField(required=True)
+    coordinate = db.StringField()
+
 class Pond(db.Document):
     shape_option = ("bundar", "persegi")
 
+    farm_id = db.ReferenceField(Farm, required=True)
     id_int = db.SequenceField(required=True)
     alias = db.StringField(required=True)
     location = db.StringField(required=True)
@@ -193,3 +200,11 @@ class OptionTable(db.Document):
     option = db.StringField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
+
+class Breeder(db.Document):
+    farm_id = db.ReferenceField(Farm, required=True)
+    username = db.StringField(required=True)
+    password = db.StringField(required=True)
+    name = db.StringField(required=True)
+    nik = db.StringField(required=True)
+    phone = db.StringField(required=True)

@@ -1,3 +1,4 @@
+
 from .controller.feedhistory import *
 from .controller.pond import *
 from .controller.feedtype import *
@@ -9,6 +10,9 @@ from .controller.dailywaterquality import *
 from .controller.weeklywaterquality import *
 from .controller.pondtreatment import *
 from .controller.statistic import *
+from .controller.authentication import *
+from .controller.breeder import *
+from .controller.farm import *
 
 
 def initialize_routes(api):
@@ -80,3 +84,9 @@ def initialize_routes(api):
 
     # StatisticAPI
     api.add_resource(StatisticApi, '/api/statistic')
+
+    #user
+    api.add_resource(BreederApi, '/api/breeder')
+    api.add_resource(FarmApi, '/api/farm')
+    api.add_resource(Login, '/api/login')
+    api.add_resource(Register, '/api/register')

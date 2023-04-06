@@ -4,16 +4,27 @@ from fishapiv2.database.models import *
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
 from fishapiv2.resources.helper import *
+from fishapiv2.resources.controller.authentication import *
 import datetime
 import json
-
+from mongoengine import ObjectIdField
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity
+from bson.objectid import ObjectId
 
 class PondsApi(Resource):
+    @jwt_required()
+    # @token_req
     def get(self):
         try:
             url = url_for('pondimageapidummy', _external=True)
+            current_user = get_jwt_identity()
+            farm = str(current_user['farm_id'])
+            farm_id = ObjectId(farm)
+            # farm = farm_id.objectId
             pipeline = [
                 {"$sort": {"status": 1,"alias": 1}},
+                {"$match": {"farm_id": farm_id}},
                 {'$lookup': {
                     'from': 'pond_activation',
                     'let': {"pondid": "$_id"},
@@ -113,8 +124,20 @@ class PondsApi(Resource):
                 }}
             ]
             ponds = Pond.objects.aggregate(pipeline)
+            # token = request.headers['Authorization']
+
+            # token = str.replace(str(token), 'Bearer ', '')
+            # tokens = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=["HS256"])
+            # user = _ruleUserObj.getRuleUser(tokens["sub"]["username"])
+            # token = request.form.get('token')
+            # current_user = get_jwt_identity()
+            # user = json.dumps(current_user, default=str)
+            # usernow = jsonify(user)
+            # pondlist = Pond.objects.get(farm_id=current_user['farm_id'])
             list_ponds = list(ponds)
+            # farm_id = list_ponds.alias
             response = json.dumps(list_ponds, default=str)
+            # response = response[0].alias
             return Response(response, mimetype="application/json", status=200)
         except Exception as e:
             response = {"message": str(e)}
@@ -124,13 +147,14 @@ class PondsApi(Resource):
     def post(self):
         try:
             body = {
+                "farm_id": '64279f2208c22aa91e27f55a',
                 "alias": request.form.get("alias", None),
                 "location": request.form.get("location", None),
                 "shape": request.form.get("shape", None),
                 "material": request.form.get("material", None),
                 "length": request.form.get("length", None),
                 "width": request.form.get("width", None),
-                "status": request.form.get("status",None),
+                "status": 'Tidak Aktif',
                 "diameter": request.form.get("diameter", None),
                 "height": request.form.get("height", None),
                 "build_at": request.form.get("build_at", None),

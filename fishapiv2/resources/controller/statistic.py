@@ -1,26 +1,56 @@
 import os
-from flask import Flask, Response, request, current_app, url_for, send_from_directory
+from flask import Flask, Response, jsonify, request, current_app, url_for, send_from_directory
 from fishapiv2.database.models import *
 from flask_restful import Resource
 from werkzeug.utils import secure_filename
+# from fishapiv2.resources.controller.authentication import token_req
 from fishapiv2.resources.helper import *
 import datetime
 import json
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity
+from bson.objectid import ObjectId
 
 
 class StatisticApi(Resource):
+    @jwt_required()
     def get(self):
         # try:
+        current_user = get_jwt_identity()
+        farm = str(current_user['farm_id'])
+        farm_id = ObjectId(farm)
+        
+            # farm = farm_id.objectId
+        pond_pipeline = [
+            {"$sort": {"status": 1,"alias": 1}},
+            {"$match": {"farm_id": farm_id}},]
+        ponds = Pond.objects.aggregate(pond_pipeline)
+        list_ponds = list(ponds)
         # total pond
-        total_pond = len(Pond.objects())
+        total_pond = len(list_ponds)
         # active pond
-        active_pond = Pond.objects(isActive=True)
-        active_culture_season = PondActivation.objects(isFinish=False)
+        active_pond_pipeline = [
+            {"$sort": {"status": 1,"alias": 1}},
+            {"$match": {"farm_id": farm_id, "isActive": True}},]
+        # active_pond = Pond.objects(isActive=True)
+        active_pond = Pond.objects.aggregate(active_pond_pipeline)
+        list_active_ponds = list(active_pond)
+        # pondtest = jsonify(list_active_ponds)
+        # active_culture_season_pipeline = [
+        #     {"$sort": {"status": 1,"alias": 1}},
+        #     {"$match": {"pond_id": farm_id, "isActive": True}},]
+        id_pond = []
+        for i in list_active_ponds:
+            id_pond.append(i['_id'])
+        print(id_pond)
+        season = PondActivation.objects(pond_id__in=id_pond)
+        active_culture_season = season(isFinish=False)
+        # test = PondActivation.objects(pond_id__in=)
         id_active_culture_season = []
         for obj in active_culture_season:
             id_active_culture_season.append(obj.id)
         print(id_active_culture_season)
-        total_active_pond = len(active_pond)
+        total_active_pond = len(list_active_ponds)
 
         # fish live
         total_fish_live = FishLog.objects(
@@ -31,7 +61,8 @@ class StatisticApi(Resource):
             pond_activation_id__in=id_active_culture_season, type_log="death").sum("fish_amount") * -1
 
         # fish harvested
-        close_culture_season = PondActivation.objects(isFinish=True)
+        
+        close_culture_season = season(isFinish=True)
         total_fish_harvested = close_culture_season.sum(
             "total_weight_harvested")
 

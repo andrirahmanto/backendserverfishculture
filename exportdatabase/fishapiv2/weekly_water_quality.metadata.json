@@ -1,1 +1,1 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"4c48af23f620437bbed2d34273a73842","collectionName":"weekly_water_quality","type":"collection"}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"1afe18d19407410a82b3089e06e627fa","collectionName":"weekly_water_quality","type":"collection"}
