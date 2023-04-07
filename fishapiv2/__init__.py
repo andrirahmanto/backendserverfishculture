@@ -15,7 +15,7 @@ from flask_jwt_extended import JWTManager
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     api = Api(app)
-    app.config['JWT_TOKEN_LOCATION'] = ['headers', 'query_string']
+    # app.config['JWT_TOKEN_LOCATION'] = ['headers', 'query_string']
     # app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
     # app.config['JWT_BLACKLIST_ENABLED'] = True
     jwt = JWTManager(app)
