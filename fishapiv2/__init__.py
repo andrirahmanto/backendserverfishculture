@@ -17,7 +17,7 @@ def create_app(test_config=None):
     api = Api(app)
     app.config['JWT_TOKEN_LOCATION'] = ['headers', 'query_string']
     app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
-    # app.config['JWT_BLACKLIST_ENABLED'] = True
+    app.config['JWT_BLACKLIST_ENABLED'] = True
     jwt = JWTManager(app)
     app.config.from_pyfile('settings.cfg', silent=False)
 
