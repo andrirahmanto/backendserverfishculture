@@ -6,7 +6,7 @@ from fishapiv2.database.models import FeedHistory, Pond, FeedType, PondActivatio
 from .resources.helper import *
 from .resources.routes import initialize_routes
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -17,6 +17,7 @@ def create_app(test_config=None):
     api = Api(app)
     app.config['JWT_TOKEN_LOCATION'] = ['headers', 'query_string']
     app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY")
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=365)
     app.config['JWT_BLACKLIST_ENABLED'] = True
     app.config['PROPAGATE_EXCEPTIONS'] = True
     jwt = JWTManager(app)

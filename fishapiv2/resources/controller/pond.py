@@ -23,8 +23,8 @@ class PondsApi(Resource):
             farm_id = ObjectId(farm)
             # farm = farm_id.objectId
             pipeline = [
-                {"$sort": {"status": 1,"alias": 1}},
                 {"$match": {"farm_id": farm_id}},
+                {"$sort": {"status": 1,"alias": 1}},
                 {'$lookup': {
                     'from': 'pond_activation',
                     'let': {"pondid": "$_id"},
@@ -143,11 +143,13 @@ class PondsApi(Resource):
             response = {"message": str(e)}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=400)
-
+    @jwt_required()
     def post(self):
         try:
+            current_user = get_jwt_identity()
+            farm = str(current_user['farm_id'])
             body = {
-                "farm_id": '64279f2208c22aa91e27f55a',
+                "farm_id": farm,
                 "alias": request.form.get("alias", None),
                 "location": request.form.get("location", None),
                 "shape": request.form.get("shape", None),
