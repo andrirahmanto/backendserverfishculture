@@ -26,7 +26,7 @@ class Pond(db.Document):
     image_name = db.StringField(required=True, default='default.jpg')
     isActive = db.BooleanField(required=True, default=False)
     pondPhDesc = db.StringField(default="Belum Diukur")
-    pondPh = db.IntFieldField(default=None)
+    pondPh = db.IntField(default=None)
     pondDoDesc = db.StringField(default="Belum Diukur")
     pondDo = db.FloatFieldField(default=None)
     pondTemp = db.IntFieldField(default=None)
