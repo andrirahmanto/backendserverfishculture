@@ -23,6 +23,14 @@ def create_app(test_config=None):
     initialize_db(app)
     initialize_routes(api)
 
+    @app.before_first_request
+    def connect_to_db():
+        db.connect()
+
+    @app.teardown_appcontext
+    def close_db_connection(exception):
+        db.disconnect()
+
     @app.route('/')
     def home():
         pipeline = [
