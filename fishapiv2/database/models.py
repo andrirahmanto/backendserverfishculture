@@ -26,10 +26,10 @@ class Pond(db.Document):
     image_name = db.StringField(required=True, default='default.jpg')
     isActive = db.BooleanField(required=True, default=False)
     pondPhDesc = db.StringField(default="Belum Diukur")
-    pondPh = db.FloatField(default=None)
+    pondPh = db.IntFieldField(default=None)
     pondDoDesc = db.StringField(default="Belum Diukur")
-    pondDo = db.FloatField(default=None)
-    pondTemp = db.FloatField(default=None)
+    pondDo = db.FloatFieldField(default=None)
+    pondTemp = db.IntFieldField(default=None)
     build_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
@@ -65,7 +65,7 @@ class WaterPreparation(db.Document):
 
 
 class FeedType(db.Document):
-    feed_type_option = ("Pelet", "Alternatif")
+    feed_type_option = ("pelet", "sayuran")
 
     name = db.StringField(required=True)
     feed_type = db.StringField(required=True, choices=feed_type_option)
