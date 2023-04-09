@@ -127,7 +127,7 @@ class StatisticApi(Resource):
             "fish_live": total_fish_live,
             "fish_death": total_fish_death,
             "fish_harvested": total_fish_harvested,
-            "total_feed_dose": total_feed_dose,
+            "total_feed_dose": float(total_feed_dose),
             "fishes_weight": fish_weight,
             "water_quality": {
                 "ph": {

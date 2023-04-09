@@ -26,10 +26,10 @@ class Pond(db.Document):
     image_name = db.StringField(required=True, default='default.jpg')
     isActive = db.BooleanField(required=True, default=False)
     pondPhDesc = db.StringField(default="Belum Diukur")
-    pondPh = db.IntField(default=None)
+    pondPh = db.FloatField(default=None)
     pondDoDesc = db.StringField(default="Belum Diukur")
     pondDo = db.FloatField(default=None)
-    pondTemp = db.IntField(default=None)
+    pondTemp = db.FloatField(default=None)
     build_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
@@ -65,7 +65,7 @@ class WaterPreparation(db.Document):
 
 
 class FeedType(db.Document):
-    feed_type_option = ("pelet", "sayuran")
+    feed_type_option = ("Pelet", "Alternatif")
 
     name = db.StringField(required=True)
     feed_type = db.StringField(required=True, choices=feed_type_option)
@@ -80,7 +80,7 @@ class FeedHistory(db.Document):
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     feed_type_id = db.ReferenceField(FeedType, required=True)
-    feed_dose = db.IntField(required=True)
+    feed_dose = db.FloatField(required=True)
     feed_history_time = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
@@ -164,11 +164,11 @@ class WeeklyWaterQuality(db.Document):
 
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
-    floc = db.IntField(required=True)
-    nitrite = db.IntField(Default=None)
-    nitrate = db.IntField(Default=None)
+    floc = db.FloatField(required=True)
+    nitrite = db.FloatField(Default=None)
+    nitrate = db.FloatField(Default=None)
     ammonia = db.FloatField(Default=None)
-    hardness = db.IntField(Default=None)
+    hardness = db.FloatField(Default=None)
     week = db.IntField(Default=None)
     weeklywater_at= db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
@@ -184,9 +184,9 @@ class PondTreatment(db.Document):
     treatment_type = db.StringField(
         required=True, choices=treatment_type_option)
     water_change = db.IntField()
-    salt = db.IntField()
-    probiotic_culture = db.IntField()
-    carbohydrate = db.IntField()
+    salt = db.FloatField()
+    probiotic_culture = db.FloatField()
+    carbohydrate = db.FloatField()
     carbohydrate_type = db.StringField(
         required=True, choices=carbohydrate_type_option, default="")
     description = db.StringField(default="")

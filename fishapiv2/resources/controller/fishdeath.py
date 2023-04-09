@@ -134,6 +134,7 @@ class FishDeathsApi(Resource):
                 "pond_activation_id": pond_activation.id,
                 "image_name": filename,
                 "diagnosis": request.form.get("diagnosis", None),
+                "death_at": datetime.datetime.now
             }
             fishdeath = FishDeath(**body).save()
             id = fishdeath.id

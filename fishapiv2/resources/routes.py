@@ -48,6 +48,8 @@ def initialize_routes(api):
                      '/api/feedhistorysbypond')
     api.add_resource(FeedHistoryByOnePond,
                      '/api/feedhistorysbyonepond/<id>')
+    api.add_resource(FeedHistoryForChart,
+                     '/api/feedhistoryforchart/<activation_id>')
 
     # fish death
     api.add_resource(FishDeathsApi, '/api/fishdeath')

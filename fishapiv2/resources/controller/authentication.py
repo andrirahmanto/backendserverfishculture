@@ -14,22 +14,27 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class Login(Resource): 
     def post(self):
-        username = request.form.get("username")
-        password = request.form.get("password")
-        data = Breeder.objects.get(username=username)
-        user = {
-            "id": str(data.id),
-            "farm_id": str(data.farm_id.id),
-            "username": data.username,
-            "name": data.name,
-            "nik": data.nik,
-            "phone": data.phone
-        }
-        passwordcheck = check_password_hash(data.password, password)
-        if passwordcheck == True:
-            access_token = create_access_token(identity=user)
+        try:
+            username = request.form.get("username")
+            password = request.form.get("password")
+            data = Breeder.objects.get(username=username)
+            user = {
+                "id": str(data.id),
+                "farm_id": str(data.farm_id.id),
+                "username": data.username,
+                "name": data.name,
+                "nik": data.nik,
+                "phone": data.phone
+            }
+            passwordcheck = check_password_hash(data.password, password)
+            if passwordcheck == True:
+                access_token = create_access_token(identity=user)
             return jsonify(access_token=access_token, identity=user)
-        return make_response('could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Req"'})
+        except Exception as e:
+            response = {"message": "Breeder ID/Password Salah"}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+        # return make_response('could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login Req"'})
 
 class Register(Resource):
     def post(self):
