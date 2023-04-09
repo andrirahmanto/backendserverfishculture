@@ -25,6 +25,7 @@ def create_app(test_config=None):
 
     @app.before_first_request
     def connect_to_db():
+        db.disconnect()
         db.connect()
 
     @app.teardown_appcontext
