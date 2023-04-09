@@ -1,8 +1,9 @@
 from .db import db
 import datetime
 from bson import json_util
+from mongoengine import connect, disconnect
 
-
+disconnect()
 class Farm(db.Document):
     farm_name = db.StringField(required=True)
     address = db.StringField(required=True)
