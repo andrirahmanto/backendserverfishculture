@@ -381,13 +381,14 @@ class FeedHistoryWeekByActivation(Resource):
         try:
             # get weeks
             weeks = []
-            dateStart = datetime.datetime.strptime(month, "%Y-%m")
+            dateStart = datetime.strptime(month, "%Y-%m")
+            # xx = "test"
             daysInMonth = calendar.monthrange(
                 dateStart.year, dateStart.month)[1]
-            daysDelta = datetime.timedelta(days=daysInMonth)
+            daysDelta = timedelta(days=daysInMonth)
             dateEnd = dateStart + daysDelta
             for i in range(daysInMonth+1):
-                day = dateStart + datetime.timedelta(days=i)
+                day = dateStart + timedelta(days=i)
                 week = day.strftime("%W")
                 if int(week) not in weeks:
                     weeks.append(int(week))
@@ -543,7 +544,7 @@ class FeedHistoryForChart(Resource):
                 date = fish["feed_history_time"].strftime('%d-%m-%Y')
                 if (dateIndicator != None):
                     if (getlogic == samedate) :
-                        feeddose += int(fish["feed_dose"])
+                        feeddose += float(fish["feed_dose"])
                         feed.pop()
                         data = {
                             "pond_id": fish['pond_id'],
@@ -568,7 +569,7 @@ class FeedHistoryForChart(Resource):
                         date_object = datetime.strptime(date, '%d-%m-%Y').date()
                         datecompar_object = datetime.strptime(dateIndicator, '%d-%m-%Y').date()
                         getlogic = datecompar_object - date_object
-                        feeddose += int(fish["feed_dose"])
+                        feeddose += float(fish["feed_dose"])
                         feed.append(data)
                 else :
                     data = {

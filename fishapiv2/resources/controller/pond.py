@@ -80,7 +80,7 @@ class PondsApi(Resource):
                         "if": {"$eq": ["$shape", "persegi"]},
                         "then": {"$multiply": ["$length", "$width"]},
                         "else": {"$divide": [
-                            {"$multiply": [22, "$diameter", "$diameter"]},
+                            {"$multiply": [float(22), "$diameter", "$diameter"]},
                             28
                         ]},
                     }},
@@ -148,20 +148,34 @@ class PondsApi(Resource):
         try:
             current_user = get_jwt_identity()
             farm = str(current_user['farm_id'])
-            body = {
-                "farm_id": farm,
-                "alias": request.form.get("alias", None),
-                "location": request.form.get("location", None),
-                "shape": request.form.get("shape", None),
-                "material": request.form.get("material", None),
-                "length": request.form.get("length", None),
-                "width": request.form.get("width", None),
-                "status": 'Tidak Aktif',
-                "diameter": request.form.get("diameter", None),
-                "height": request.form.get("height", None),
-                "build_at": request.form.get("build_at", None),
-            }
-            pond = Pond(**body).save()
+            shape = request.form.get("shape"),
+            if shape[0] == "bundar":
+                body = {
+                    "farm_id": farm,
+                    "alias": request.form.get("alias", None),
+                    "location": request.form.get("location", None),
+                    "shape": request.form.get("shape", None),
+                    "material": request.form.get("material", None),
+                    "status": 'Tidak Aktif',
+                    "diameter": request.form.get("diameter", None),
+                    "height": request.form.get("height", None),
+                    "build_at": request.form.get("build_at", None),
+                }
+                pond = Pond(**body).save()
+            if shape[0] == "persergi":
+                body = {
+                    "farm_id": farm,
+                    "alias": request.form.get("alias", None),
+                    "location": request.form.get("location", None),
+                    "shape": request.form.get("shape", None),
+                    "material": request.form.get("material", None),
+                    "length": request.form.get("length", None),
+                    "width": request.form.get("width", None),
+                    "status": 'Tidak Aktif',
+                    "height": request.form.get("height", None),
+                    "build_at": request.form.get("build_at", None),
+                }    
+                pond = Pond(**body).save()
             id = pond.id
             response = {"message": "success add pond", "id": id}
             response = json.dumps(response, default=str)
