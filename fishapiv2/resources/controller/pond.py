@@ -148,8 +148,8 @@ class PondsApi(Resource):
         try:
             current_user = get_jwt_identity()
             farm = str(current_user['farm_id'])
-            shape = request.form.get("shape"),
-            if shape[0] == "bundar":
+            shape = request.form.get("shape", None)
+            if shape == "bundar":
                 body = {
                     "farm_id": farm,
                     "alias": request.form.get("alias", None),
@@ -161,8 +161,7 @@ class PondsApi(Resource):
                     "height": request.form.get("height", None),
                     "build_at": request.form.get("build_at", None),
                 }
-                pond = Pond(**body).save()
-            if shape[0] == "persergi":
+            else :
                 body = {
                     "farm_id": farm,
                     "alias": request.form.get("alias", None),
@@ -175,7 +174,7 @@ class PondsApi(Resource):
                     "height": request.form.get("height", None),
                     "build_at": request.form.get("build_at", None),
                 }    
-                pond = Pond(**body).save()
+            pond = Pond(**body).save()
             id = pond.id
             response = {"message": "success add pond", "id": id}
             response = json.dumps(response, default=str)
