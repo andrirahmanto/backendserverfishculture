@@ -19,7 +19,7 @@ class Login(Resource):
             password = request.form.get("password")
             data = Breeder.objects.get(username=username)
 
-            farm = Farm.objects.get(farm_id=data.farm_id.id)
+            farm = Farm.objects.get(id=data.farm_id.id)
             user = {
                 "id": str(data.id),
                 "farm_id": str(data.farm_id.id),
@@ -64,6 +64,8 @@ class Register(Resource):
                 farm_id = farm.id
             if hasFarm == "Sudah":
                 farm_id = request.form.get('farm_id')
+                farm = Farm.objects.get(id=farm_id)
+                farm_name = farm.farm_name
             body = {
                 "farm_id": farm_id,
                 "username": username,
@@ -76,6 +78,7 @@ class Register(Resource):
             user = {
                 "id": str(breeder.id),
                 "farm_id": str(breeder.farm_id.id),
+                "farm_name": farm_name,
                 "username": breeder.username,
                 "name": breeder.name,
                 "nik": breeder.nik,
