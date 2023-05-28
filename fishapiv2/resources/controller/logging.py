@@ -7,6 +7,7 @@ from functools import wraps
 from werkzeug.utils import secure_filename
 from fishapiv2.resources.helper import *
 import datetime
+from datetime import datetime
 import json
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -31,8 +32,9 @@ class LoggingApi(Resource):
             breeder_id = request.form.get('breeder_id', None)
             feature_name = request.form.get('feature_name', None)
             start_at = request.form.get('start_at')
+            start_time = datetime.strptime(start_at)
             end_at = datetime.datetime.now()
-            duration = str(end_at - start_at)
+            duration = str(end_at - start_time)
             breeder_name = request.form.get('breeder_name', None)
             farm_name = request.form.get('farm_name', None)
             data_log = {
