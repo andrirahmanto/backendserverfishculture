@@ -31,7 +31,7 @@ class LoggingApi(Resource):
             farm_id = request.form.get('farm_id', None)
             breeder_id = request.form.get('breeder_id', None)
             feature_name = request.form.get('feature_name', None)
-            start_at = request.form.get('start_at')
+            start_at = request.form.get('start_at', '%Y-%m-%d %H:%M:%S.%f')
             start_time = datetime.strptime(start_at)
             end_at = datetime.datetime.now()
             duration = str(end_at - start_time)
