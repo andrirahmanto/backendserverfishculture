@@ -27,8 +27,7 @@ class LoggingApi(Resource):
             return Response(response, mimetype="application/json", status=400)
     def post(self):
         try:
-            farm_id = request.form.get('farm_id', None)
-            breeder_id = request.form.get('breeder_id', None)
+
             feature_name = request.form.get('feature_name', None)
             start_at = datetime.datetime.now
             end_at = datetime.datetime.now
@@ -36,8 +35,7 @@ class LoggingApi(Resource):
             breeder_name = request.form.get('breeder_name', None)
             farm_name = request.form.get('farm_name', None)
             data_log = {
-                "farm_id": farm_id,
-                "breeder_id": breeder_id,
+
                 "farm_name": farm_name,
                 "breeder_name": breeder_name,
                 "start_at": start_at,

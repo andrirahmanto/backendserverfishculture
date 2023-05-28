@@ -213,8 +213,6 @@ class OptionTable(db.Document):
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 class Logging(db.Document):
-    farm_id = db.ReferenceField(Farm)
-    breeder_id = db.ReferenceField(Breeder)
     farm_name = db.StringField()
     breeder_name = db.StringField()
     start_at = db.DateTimeField()
