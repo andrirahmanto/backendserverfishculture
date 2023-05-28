@@ -18,13 +18,16 @@ class Login(Resource):
             username = request.form.get("username")
             password = request.form.get("password")
             data = Breeder.objects.get(username=username)
+
+            farm = Farm.objects.get(farm_id=data.farm_id.id)
             user = {
                 "id": str(data.id),
                 "farm_id": str(data.farm_id.id),
                 "username": data.username,
                 "name": data.name,
                 "nik": data.nik,
-                "phone": data.phone
+                "phone": data.phone,
+                "farm_name":farm.farm_name
             }
             passwordcheck = check_password_hash(data.password, password)
             if passwordcheck == True:
