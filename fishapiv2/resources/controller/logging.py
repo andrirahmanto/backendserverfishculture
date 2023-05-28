@@ -17,7 +17,7 @@ class LoggingApi(Resource):
     def get(seft):
         try:
             pipeline_logging = {"$sort": {"start_at": 1}},
-            logging = Pond.objects.aggregate(pipeline_logging)
+            logging = Logging.objects.aggregate(pipeline_logging)
             list_logging = list(logging)
             response = json.dumps(list_logging, default=str)
             return Response(response, mimetype="application/json", status=200)
