@@ -13,6 +13,7 @@ from .controller.statistic import *
 from .controller.authentication import *
 from .controller.breeder import *
 from .controller.farm import *
+from .controller.logging import *
 
 
 def initialize_routes(api):
@@ -92,3 +93,5 @@ def initialize_routes(api):
     api.add_resource(FarmApi, '/api/farm')
     api.add_resource(Login, '/api/login')
     api.add_resource(Register, '/api/register')
+
+    api.add_resource(LoggingApi, '/api/logging')

@@ -10,6 +10,16 @@ class Farm(db.Document):
     breeder = db.StringField(required=True)
     coordinate = db.StringField()
 
+
+class Breeder(db.Document):
+    farm_id = db.ReferenceField(Farm, required=True)
+    username = db.StringField(required=True)
+    password = db.StringField(required=True)
+    name = db.StringField(required=True)
+    nik = db.StringField(required=True)
+    phone = db.StringField(required=True)
+
+
 class Pond(db.Document):
     shape_option = ("bundar", "persegi")
 
@@ -202,10 +212,12 @@ class OptionTable(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
-class Breeder(db.Document):
+class Logging(db.Document):
     farm_id = db.ReferenceField(Farm, required=True)
-    username = db.StringField(required=True)
-    password = db.StringField(required=True)
-    name = db.StringField(required=True)
-    nik = db.StringField(required=True)
-    phone = db.StringField(required=True)
+    breeder_id = db.ReferenceField(Breeder, required=True)
+    farm_name = db.StringField()
+    breeder_name = db.StringField()
+    start_at = db.DateTimeField()
+    end_at = db.DateTimeField()
+    duration = db.StringField()
+    feature_name = db.StringField()
