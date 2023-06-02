@@ -27,8 +27,8 @@ class BreederApi(Resource):
             pipeline_farm = [
                 {"$match": {"_id": farm_id}},
             ]
-            breeder = Breeder.objects.aggregate(pipeline_user)
             farmdata = Farm.objects.aggregate(pipeline_farm)
+            breeder = Breeder.objects.aggregate(pipeline_user)
             list_farm = list(farmdata)
             list_breeder = list(breeder)
             breederdata = {
@@ -41,6 +41,20 @@ class BreederApi(Resource):
                 "farm_id": list_breeder[0]["farm_id"]
             }
             response = json.dumps(breederdata, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)
+
+
+class BreederListApi(Resource):
+    def get(self):
+        try:
+            pipeline = [{"$sort": {"name": 1}},]
+            list_farm = Breeder.objects.aggregate(pipeline)
+            farm_list = list(list_farm)
+            response = json.dumps(farm_list, default=str)
             return Response(response, mimetype="application/json", status=200)
         except Exception as e:
             response = {"message": str(e)}
