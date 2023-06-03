@@ -48,6 +48,15 @@ class Register(Resource):
             nik = request.form.get('nik')
             phone = request.form.get('phone')
             hasFarm = request.form.get('hasFarm')
+            pipeline_user = [
+                {"$match": {"username": username}},
+            ]
+            check_breeder = Breeder.objects.aggregate(pipeline_user)
+            checking_breeder = list(check_breeder)
+            if len(checking_breeder) > 0:
+                response = {"message": "BreederID Sudah Digunakan"}
+                response = json.dumps(response, default=str)
+                return Response(response, mimetype="application/json", status=400)
             password_hash = generate_password_hash(password, method='sha256')
             if hasFarm == "Belum":
                 farm_name = request.form.get('farm_name')
