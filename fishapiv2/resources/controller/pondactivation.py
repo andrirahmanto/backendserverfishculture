@@ -357,6 +357,12 @@ class PondDeactivationApi(Resource):
         fishes = request.form.get("fish", "[]")
         fishes = json.loads(fishes)
         total_fish_harvested = request.form.get("total_fish_harvested", None)
+        amount_undersize = request.form.get("amount_undersize", None)
+        amount_oversize = request.form.get("amount_oversize", None)
+        amount_normal = request.form.get("amount_normal", None)
+        sample_weight = request.form.get("sample_weight", None)
+        sample_amount = request.form.get("sample_amount", None)
+        sample_long = request.form.get("sample_long", None)
         total_weight_harvested = request.form.get("total_weight_harvested", None)
         # fish_harvested = request.form.get("fish_harvested", None)
         for fish in fishes:
@@ -367,7 +373,7 @@ class PondDeactivationApi(Resource):
                 "type_log": "deactivation",
                 "fish_type": fish['type'],
                 "fish_amount": fish['amount'],
-                "fish_total_weight": fish['weight']
+                "fish_total_weight": fish['weight'],
             }
             # total_fish_harvested += fish['amount']
             # total_weight_harvested += fish['weight']
@@ -382,7 +388,13 @@ class PondDeactivationApi(Resource):
             "total_fish_harvested": total_fish_harvested,
             "total_weight_harvested": total_weight_harvested,
             "deactivated_at": request.form.get("deactivated_at", datetime.datetime.now()),
-            "deactivated_description": "Normal"
+            "deactivated_description": "Normal",
+            "amount_undersize_fish":amount_undersize,
+            "amount_oversize_fish":amount_oversize,
+            "amount_normal_fish":amount_normal,
+            "sample_amount":sample_amount,
+            "sample_long":sample_long,
+            "sample_weight": sample_weight
         }
         pond_activation.update(**pond_deactivation_data)
         # update pond isActive

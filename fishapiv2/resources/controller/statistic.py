@@ -61,7 +61,6 @@ class StatisticApi(Resource):
             pond_activation_id__in=id_active_culture_season, type_log="death").sum("fish_amount") * -1
 
         # fish harvested
-        
         close_culture_season = season(isFinish=True)
         total_fish_harvested = close_culture_season.sum(
             "total_weight_harvested")

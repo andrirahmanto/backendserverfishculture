@@ -148,6 +148,16 @@ class PondsApi(Resource):
         try:
             current_user = get_jwt_identity()
             farm = str(current_user['farm_id'])
+            alias = request.form.get("alias", None),
+            pipeline_pond = [
+                {"$match": {"alias": alias}},
+            ]
+            check_pond = Pond.objects.aggregate(pipeline_pond)
+            checking_pond = list(check_pond)
+            if len(checking_pond) > 0:
+                response = {"message": "Nama Kolam Sudah Digunakan"}
+                response = json.dumps(response, default=str)
+                return Response(response, mimetype="application/json", status=400)
             shape = request.form.get("shape", None)
             if shape == "bundar":
                 body = {
