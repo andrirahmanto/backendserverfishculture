@@ -54,7 +54,7 @@ class PondActivation(db.Document):
     water_level = db.FloatField(required=True, default=0)
     total_fish_harvested = db.IntField(required=True, default=0)
     total_weight_harvested = db.FloatField(required=True, default=0)
-    fish_harvested = db.ArrayField(default=None)
+    # fish_harvested = db.ArrayField(default=None)
     activated_at = db.DateTimeField(default=datetime.datetime.now)
     deactivated_at = db.DateTimeField(default=None)
     deactivated_description = db.StringField(default=None)
