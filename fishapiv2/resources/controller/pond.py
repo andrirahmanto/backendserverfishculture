@@ -148,9 +148,10 @@ class PondsApi(Resource):
         try:
             current_user = get_jwt_identity()
             farm = str(current_user['farm_id'])
+            farm_id = ObjectId(farm)
             alias = request.form.get("alias", None),
             pipeline_pond = [
-                {"$match": {"alias": alias}},
+                {"$match": {"farm_id": farm_id, "alias": "epsilon"}},
             ]
             check_pond = Pond.objects.aggregate(pipeline_pond)
             checking_pond = list(check_pond)
@@ -186,7 +187,7 @@ class PondsApi(Resource):
                 }    
             pond = Pond(**body).save()
             id = pond.id
-            response = {"message": "success add pond", "id": id}
+            response = {"message": "success add pond", "id": check_pond}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
         except Exception as e:
