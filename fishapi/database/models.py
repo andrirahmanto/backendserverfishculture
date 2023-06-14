@@ -2,6 +2,7 @@ from mongoengine import *
 import datetime
 from bson import json_util
 
+db = connect(alias='v1connection')
 
 class Pond(Document):
     shape_option = ("bundar", "persegi")

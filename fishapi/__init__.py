@@ -24,7 +24,6 @@ def create_app(test_config=None):
     initialize_db(app)
     initialize_routes(api)
 
-    db = MongoEngine(app)
 
     # @app.before_first_request
     # def connect_to_db():
