@@ -111,7 +111,7 @@ class PondsApi(Resource):
                     "last_activation": 0,
                 }}
             ]
-            ponds = Pond.objects.using('v1connection').aggregate(pipeline)
+            ponds = Pond.objects.aggregate(pipeline)
             list_ponds = list(ponds)
             response = json.dumps(list_ponds, default=str)
             return Response(response, mimetype="application/json", status=200)

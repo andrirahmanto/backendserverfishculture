@@ -7,6 +7,7 @@ from .resources.helper import *
 from .resources.routes import initialize_routes
 import json
 from datetime import datetime
+from flask_mongoengine import MongoEngine
 
 
 def create_app(test_config=None):
@@ -22,6 +23,8 @@ def create_app(test_config=None):
 
     initialize_db(app)
     initialize_routes(api)
+
+    db = MongoEngine(app)
 
     # @app.before_first_request
     # def connect_to_db():
