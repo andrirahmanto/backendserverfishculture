@@ -1,4 +1,5 @@
 import os
+from fishapi.database.db import alias_connection
 from flask import Flask, Response, request, current_app, url_for, send_from_directory
 from fishapi.database.models import *
 from flask_restful import Resource
@@ -111,7 +112,7 @@ class PondsApi(Resource):
                     "last_activation": 0,
                 }}
             ]
-            ponds = Pond.objects.using('v1connection').aggregate(pipeline)
+            ponds = Pond.objects.aggregate(pipeline)
             list_ponds = list(ponds)
             response = json.dumps(list_ponds, default=str)
             return Response(response, mimetype="application/json", status=200)
