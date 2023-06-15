@@ -5,7 +5,7 @@ from bson import json_util
 
 
 _meta = {
-    'db_alias' : getAliasConnection(),
+    'db_alias' : 'v1connection',
 }
 
 class Pond(db.Document):
