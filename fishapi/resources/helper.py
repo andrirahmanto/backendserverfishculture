@@ -1,5 +1,6 @@
 from datetime import datetime as dt
 from flask import current_app
+import json
 import time
 
 
@@ -13,6 +14,34 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower(
         ) in current_app.config['ALLOWED_EXTENSIONS']
+
+def get_value_from_cfg_file(file_path, key):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        
+        for line in lines:
+            # Melewati baris yang tidak mengandung "="
+            if '=' not in line:
+                continue
+            
+            # Memecah baris menjadi key dan value
+            parts = line.strip().split('=')
+            file_key = parts[0].strip()
+            value = parts[1].strip()
+            
+            # Memeriksa apakah key cocok
+            if file_key == key:
+                return value
+    
+    # Jika key tidak ditemukan
+    return None
+
+def getAliasConnection():
+    file_path = 'fishapi/../instance/settings.cfg'
+    key = 'MONGODB_SETTINGS'
+    str_value = get_value_from_cfg_file(file_path, key)
+    dict_value =  json.loads(str_value)
+    return dict_value['alias']
 
 
 def pad_timestamp(filename):

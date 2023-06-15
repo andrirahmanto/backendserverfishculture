@@ -1,9 +1,11 @@
 from .db import db
 import datetime
+from fishapi.resources.helper import getAliasConnection 
 from bson import json_util
 
+
 _meta = {
-    'db_alias' : 'v1connection',
+    'db_alias' : getAliasConnection(),
 }
 
 class Pond(db.Document):
