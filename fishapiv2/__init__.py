@@ -36,6 +36,7 @@ def create_app(test_config=None):
     @app.route('/')
     def home():
         pipeline = [
+            {"$sort":{"_id":-1}},
             {'$lookup': {
                 'from': 'pond',
                 'let': {"pondid": "$pond_id"},
