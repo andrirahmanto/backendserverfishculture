@@ -1,1 +1,1 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"abf5edeba282429c933815bf7f5da74b","collectionName":"water_preparation","type":"collection"}
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"72628b6901f84fb18c406ba580e1d638","collectionName":"water_preparation","type":"collection"}
