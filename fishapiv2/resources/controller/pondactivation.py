@@ -1,4 +1,5 @@
-from flask import Response, request
+from bson import ObjectId
+from flask import Response, jsonify, request
 from fishapiv2.database.models import *
 from flask_restful import Resource
 from fishapiv2.database.db import db
@@ -270,6 +271,238 @@ class PondStatusApi(Resource):
         response = json.dumps(ponds, default=str)
         return Response(response, mimetype="application/json", status=200)
 
+
+class PondActivationDetailApi(Resource):
+    def get(self,id, pond):
+        # log = FishLog.objects(pond_activation_id=id, type_log="deactivation").first()
+        # response = json.dumps(ponds, default=str)
+        activation = PondActivation.objects(id=id).first()
+        pond_id = ObjectId(pond)
+        # pond = Pond.objects(id=pond).first()
+        pipline = [
+            
+            {'$match': {'$expr': {'$eq': ['$_id', pond_id]}}},
+            {'$lookup': {
+                'from': 'pond_activation',
+                'let': {"pondid": "$_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$and': [
+                        {'$eq': ['$pond_id', '$$pondid']},
+                    ]}}},
+                    {"$sort": {"activated_at": -1}},
+                    {'$lookup': {
+                        'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'activation']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"},
+                                "fish_total_weight": {"$sum": "$fish_total_weight"}
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},
+                        ],
+                        'as': 'fish_stock'
+                    }},
+                    {'$lookup': {
+                        'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                                    {'$ne': ['$type_log', 'deactivation']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"}
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},
+                        ],
+                        'as': 'fish_live'
+                    }},
+                    {'$lookup': {
+                        'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                             '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'death']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"}
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},
+                        ],
+                        'as': 'fish_death'
+                    }},
+                    {'$lookup': {
+                        'from': 'fish_log',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                     '$$pond_activation_id']},
+                                    {'$eq': ['$type_log', 'deactivation']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"},
+                                "fish_total_weight": {"$sum": "$fish_total_weight"},
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},
+                        ],
+                        'as': 'fish_harvested'
+                    }},
+                    {'$lookup': {
+                        'from': 'feed_history',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                             '$$pond_activation_id']},
+                                ]}
+                            }},
+                        ],
+                        'as': 'feed_history'
+                    }},
+                    {'$lookup': {
+                        'from': 'water_preparation',
+                        'let': {"pond_activation_id": "$_id"},
+                        'pipeline': [
+                            {'$match': {
+                                '$expr': {'$eq': ['$pond_activation_id', '$$pond_activation_id']}}},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }}
+                        ],
+                        'as': 'water_preparation'
+                    }},
+                    {"$addFields": {
+                        "water_preparation": {"$first": "$water_preparation"},
+                        "total_fish": {"$sum": "$fish_live.fish_amount"},
+                        "survival_rate": {"$cond": [
+                            {"$eq": [{"$sum": "$fish_stock.fish_amount"}, 0]},
+                            0,
+                            {"$multiply": [{"$divide": [{"$sum": "$fish_live.fish_amount"}, {
+                                "$sum": "$fish_stock.fish_amount"}]}, 100]}
+                        ]},
+                        "weight_growth": {"$subtract": [{"$sum": "$fish_harvested.fish_total_weight"}, {"$sum": "$fish_stock.fish_total_weight"}]},
+                        "total_dose": {"$sum": "$feed_history.feed_dose"},
+                        # "fcr": {"$sum": {"$divide": [{"$sum": "$fish_live.fish_amount"}, {"$sum": "$fish_stock.fish_amount"}]}},
+                    }},
+                    {"$addFields": {
+                        "fcr": {"$cond": [
+                            {"$eq": [{"$sum": "$total_dose"}, 0]},
+                            0,
+                            {"$sum": {"$divide": [
+                                "$weight_growth", "$total_dose"]}}
+                        ]},
+                    }},
+                    {"$project": {
+                        "pond_id": 0,
+                        "feed_history": 0,
+                        "feed_type_id": 0,
+                        "created_at": 0,
+                        "updated_at": 0,
+                    }}
+                ],
+                'as': 'pond_activation_list'
+            }},
+            {"$addFields": {
+                "total_activation": {"$size": "$pond_activation_list"},
+                "pond_activation_list": '$pond_activation_list',
+
+            }},
+            {"$project": {
+                "location": 0,
+                "shape": 0,
+                "material": 0,
+                "length": 0,
+                "width": 0,
+                "diameter": 0,
+                "height": 0,
+                "image_name": 0,
+                "updated_at": 0,
+                "created_at": 0,
+            }}
+        ]
+        ponds = Pond.objects().aggregate(pipline)
+        ponds = list(ponds)
+        activ = None
+        for acti in ponds[0]["pond_activation_list"]:
+            # activ = acti["_id"]
+            if str(acti["_id"]) == id:
+                activ = acti
+        if activ == None:
+            activ =0
+        response =  {
+            "id": activation.id,
+            "pond_id": pond,
+            # "pond_id": activation.pond_id,
+            "is_finish": activation.isFinish,
+            "water_level": activation.water_level,
+            "total_fish_harvested": activation.total_fish_harvested,
+            "total_weight_harvested": activation.total_weight_harvested,
+            "activation_at": activation.activated_at,
+            "deactivation_at": activation.deactivated_at,
+            "deactivation_description": activation.deactivated_description,
+            "fish_activated": activ["fish_stock"],
+            "fish_alive": activ["fish_live"],
+            "fish_harvested": activ["fish_harvested"],
+            "fish_death": activ["fish_death"]
+        }
+        response = json.dumps(response, default=str)
+        # response = jsonify(activation.__dict__)
+        return Response(response, mimetype="application/json", status=200)
 
 class PondActivationApi(Resource):
     def post(self, pond_id):
