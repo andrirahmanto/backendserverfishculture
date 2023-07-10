@@ -228,7 +228,7 @@ def deactivationPond(args):
 
 class FishSortsApi(Resource):
     def post(self):
-        # try:
+        try:
             parser = reqparse.RequestParser()
             parser.add_argument('origin_pond_id', type=str, required=True, location='form')
             parser.add_argument('fish_sort_type', type=str, required=True, location='form')
@@ -305,7 +305,7 @@ class FishSortsApi(Resource):
             response = {"message": "success add multipond fish sort"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
-        # except Exception as e:
-        #     response = {"message": str(e)}
-        #     response = json.dumps(response, default=str)
-        #     return Response(response, mimetype="application/json", status=400)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)

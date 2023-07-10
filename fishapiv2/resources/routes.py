@@ -15,6 +15,7 @@ from .controller.authentication import *
 from .controller.breeder import *
 from .controller.farm import *
 from .controller.logging import *
+from .controller.addfish import *
 
 
 def initialize_routes(api):
@@ -66,6 +67,12 @@ def initialize_routes(api):
     # fish transfer
     api.add_resource(FishTransfersApi, '/api/fishtransfer')
     api.add_resource(FishTransferApi, '/api/fishtransfer/<id>')
+
+    # add fish
+    api.add_resource(AddFishApi, '/api/addfish')
+
+    # edit fish
+    api.add_resource(EditFishApi, '/api/editfish')
 
     # fish sort
     api.add_resource(FishSortsApi, '/api/fishsort')
