@@ -228,28 +228,29 @@ def deactivationPond(args):
 
 class FishSortsApi(Resource):
     def post(self):
-        try:
+        # try:
             parser = reqparse.RequestParser()
-            parser.add_argument('origin_pond_id', type=str, required=True)
-            parser.add_argument('fish_sort_type', type=str, required=True)
-            parser.add_argument('transfer_list', type=str, required=False)
-            parser.add_argument('fish_death', type=str, required=False)
-            parser.add_argument('transfer_at', type=str, required=False)
-            parser.add_argument('water_level', type=str, required=False, default=1)
-            parser.add_argument("amount_undersize", required=False, default=0)
-            parser.add_argument("amount_oversize", required=False, default=0)
-            parser.add_argument("amount_normal", required=False, default=0)
-            parser.add_argument("sample_weight", required=False, default=0)
-            parser.add_argument("sample_amount", required=False, default=0)
-            parser.add_argument("sample_long", required=False, default=0)
-            parser.add_argument("total_fish_harvested", required=False, default=0)
-            parser.add_argument("total_weight_harvested", required=False, default=0)
+            parser.add_argument('origin_pond_id', type=str, required=True, location='form')
+            parser.add_argument('fish_sort_type', type=str, required=True, location='form')
+            parser.add_argument('transfer_list', type=str, required=False, location='form')
+            parser.add_argument('fish_death', type=str, required=False, location='form')
+            parser.add_argument('transfer_at', type=str, required=False, location='form')
+            parser.add_argument('water_level', type=str, required=False, default=1, location='form')
+            parser.add_argument("amount_undersize", required=False, default=0, location='form')
+            parser.add_argument("amount_oversize", required=False, default=0, location='form')
+            parser.add_argument("amount_normal", required=False, default=0, location='form')
+            parser.add_argument("sample_weight", required=False, default=0, location='form')
+            parser.add_argument("sample_amount", required=False, default=0, location='form')
+            parser.add_argument("sample_long", required=False, default=0, location='form')
+            parser.add_argument("total_fish_harvested", required=False, default=0, location='form')
+            parser.add_argument("total_weight_harvested", required=False, default=0, location='form')
+            # print("", location='form')
             args = parser.parse_args()
+            print(args)
             validation = _validationInput(args)
             if (not validation):
                 raise Exception("Input gagal di validasi")
             # create dict of transfer_list
-            print('sampai sini')
             transfer_list_str = args['transfer_list']
             transfer_list = json.loads(transfer_list_str)
             # check if sort type
@@ -304,7 +305,7 @@ class FishSortsApi(Resource):
             response = {"message": "success add multipond fish sort"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
-        except Exception as e:
-            response = {"message": str(e)}
-            response = json.dumps(response, default=str)
-            return Response(response, mimetype="application/json", status=400)
+        # except Exception as e:
+        #     response = {"message": str(e)}
+        #     response = json.dumps(response, default=str)
+        #     return Response(response, mimetype="application/json", status=400)
