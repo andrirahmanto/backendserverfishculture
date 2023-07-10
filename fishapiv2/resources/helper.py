@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+from datetime import timedelta
 from flask import current_app
 import time
 
@@ -30,3 +31,11 @@ def getAmountFishByType(fishtype, fishlist):
 def getYearToday():
     current_year = dt.today().year
     return str(current_year)
+
+def getListDateBettwenDate(dateA, dateB):
+    # Return list of datetime.date objects (inclusive) between start_date and end_date (inclusive).
+    date_list = []
+    while dateA <= dateB:
+        date_list.append(dateA)
+        dateA += timedelta(days=1)
+    return date_list

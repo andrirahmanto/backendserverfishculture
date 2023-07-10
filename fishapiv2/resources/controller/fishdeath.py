@@ -244,3 +244,29 @@ class FishDeathsApiByActivation(Resource):
             response = {"message": str(e)}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=400)
+
+
+class FishLiveChart(Resource):
+    def get(self, activation_id):
+        try:
+            print(activation_id)
+            # get activation date
+            activation = PondActivation.objects(id=activation_id).first()
+            activation_date = activation.activated_at
+            print(activation_date)
+            # get date now
+            date_now = datetime.datetime.now()
+            print(date_now)
+            # get range bettwen date
+            list_date = getListDateBettwenDate(dateA=activation_date, dateB=date_now)
+            list_graph = []
+            for date in list_date:
+                fishamount = FishLog.objects(pond_activation_id=activation_id,created_at__lte=date).sum('fish_amount')
+                if fishamount != 0:
+                    list_graph.append({'date':date.strftime("%d %b"), 'amount':fishamount})
+            response = json.dumps(list_graph, default=str)
+            return Response(response, mimetype="application/json", status=200)
+        except Exception as e:
+            response = {"message": str(e)}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=400)

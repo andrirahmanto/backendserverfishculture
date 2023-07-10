@@ -102,3 +102,6 @@ def initialize_routes(api):
     api.add_resource(Register, '/api/register')
     api.add_resource(BreederListApi, '/api/breederlist')
     api.add_resource(LoggingApi, '/api/logging')
+
+    # chart fish
+    api.add_resource(FishLiveChart, '/api/fishchart/<activation_id>')
