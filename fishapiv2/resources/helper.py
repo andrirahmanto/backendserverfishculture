@@ -35,7 +35,9 @@ def getYearToday():
 def getListDateBettwenDate(dateA, dateB):
     # Return list of datetime.date objects (inclusive) between start_date and end_date (inclusive).
     date_list = []
-    while dateA <= dateB:
+    while dateA < dateB:
         date_list.append(dateA)
         dateA += timedelta(days=1)
+    date_list.append(dateA)
+    print(date_list)
     return date_list
