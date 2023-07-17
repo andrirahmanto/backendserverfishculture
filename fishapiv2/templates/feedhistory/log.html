@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block name %}{{name}}{% endblock %}
+{% block plugins_css %}
+<link rel="stylesheet"
+    href="{{url_for('static', filename='node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
+{% endblock %}
 {% block content %}
 <!-- Main Content -->
 <div class="main-content">
@@ -20,9 +24,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
-                                    <th>Kolam</th>
                                     <th>Masa Budidaya</th>
                                     <th>Tipe Pakan</th>
                                     <th>Dosis Pakan</th>
@@ -32,9 +37,11 @@
                                 {% for index, feedhistory in feedhistorys %}
                                 <tr>
                                     <td>{{index}}</td>
+                                    <td>{{feedhistory.pond.farm.farm_name if feedhistory.pond else "-"}}
+                                    </td>
+                                    <td>{{feedhistory.pond.alias if feedhistory.pond else "-"}}</td>
                                     <td>{{feedhistory["date"]}}</td>
                                     <td>{{feedhistory["time"]}}</td>
-                                    <td>{{feedhistory.pond.alias if feedhistory.pond else "-"}}</td>
                                     <td>{{feedhistory.pond_activation.activation_date if feedhistory.pond_activation
                                         else "-"}}
                                     </td>
@@ -43,6 +50,18 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Tanggal</th>
+                                    <th>Waktu</th>
+                                    <th>Kolam</th>
+                                    <th>Masa Budidaya</th>
+                                    <th>Tipe Pakan</th>
+                                    <th>Dosis Pakan</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -50,6 +69,10 @@
         </div>
     </section>
 </div>
+{% endblock %}
+{% block plugins_js %}
+<script
+    src="{{url_for('static', filename='node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 {% endblock %}
 {% block page_js %}
 <script src="{{url_for('static', filename='js/custom_page/feedhistory/log.js')}}"></script>

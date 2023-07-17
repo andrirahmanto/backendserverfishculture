@@ -21,6 +21,7 @@ def create_app(test_config=None):
     app.config['JWT_BLACKLIST_ENABLED'] = True
     app.config['PROPAGATE_EXCEPTIONS'] = True
     app.config['MONGODB_SETTINGS'] = {'db':'fishapiv2', 'alias':'default'}
+    # app.config['MONGODB_SETTINGS'] = {'db':'fishapitest', 'alias':'default'}
     jwt = JWTManager(app)
     app.config.from_pyfile('settings.cfg', silent=False)
 
@@ -42,11 +43,25 @@ def create_app(test_config=None):
                 'let': {"pondid": "$pond_id"},
                 'pipeline': [
                     {'$match': {'$expr': {'$eq': ['$_id', '$$pondid']}}},
+                    {'$lookup': {
+                        'from': 'farm',
+                        'let': {"farmid": "$farm_id"},
+                        'pipeline': [
+                            {'$match': {'$expr': {'$eq': ['$_id', '$$farmid']}}},
+                            {"$project": {
+                                "_id": 1,
+                                "farm_name": 1
+                            }}
+                        ],
+                        'as': 'farms'
+                    }},
+                    {"$addFields": {"farm": {"$first": "$farms"}}},
                     {"$project": {
                         "_id": 1,
                         "alias": 1,
                         "location": 1,
                         "build_at": 1,
+                        "farm": 1,
                         "isActive": 1,
                     }}
                 ],
