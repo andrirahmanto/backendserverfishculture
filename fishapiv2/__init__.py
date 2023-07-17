@@ -178,11 +178,25 @@ def create_app(test_config=None):
                 ],
                 'as': 'feed_historys_today'
             }},
+            {'$lookup': {
+                'from': 'farm',
+                'let': {"farmid": "$farm_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$eq': ['$_id', '$$farmid']}}},
+                    {"$project": {
+                        "_id": 1,
+                        "farm_name": 1
+                    }}
+                ],
+                'as': 'farms'
+            }},
+            {"$addFields": {"farm": {"$first": "$farms"}}},
             {"$project": {
                 "_id": 1,
                 "id_int": 1,
                 "alias": 1,
                 "location": 1,
+                "farm":1,
                 "total_feed_historys": {"$size": "$feed_historys_today"},
                 "total_feed_dose": {"$sum": "$feed_historys_today.feed_dose"},
                 "avg_feed_dose": {'$avg': "$feed_historys_today.feed_dose"}

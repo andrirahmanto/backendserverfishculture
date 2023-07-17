@@ -38,6 +38,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Farm</th>
                                     <th>Kolam</th>
                                     <th>Lokasi</th>
                                     <th>Total Pemberian</th>
@@ -50,6 +51,7 @@
                                 {% for index, pond in ponds %}
                                 <tr>
                                     <td>{{index}}</td>
+                                    <td>{{pond.farm.farm_name if pond.farm else "-"}}
                                     <td>{{pond["alias"]}}</td>
                                     <td>{{pond["location"]}}</td>
                                     <td class="text-right">{{pond["total_feed_historys"]}} X</td>
@@ -62,6 +64,18 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
+                                    <th>Lokasi</th>
+                                    <th>Total Pemberian</th>
+                                    <th>Total Dosis</th>
+                                    <th>Rata-rata Dosis</th>
+                                    <th>Detail Masa Budidaya</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
