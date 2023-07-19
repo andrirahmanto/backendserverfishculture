@@ -38,8 +38,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Tanggal Pengukuran</th>
+                                    <th>farm</th>
                                     <th>Kolam</th>
+                                    <th>Tanggal Pengukuran</th>
                                     <th>Masa Budidaya</th>
                                     <th>Status</th>
                                     <th>pH</th>
@@ -51,8 +52,10 @@
                                 {% for index, dailyquality in dailyquality_list %}
                                 <tr>
                                     <td>{{index}}</td>
-                                    <td>{{dailyquality["date"]}}</td>
+                                    <td>{{dailyquality.pond.farm.farm_name if dailyquality.pond and
+                                        dailyquality.pond.farm else "-"}}</td>
                                     <td>{{dailyquality["pond"]["alias"]}}</td>
+                                    <td>{{dailyquality["date"]}}</td>
                                     <td>{{dailyquality["pond_activation"]["id_int"]}}</td>
                                     <td>{{dailyquality["pond_activation"]["isFinish"]}}</td>
                                     <td>{{dailyquality["ph"]}} pH</td>
@@ -64,13 +67,14 @@
                             <tfoot>
                                 <tr>
                                     <th>No</th>
-                                    <th>Check Date</th>
-                                    <th>Pond</th>
-                                    <th>Culture Season</th>
+                                    <th>farm</th>
+                                    <th>Kolam</th>
+                                    <th>Tanggal Pengukuran</th>
+                                    <th>Masa Budidaya</th>
                                     <th>Status</th>
-                                    <th>Ph</th>
-                                    <th>Do</th>
-                                    <th>Temprateure</th>
+                                    <th>pH</th>
+                                    <th>DO</th>
+                                    <th>Suhu</th>
                                 </tr>
                             </tfoot>
                         </table>
