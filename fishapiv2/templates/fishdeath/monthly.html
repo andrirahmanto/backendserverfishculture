@@ -38,9 +38,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
                                     <th>Tanggal</th>
                                     <th>Waktu</th>
-                                    <th>Kolam</th>
                                     <th>Jumlah Kematian</th>
                                     <th>Diagnosis</th>
                                     <th>Foto</th>
@@ -50,9 +51,11 @@
                                 {% for index, fishdeath in fishdeaths %}
                                 <tr>
                                     <td>{{index}}</td>
+                                    <td>{{fishdeath.pond.farm.farm_name if fishdeath.pond and fishdeath.pond.farm else
+                                        "-"}}</td>
+                                    <td>{{fishdeath["pond"]["alias"]}}</td>
                                     <td>{{fishdeath["date"]}}</td>
                                     <td>{{fishdeath["time"]}} WIB</td>
-                                    <td>{{fishdeath["pond"]["alias"]}}</td>
                                     <td>
                                         {% for fishz in fishdeath['fish'] %}
                                         <p>{{fishz['fish_type']}}: {{fishz['fish_amount']}}</p>
@@ -65,6 +68,18 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
+                                    <th>Tanggal</th>
+                                    <th>Waktu</th>
+                                    <th>Jumlah Kematian</th>
+                                    <th>Diagnosis</th>
+                                    <th>Foto</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
