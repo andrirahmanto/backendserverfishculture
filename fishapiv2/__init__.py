@@ -284,8 +284,22 @@ def create_app(test_config=None):
                 "build_at":{'$dateToString': {
                     'format': "%d-%m-%Y", 'date': "$build_at"}}
             }},
+            {'$lookup': {
+                'from': 'farm',
+                'let': {"farmid": "$farm_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$eq': ['$_id', '$$farmid']}}},
+                    {"$project": {
+                        "_id": 1,
+                        "farm_name": 1
+                    }}
+                ],
+                'as': 'farms'
+            }},
+            {"$addFields": {"farm": {"$first": "$farms"}}},
             {"$project": {
                 "pond_id": 0,
+                "farms": 0,
                 "feed_type_id": 0,
                 "created_at": 0,
                 "updated_at": 0,
@@ -293,6 +307,8 @@ def create_app(test_config=None):
         ]
         ponds = Pond.objects().aggregate(pipeline)
         response = list(ponds)
+        # response = json.dumps(response, default=str)
+        # return Response(response, mimetype="application/json", status=200)
         return render_template('pond/pondlist.html', name='Andri', ponds=enumerate(response, start=1))
 
     @app.route('/ponds/activation')
@@ -330,8 +346,21 @@ def create_app(test_config=None):
                 ],
                 'as': 'pond_activation_list'
             }},
+            {'$lookup': {
+                'from': 'farm',
+                'let': {"farmid": "$farm_id"},
+                'pipeline': [
+                    {'$match': {'$expr': {'$eq': ['$_id', '$$farmid']}}},
+                    {"$project": {
+                        "_id": 1,
+                        "farm_name": 1
+                    }}
+                ],
+                'as': 'farms'
+            }},
             {"$addFields": {
                 "total_activation": {"$size": "$pond_activation_list"},
+                "farm": {"$first": "$farms"},
             }},
             {"$project": {
                 "location": 0,
@@ -343,12 +372,15 @@ def create_app(test_config=None):
                 "height": 0,
                 "image_name": 0,
                 "pond_activation_list": 0,
+                "farms": 0,
                 "updated_at": 0,
                 "created_at": 0,
             }}
         ]
         ponds = Pond.objects().aggregate(pipeline)
         response = list(ponds)
+        # response = json.dumps(response, default=str)
+        # return Response(response, mimetype="application/json", status=200)
         return render_template('pond/pondlist_active.html', name='Andri', ponds=enumerate(response, start=1))
 
     @app.route('/ponds/activation/<pondid>')

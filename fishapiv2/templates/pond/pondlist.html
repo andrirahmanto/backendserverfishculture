@@ -20,6 +20,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Farm</th>
                                     <th>Kolam</th>
                                     <th>Bentuk</th>
                                     <th>Dimensi</th>
@@ -34,6 +35,7 @@
                                 {% for index, pond in ponds %}
                                 <tr>
                                     <td>{{index}}</td>
+                                    <td>{{pond.farm.farm_name if pond.farm else "-"}}
                                     <td>{{pond["alias"]}}</td>
                                     <td>{{pond["shape"]}}</td>
                                     {% if pond["shape"] == "persegi" %}
@@ -49,6 +51,20 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
+                                    <th>Bentuk</th>
+                                    <th>Dimensi</th>
+                                    <th>Tinggi</th>
+                                    <th>Luas</th>
+                                    <th>Volume</th>
+                                    <th>Material</th>
+                                    <th>Dibangun Pada</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

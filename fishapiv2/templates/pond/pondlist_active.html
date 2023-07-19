@@ -20,6 +20,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Farm</th>
                                     <th>Kolam</th>
                                     <th>Total Masa Budidaya</th>
                                     <th>Status</th>
@@ -30,6 +31,7 @@
                                 {% for index, pond in ponds %}
                                 <tr>
                                     <td>{{index}}</td>
+                                    <td>{{pond.farm.farm_name if pond.farm else "-"}}</td>
                                     <td>{{pond["alias"]}}</td>
                                     <td>{{pond["total_activation"]}} X</td>
                                     {% if pond["isActive"] == True %}
@@ -51,6 +53,16 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
+                                    <th>Total Masa Budidaya</th>
+                                    <th>Status</th>
+                                    <th>List Masa Budidaya</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
