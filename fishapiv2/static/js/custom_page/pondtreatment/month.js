@@ -14,7 +14,7 @@ $(document).ready(function () {
         $(this).html('<input type="text" placeholder="Search ' + title + '" />');
     });
 
-    // DataTable
+    DataTable
     var table = $('#mainTable').DataTable({
         initComplete: function () {
             this.api()
@@ -36,6 +36,26 @@ $(document).ready(function () {
                         .each(function (d, j) {
                             select.append('<option value="' + d + '">' + d + '</option>');
                         });
+                    // Menghitung rata-rata pada kolom
+                    var footer = $(column.footer());
+                    var data = column.data();
+
+                    var average = data
+                        .reduce(function (acc, curr) {
+                            return acc + parseFloat(curr);
+                        }, 0) / data.length;
+
+                    var total = data
+                        .reduce(function (acc, curr) {
+                            return acc + parseFloat(curr);
+                        }, 0);
+
+                    if (column.index() == 6 || column.index() == 7 || column.index() == 8 || column.index() == 9) {
+
+                        if (isNaN(average) == false) {
+                            footer.html(footer.html() + '<br> <br>' + ' Avg: ' + average.toFixed(2) + '');
+                        }
+                    }
                 });
         },
     });

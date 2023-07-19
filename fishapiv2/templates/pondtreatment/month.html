@@ -38,8 +38,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Tanggal Treatment</th>
+                                    <th>Farm</th>
                                     <th>Kolam</th>
+                                    <th>Tanggal Treatment</th>
                                     <th>Masa Budidaya</th>
                                     <th>Tipe Treatment</th>
                                     <th>Pergantian Air</th>
@@ -52,8 +53,10 @@
                                 {% for index, pondtreatment in pondtreatments %}
                                 <tr>
                                     <td>{{index}}</td>
-                                    <td>{{pondtreatment["date"]}}</td>
+                                    <td>{{pondtreatment.pond.farm.farm_name if pondtreatment.pond and
+                                        pondtreatment.pond.farm else "-"}}</td>
                                     <td>{{pondtreatment["pond"]["alias"]}}</td>
+                                    <td>{{pondtreatment["date"]}}</td>
                                     <td>{{pondtreatment["pond_activation"]["id_int"]}}</td>
                                     <td>{{pondtreatment["treatment_type"]}}</td>
                                     <td>{{pondtreatment["water_change"]}}%</td>
@@ -61,21 +64,21 @@
                                         {% if pondtreatment["salt"] %}
                                         {{pondtreatment["salt"]}} Kg
                                         {% else %}
-                                        -
+                                        0
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if pondtreatment["probiotic_culture"] %}
                                         {{pondtreatment["probiotic_culture"]}} G/ml
                                         {% else %}
-                                        -
+                                        0
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if pondtreatment["probiotic_culture"] %}
                                         {{pondtreatment["carbohydrate"]}} ({{pondtreatment["carbohydrate_type"]}})
                                         {% else %}
-                                        -
+                                        0
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -84,13 +87,15 @@
                             <tfoot>
                                 <tr>
                                     <th>No</th>
-                                    <th>Treatment Date</th>
-                                    <th>Pond</th>
-                                    <th>Culture Season</th>
-                                    <th>Type</th>
-                                    <th>salt</th>
-                                    <th>Probiotic Culture</th>
-                                    <th>Carbohydrate</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
+                                    <th>Tanggal Treatment</th>
+                                    <th>Masa Budidaya</th>
+                                    <th>Tipe Treatment</th>
+                                    <th>Pergantian Air</th>
+                                    <th>Dosis Garam</th>
+                                    <th>Kultur Probiotik</th>
+                                    <th>Karbon</th>
                                 </tr>
                             </tfoot>
                         </table>
