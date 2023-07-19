@@ -38,8 +38,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Tanggal Pengukuran</th>
+                                    <th>Farm</th>
                                     <th>Kolam</th>
+                                    <th>Tanggal Pengukuran</th>
                                     <th>Masa Budidaya</th>
                                     <th>Status</th>
                                     <th>Kadar Flok</th>
@@ -53,8 +54,10 @@
                                 {% for index, weeklyquality in weeklyquality_list %}
                                 <tr>
                                     <td>{{index}}</td>
-                                    <td>{{weeklyquality["date"]}}</td>
+                                    <td>{{weeklyquality.pond.farm.farm_name if weeklyquality.pond and
+                                        weeklyquality.pond.farm else "-"}}</td>
                                     <td>{{weeklyquality["pond"]["alias"]}}</td>
+                                    <td>{{weeklyquality["date"]}}</td>
                                     <td>{{weeklyquality["pond_activation"]["id_int"]}}</td>
                                     <td>{{weeklyquality["pond_activation"]["isFinish"]}}</td>
                                     <td>{{weeklyquality["floc"]}} ({{weeklyquality["floc_desc"]}})</td>
@@ -68,15 +71,16 @@
                             <tfoot>
                                 <tr>
                                     <th>No</th>
-                                    <th>Check Date</th>
-                                    <th>Pond</th>
-                                    <th>Culture Season</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
+                                    <th>Tanggal Pengukuran</th>
+                                    <th>Masa Budidaya</th>
                                     <th>Status</th>
-                                    <th>Floc</th>
-                                    <th>Nitrite</th>
-                                    <th>Nitrate</th>
+                                    <th>Kadar Flok</th>
+                                    <th>Kadar Nitrit</th>
+                                    <th>Kadar Nitrat</th>
                                     <th>Ammonia</th>
-                                    <th>Hardness</th>
+                                    <th>Nilai Hardness</th>
                                 </tr>
                             </tfoot>
                         </table>
