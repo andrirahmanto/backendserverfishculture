@@ -20,6 +20,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Farm</th>
                                     <th>Kolam</th>
                                     <th>Mulai Budidaya</th>
                                     <th>Ikan Awal</th>
@@ -33,7 +34,9 @@
                                 {% for index, pondactivation in pondactivations %}
                                 <tr>
                                     <td>{{index}}</td>
-                                    <td>{{pondactivation["pond"]["alias"]}}</td>
+                                    <td>{{pondactivation.pond.farm.farm_name if pondactivation.pond and
+                                        pondactivation.pond.farm else "-"}}</td>
+                                    <td>{{pondactivation["pond"]["alias"] if pondactivation.pond else "-"}}</td>
                                     <td>{{pondactivation["activation_date"]}}</td>
                                     <td>
                                         {% for fishz in pondactivation["fish_stock"] %}
@@ -67,6 +70,19 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
+                                    <th>Mulai Budidaya</th>
+                                    <th>Ikan Awal</th>
+                                    <th>Ikan Masuk</th>
+                                    <th>Ikan Keluar</th>
+                                    <th>Ikan Mati</th>
+                                    <th>Jumlah Ikan di Kolam</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -76,5 +92,5 @@
 </div>
 {% endblock %}
 {% block page_js %}
-<script src="{{url_for('static', filename='js/custom_page/pond/pondlist.js')}}"></script>
+<script src="{{url_for('static', filename='js/custom_page/pond/fish.js')}}"></script>
 {% endblock %}
