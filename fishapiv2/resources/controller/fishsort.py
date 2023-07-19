@@ -280,6 +280,8 @@ class FishSortsApi(Resource):
             if (args['fish_sort_type']== 'kering'):
                 # create fish transfer per transfer_list
                 for transfer in transfer_list:
+                    if (transfer.destination_pond_id == args['origin_pond_id']):
+                        continue 
                     if (transfer['status'] == 'isActivated'):
                         # get origin activation
                         origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
@@ -292,7 +294,7 @@ class FishSortsApi(Resource):
                         # transfer in
                         createFishIn(destination_activation, args, transfer, fishtransfer)
                     if (transfer['status'] == 'isNotActivated'):
-                         # get origin activation
+                        # get origin activation
                         origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
                         # activation pond destination
                         destination_activation = activationPond(args, transfer)
@@ -302,6 +304,12 @@ class FishSortsApi(Resource):
                         createFishOut(destination_activation, args, transfer, fishtransfer)
                     # deactivation origin pond
                     deactivationPond(args)
+                for transfer in transfer_list:
+                    if (transfer.destination_pond_id == args['origin_pond_id']):
+                        # get origin activation
+                        last_origin_activation = PondActivation.objects(pond_id=args['origin_pond_id']).order_by('-activated_at').first()
+                        # activation pond with same fish
+                        origin_pond_activation = activationPond(args, transfer)
             response = {"message": "success add multipond fish sort"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
