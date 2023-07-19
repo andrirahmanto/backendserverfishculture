@@ -44,8 +44,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Tanggal Grading</th>
+                                    <th>Farm</th>
                                     <th>Kolam</th>
+                                    <th>Tanggal Grading</th>
                                     <th>Masa Budidaya</th>
                                     <th>Tipe Ikan</th>
                                     <th>Jumlah Sample</th>
@@ -59,8 +60,10 @@
                                 {% for index, fishgrading in fishgradings %}
                                 <tr>
                                     <td>{{index}}</td>
-                                    <td>{{fishgrading["date"]}}</td>
+                                    <td>{{fishgrading.pond.farm.farm_name if fishgrading.pond and fishgrading.pond.farm
+                                        else "-"}}</td>
                                     <td>{{fishgrading["pond"]["alias"]}}</td>
+                                    <td>{{fishgrading["date"]}}</td>
                                     <td>{{fishgrading["pond_activation"]["date"]}}</td>
                                     <td>{{fishgrading["fish_type"]}}</td>
                                     <td>{{fishgrading["sampling_amount"]}}</td>
@@ -86,15 +89,16 @@
                             <tfoot>
                                 <tr>
                                     <th>No</th>
-                                    <th>Grading Date</th>
-                                    <th>Pond</th>
-                                    <th>Activation Date</th>
-                                    <th>Fish Type</th>
-                                    <th>Sampling Amount</th>
-                                    <th>Avg Fish Long</th>
-                                    <th>Avg Fish Weight</th>
-                                    <th>Weight Limit</th>
-                                    <th>Sizeing</th>
+                                    <th>Farm</th>
+                                    <th>Kolam</th>
+                                    <th>Tanggal Grading</th>
+                                    <th>Masa Budidaya</th>
+                                    <th>Tipe Ikan</th>
+                                    <th>Jumlah Sample</th>
+                                    <th>Rata2 Panjang Ikan</th>
+                                    <th>Rata2 Berat Ikan</th>
+                                    <th>Batas Berat</th>
+                                    <th>Hasil</th>
                                 </tr>
                             </tfoot>
                         </table>
