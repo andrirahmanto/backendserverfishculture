@@ -854,7 +854,21 @@ def create_app(test_config=None):
                 'pipeline': [
                     {'$match': {
                         '$expr': {'$eq': ['$_id', '$$pondid']}}},
+                    {'$lookup': {
+                        'from': 'farm',
+                        'let': {"farmid": "$farm_id"},
+                        'pipeline': [
+                            {'$match': {'$expr': {'$eq': ['$_id', '$$farmid']}}},
+                            {"$project": {
+                                "_id": 1,
+                                "farm_name": 1
+                            }}
+                        ],
+                        'as': 'farms'
+                    }},
+                    {"$addFields": {"farm": {"$first": "$farms"}}},
                     {"$project": {
+                        "farms": 0,
                         "created_at": 0,
                         "updated_at": 0,
                     }}

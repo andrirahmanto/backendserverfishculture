@@ -38,9 +38,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Tanggal</th>
+                                    <th>Farm</th>
                                     <th>Kolam Asal</th>
                                     <th>Kolam Tujuan</th>
+                                    <th>Tanggal</th>
                                     <th>Metode Pemindahan</th>
                                     <th>Sample Berat</th>
                                     <th>Sample Panjang</th>
@@ -51,9 +52,11 @@
                                 {% for index, fishtransfer in fishtransfers %}
                                 <tr>
                                     <td>{{index}}</td>
-                                    <td>{{fishtransfer["date"]}}</td>
+                                    <td>{{fishtransfer.origin_pond.farm.farm_name if fishtransfer.origin_pond and
+                                        fishtransfer.origin_pond.farm else "-"}}</td>
                                     <td>{{fishtransfer["origin_pond"]["alias"]}}</td>
                                     <td>{{fishtransfer["destination_pond"]["alias"]}}</td>
+                                    <td>{{fishtransfer["date"]}}</td>
                                     <td>{{fishtransfer["transfer_method"]}}</td>
                                     <td>{{fishtransfer["sample_weight"]}} Kg</td>
                                     <td>{{fishtransfer["sample_long"]}} Cm</td>
@@ -65,6 +68,19 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Farm</th>
+                                    <th>Kolam Asal</th>
+                                    <th>Kolam Tujuan</th>
+                                    <th>Tanggal</th>
+                                    <th>Metode Pemindahan</th>
+                                    <th>Sample Berat</th>
+                                    <th>Sample Panjang</th>
+                                    <th>Perpindahan Ikan</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -78,5 +94,5 @@
     src="{{url_for('static', filename='node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 {% endblock %}
 {% block page_js %}
-<script src="{{url_for('static', filename='js/custom_page/fishdeath/monthly.js')}}"></script>
+<script src="{{url_for('static', filename='js/custom_page/fishtransfer/monthly.js')}}"></script>
 {% endblock %}
