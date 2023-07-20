@@ -115,7 +115,7 @@ class FishDeath(db.Document):
 
 class FishTransfer(db.Document):
     transfer_method_option = ("basah", "kering")
-    transfer_type_option = ("", "oversized_transfer", "undersized_transfer")
+    transfer_type_option = ("", "oversized_transfer", "undersized_transfer", "maintain_transfer")
 
     origin_pond_id = db.ReferenceField(Pond, required=True)
     destination_pond_id = db.ReferenceField(Pond, required=True)

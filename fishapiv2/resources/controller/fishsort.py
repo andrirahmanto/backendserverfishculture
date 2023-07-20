@@ -99,7 +99,7 @@ def _transferListValidation(i,transfer):
     # sample long
     if (transfer['sample_long']==None or transfer['sample_long']<1):
         raise Exception('transfer_list ke %s harus memiliki sample long' % (i))
-    if (transfer['transfer_type'] != "oversized_transfer" and transfer['transfer_type'] != "undersized_transfer"):
+    if (transfer['transfer_type'] != "oversized_transfer" and transfer['transfer_type'] != "undersized_transfer" and transfer['transfer_type'] != "maintain_transfer"):
         raise Exception('transfer_list ke %s harus memiliki transfer_type antara oversized_transfer atau undersized_transfer' % (i))
     return True
 
