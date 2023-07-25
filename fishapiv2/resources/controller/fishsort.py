@@ -235,7 +235,7 @@ class FishSortsApi(Resource):
             parser.add_argument('transfer_list', type=str, required=False, location='form')
             parser.add_argument('fish_death', type=str, required=False, location='form')
             parser.add_argument('transfer_at', type=str, required=False, location='form')
-            parser.add_argument('water_level', type=str, required=False, default=1, location='form')
+            parser.add_argument('water_level', type=int, required=False, default=1, location='form')
             parser.add_argument("amount_undersize", required=False, default=0, location='form')
             parser.add_argument("amount_oversize", required=False, default=0, location='form')
             parser.add_argument("amount_normal", required=False, default=0, location='form')
