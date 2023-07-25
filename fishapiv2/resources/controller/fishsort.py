@@ -37,36 +37,34 @@ inpt_json_transfer_basah = {
 
 # NOTE: ikan di kolam harus habis, dan bisa transfer ikan ke kolam yang belum di aktivasi
 inpt_json_transfer_kering = {
-    'origin_pond_id': 'obid(1288374682374)',
+    'origin_pond_id': '64a2f873b8354d11ab456639',
     'fish_sort_type' : 'kering',
-    'total_fish_harvested' : 330,
-    'amount_undersize' : 10,
-    'amount_oversize' : 20,
-    'amount_normal' : 300,
-    'sample_weight' : 400,
-    'sample_amount' : 60,
-    'sample_long' : 50,
-    'total_weight_harvested' : 3000,
+    'amount_undersize' : 5,
+    'amount_oversize' : 4,
+    'amount_normal' : 5,
+    'sample_weight' : 10,
+    'sample_amount' : 3,
+    'sample_long' : 30,
+    'total_fish_harvested' : 14,
+    'total_weight_harvested' : 20,
     'transfer_list' : [
         {
-            'destination_pond_id':'obid(1288374682374)',
+            'destination_pond_id':'64a2f857b8354d11ab456638',
             'status': 'isActivated',
             'fish': [
-                {"type": "lele","amount": 5, "weight":23},
-                {"type": "patin","amount": 9, "weight":23}
+                {"type": "nila merah","amount": 5, "weight":12},
+                {"type": "lele","amount": 3, "weight":12}
             ],
             'sample_weight': 20,
             'sample_long': 20,
             'transfer_type': 'oversized_transfer'
         },
         {
-            'destination_pond_id':'obid(1288374682374)',
-            'activation_type' : 'pedaging',
-            'status': 'isNotActivated',
-            'water_level': 100,
+            'destination_pond_id':'64a2f88fb8354d11ab45663a',
+            'status': 'isActivated',
             'fish': [
-                {"type": "lele","amount": 5, "weight":23},
-                {"type": "patin","amount": 9, "weight":23}
+                {"type": "lele","amount": 4, "weight":23},
+                {"type": "patin","amount": 3, "weight":23}
             ],
             'sample_weight': 20,
             'sample_long': 20,
@@ -120,6 +118,8 @@ def _validationInput(args):
         raise Exception("fish_sort_type harus berisi 'basah' atau 'kering'")
     # transfer list
     transfer_list_str = args['transfer_list']
+    print('sampai sini')
+    print(transfer_list_str)
     transfer_list = json.loads(transfer_list_str)
     if (len(transfer_list)<1):
         raise Exception('transfer_list harus lebih dari 1 kolam')
@@ -210,25 +210,27 @@ def createFishIn(destination_activation, args, transfer, fishtransfer):
     return
 
 def deactivationPond(args):
+    pond_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
     pond_activation = pond_activation.update(**{
         "isFinish": True,
-        "total_fish_harvested": total_fish_harvested,
-        "total_weight_harvested": total_weight_harvested,
+        "total_fish_harvested": args['total_fish_harvested'],
+        "total_weight_harvested": args['total_weight_harvested'],
         "deactivated_at": datetime.datetime.now(),
         "deactivated_description": "Sortir Ikan",
-        "amount_undersize_fish":amount_undersize,
-        "amount_oversize_fish":amount_oversize,
-        "amount_normal_fish":amount_normal,
-        "sample_amount":sample_amount,
-        "sample_long":sample_long,
-        "sample_weight": sample_weight
+        "amount_undersize_fish":args['amount_undersize'],
+        "amount_oversize_fish":args['amount_oversize'],
+        "amount_normal_fish":args['amount_normal'],
+        "sample_amount":args['sample_amount'],
+        "sample_long":args['sample_long'],
+        "sample_weight": args['sample_weight']
     })
     return pond_activation
 
 
 class FishSortsApi(Resource):
     def post(self):
-        try:
+            print(inpt_json_transfer_kering)
+        # try:
             parser = reqparse.RequestParser()
             parser.add_argument('origin_pond_id', type=str, required=True, location='form')
             parser.add_argument('fish_sort_type', type=str, required=True, location='form')
@@ -236,14 +238,14 @@ class FishSortsApi(Resource):
             parser.add_argument('fish_death', type=str, required=False, location='form')
             parser.add_argument('transfer_at', type=str, required=False, location='form')
             parser.add_argument('water_level', type=int, required=False, default=1, location='form')
-            parser.add_argument("amount_undersize", required=False, default=0, location='form')
-            parser.add_argument("amount_oversize", required=False, default=0, location='form')
-            parser.add_argument("amount_normal", required=False, default=0, location='form')
-            parser.add_argument("sample_weight", required=False, default=0, location='form')
-            parser.add_argument("sample_amount", required=False, default=0, location='form')
-            parser.add_argument("sample_long", required=False, default=0, location='form')
-            parser.add_argument("total_fish_harvested", required=False, default=0, location='form')
-            parser.add_argument("total_weight_harvested", required=False, default=0, location='form')
+            parser.add_argument("amount_undersize", type=int, required=False, default=0, location='form')
+            parser.add_argument("amount_oversize",type=int, required=False, default=0, location='form')
+            parser.add_argument("amount_normal",type=int, required=False, default=0, location='form')
+            parser.add_argument("sample_weight",type=int, required=False, default=0, location='form')
+            parser.add_argument("sample_amount",type=int, required=False, default=0, location='form')
+            parser.add_argument("sample_long",type=int, required=False, default=0, location='form')
+            parser.add_argument("total_fish_harvested",type=int, required=False, default=0, location='form')
+            parser.add_argument("total_weight_harvested",type=int, required=False, default=0, location='form')
             # print("", location='form')
             args = parser.parse_args()
             print(args)
@@ -280,13 +282,13 @@ class FishSortsApi(Resource):
             if (args['fish_sort_type']== 'kering'):
                 # create fish transfer per transfer_list
                 for transfer in transfer_list:
-                    if (transfer.destination_pond_id == args['origin_pond_id']):
+                    if (transfer['destination_pond_id'] == args['origin_pond_id']):
                         continue 
                     if (transfer['status'] == 'isActivated'):
                         # get origin activation
                         origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
                         # get destination activation
-                        destination_activation = PondActivation.objects(pond_id=transfer['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
+                        destination_activation = PondActivation.objects(pond_id=transfer['destination_pond_id'], isFinish=False).order_by('-activated_at').first()
                         # create fishtransfer
                         fishtransfer = createFishTransfer(origin_activation, destination_activation, args, transfer)
                         # transfer out
@@ -313,7 +315,7 @@ class FishSortsApi(Resource):
             response = {"message": "success add multipond fish sort"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
-        except Exception as e:
-            response = {"message": str(e)}
-            response = json.dumps(response, default=str)
-            return Response(response, mimetype="application/json", status=400)
+        # except Exception as e:
+        #     response = {"message": str(e)}
+        #     response = json.dumps(response, default=str)
+        #     return Response(response, mimetype="application/json", status=400)
