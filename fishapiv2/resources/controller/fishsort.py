@@ -224,6 +224,9 @@ def deactivationPond(args):
         "sample_long":args['sample_long'],
         "sample_weight": args['sample_weight']
     })
+    pond = Pond.objects.get(id=args['origin_pond_id'])
+    pond = pond.update(**{"isActive": False,
+        "status": "Aktif",  "pondDoDesc": "Belum Diukur", "pondPhDesc": "Belum Diukur", "pondPh": None, "pondDo": None, "pondTemp": None})
     return pond_activation
 
 
@@ -271,7 +274,7 @@ class FishSortsApi(Resource):
                         # transfer in
                         createFishIn(destination_activation, args, transfer, fishtransfer)
                     if (transfer['status'] == 'isNotActivated'):
-                         # get origin activation
+                        # get origin activation
                         origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
                         # activation pond destination
                         destination_activation = activationPond(args, transfer)
@@ -294,7 +297,7 @@ class FishSortsApi(Resource):
                         # transfer out
                         createFishOut(origin_activation, args, transfer, fishtransfer)
                         # transfer in
-                        createFishIn(destination_activation, args, transfer, fishtransfer)
+                        createFishIn(origin_activation, args, transfer, fishtransfer)
                     if (transfer['status'] == 'isNotActivated'):
                         # get origin activation
                         origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
@@ -303,11 +306,11 @@ class FishSortsApi(Resource):
                         # create fishtransfer
                         fishtransfer = createFishTransfer(origin_activation, destination_activation, args, transfer)
                         # transfer out
-                        createFishOut(destination_activation, args, transfer, fishtransfer)
+                        createFishOut(origin_activation, args, transfer, fishtransfer)
                     # deactivation origin pond
                     deactivationPond(args)
                 for transfer in transfer_list:
-                    if (transfer.destination_pond_id == args['origin_pond_id']):
+                    if (transfer['destination_pond_id'] == args['origin_pond_id']):
                         # get origin activation
                         last_origin_activation = PondActivation.objects(pond_id=args['origin_pond_id']).order_by('-activated_at').first()
                         # activation pond with same fish
