@@ -7,6 +7,7 @@ import calendar
 from datetime import timedelta
 import json
 from bson.json_util import dumps
+from fishapiv2.resources.helper import *
 
 
 class FeedHistorysApi(Resource):
@@ -505,86 +506,21 @@ class FeedHistoryForChart(Resource):
 
     def get(self, activation_id):
         try:
-            pipeline = [
-                {'$match': {'$expr': {'$and': [
-                            {'$eq': ['$pond_activation_id', {
-                                '$toObjectId': activation_id}]},
-                            ]}}},
-                {"$addFields": {
-                    "week": {"$week": "$feed_history_time"},
-                    "day": {"$dayOfMonth": "$feed_history_time"},
-                    "month": {"$month": "$feed_history_time"},
-                    "year": {"$year": "$feed_history_time"},
-                }},
-                {"$sort": {"year": 1, "month": 1, "_id": 1}},
-                {'$lookup': {
-                    'from': 'feed_type',
-                            'let': {"feedid": "$feed_type_id"},
-                            'pipeline': [
-                                {'$match': {
-                                    '$expr': {'$eq': ['$_id', '$$feedid']}}},
-                                {"$project": {
-                                    "created_at": 0,
-                                    "updated_at": 0,
-                                }}
-                            ],
-                    'as': 'feed_type'
-                }},
-            ]
-            feedHistorys = FeedHistory.objects.aggregate(pipeline)
-            response = list(feedHistorys)
-            feed = []
-            dateIndicator = None
-            feeddose = 0
-            getlogic = 200
-            samedate = datetime.now()
-            yesterday = samedate - timedelta(days = 2)
-            samedate = samedate - samedate
-            for fish in response:
-                date = fish["feed_history_time"].strftime('%d-%m-%Y')
-                if (dateIndicator != None):
-                    if (getlogic == samedate) :
-                        feeddose += float(fish["feed_dose"])
-                        feed.pop()
-                        data = {
-                            "pond_id": fish['pond_id'],
-                            "pond_activation_id": fish['pond_activation_id'],
-                            "date": fish['feed_history_time'],
-                            "feed_dose": feeddose
-                        }
-                        dateIndicator = date
-                        date_object = datetime.strptime(date, '%d-%m-%Y').date()
-                        datecompar_object = datetime.strptime(dateIndicator, '%d-%m-%Y').date()
-                        getlogic = datecompar_object - date_object
-                        feed.append(data)
-                    if (getlogic != samedate) :
-                        feeddose = 0
-                        data = {
-                            "pond_id": fish['pond_id'],
-                            "pond_activation_id": fish['pond_activation_id'],
-                            "date": fish['feed_history_time'],
-                            "feed_dose": fish["feed_dose"]
-                        }
-                        dateIndicator = date
-                        date_object = datetime.strptime(date, '%d-%m-%Y').date()
-                        datecompar_object = datetime.strptime(dateIndicator, '%d-%m-%Y').date()
-                        getlogic = datecompar_object - date_object
-                        feeddose += float(fish["feed_dose"])
-                        feed.append(data)
-                else :
-                    data = {
-                        "pond_id": fish['pond_id'],
-                        "pond_activation_id": fish['pond_activation_id'],
-                        "date": fish['feed_history_time'],
-                        "feed_dose": fish["feed_dose"]
-                    }
-                    
-                    date_object = datetime.strptime(date, '%d-%m-%Y').date()
-                    feed.append(data)
-                    feeddose += int(fish["feed_dose"])
-                    getlogic =  date_object - yesterday.date()
-                    dateIndicator = date
-            response = json.dumps(feed, default=str)
+            print(activation_id)
+            # get activation date
+            activation = PondActivation.objects(id=activation_id).first()
+            activation_date = activation.activated_at.replace(hour=0, minute=0, second=0, microsecond=0)
+            print(activation_date)
+            # get date now
+            date_now = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            print(date_now)
+            # get range bettwen date
+            list_date = getListDateBettwenDate(dateA=activation_date, dateB=date_now)
+            list_graph = []
+            for date in list_date:
+                feed_dose = FeedHistory.objects(pond_activation_id=activation_id,feed_history_time__gte=date, feed_history_time__lt=date+timedelta(hours=24),).sum('feed_dose')
+                list_graph.append({'date':date.strftime("%d %b "), 'feed_dose':"{:.2f}".format(feed_dose*1000)})
+            response = json.dumps(list_graph, default=str)
             return Response(response, mimetype="application/json", status=200)
         except Exception as e:
             response = {"message": str(e)}
