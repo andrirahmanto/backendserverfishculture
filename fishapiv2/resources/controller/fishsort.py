@@ -209,6 +209,34 @@ def createFishIn(destination_activation, args, transfer, fishtransfer):
         fishlog = FishLog(**data).save()
     return
 
+def addfishdeath(args):
+    fish_death_str = args['fish_death']
+    if fish_death_str == None:
+        return
+    fish_deaths = json.loads(fish_death_str)
+    if len(fish_deaths) < 1:
+        return
+    origin_pond = Pond.objects.get(id=args['origin_pond_id'])
+    origin_pond_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
+    fishdeath = FishDeath(**{
+        "pond_id": origin_pond.id,
+        "pond_activation_id": origin_pond_activation.id,
+        "image_name": "default.jpg",
+        "diagnosis": "selisih saat sortir ikan",
+        "death_at": datetime.datetime.now
+    }).save()
+    for fish in fish_deaths:
+        # save fish log
+        fishlog = FishLog(**{
+            "pond_id": origin_pond.id,
+            "pond_activation_id": origin_pond_activation.id,
+            "fish_death_id": fishdeath.id,
+            "type_log": "death",
+            "fish_type": fish['type'],
+            "fish_amount": int(fish['amount']) * -1
+        }).save()
+    return
+
 def deactivationPond(args):
     pond_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
     pond_activation = pond_activation.update(**{
@@ -249,6 +277,7 @@ class FishSortsApi(Resource):
             parser.add_argument("sample_long",type=int, required=False, default=0, location='form')
             parser.add_argument("total_fish_harvested",type=int, required=False, default=0, location='form')
             parser.add_argument("total_weight_harvested",type=int, required=False, default=0, location='form')
+            parser.add_argument('fish_death', type=str, required=False, location='form')
             # print("", location='form')
             args = parser.parse_args()
             print(args)
@@ -307,6 +336,8 @@ class FishSortsApi(Resource):
                         fishtransfer = createFishTransfer(origin_activation, destination_activation, args, transfer)
                         # transfer out
                         createFishOut(origin_activation, args, transfer, fishtransfer)
+                    # add fish death
+                    addfishdeath(args)
                     # deactivation origin pond
                     deactivationPond(args)
                 for transfer in transfer_list:
