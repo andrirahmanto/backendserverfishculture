@@ -62,6 +62,7 @@ class PondsApi(Resource):
                         {"$addFields": {
                             "activated_at": {'$dateToString': {
                                 'format': "%d-%m-%Y", 'date': "$activated_at"}},
+                            "activated_at_iso": "$activated_at",
                             "deactivated_at": {'$dateToString': {
                                 'format': "%d-%m-%Y", 'date': "$deactivated_at"}},
                             "total_fish_alive": {"$sum": "$fish_alive.fish_amount"}
@@ -112,6 +113,9 @@ class PondsApi(Resource):
                 }},
                 {"$addFields": {
                     "activation_date": "$last_activation.activated_at",
+                    "water_level":"$last_activation.water_level",
+                    "water_volume": {"$multiply": ["$area", "$last_activation.water_level", 1000]},
+                    "activation_date_iso": "$last_activation.activated_at_iso",
                     "fish_alive": "$last_activation.total_fish_alive",
                 }},
                 {"$project": {
@@ -121,7 +125,9 @@ class PondsApi(Resource):
                     "updated_at": 0,
                     "pond_activation_list": 0,
                     "last_activation": 0,
-                }}
+                }},
+                # {"$match": {"status": "Tidak Aktif"}},
+                # {"$sort": {"alias": 1}},
             ]
             ponds = Pond.objects.aggregate(pipeline)
             # token = request.headers['Authorization']
