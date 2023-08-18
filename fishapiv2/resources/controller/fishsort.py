@@ -145,7 +145,7 @@ def createFishTransfer(origin_activation, destination_activation, args, transfer
         "transfer_at": args['transfer_at']
     }).save()
 
-def activationPond(args,transfer):
+def activationPond(args,transfer, isFishLogUpdate=True):
     pond = Pond.objects.get(id=transfer['destination_pond_id'])
     pipeline_year = {'$match': {'$expr': {'$and': [
                     {'$eq': ['$pond_id', {'$toObjectId': pond.id}]},
@@ -166,17 +166,18 @@ def activationPond(args,transfer):
     }).save()
     pond.update(**{"isActive": True,
     "status": "Aktif",  "pondDoDesc": "Belum Diukur", "pondPhDesc": "Belum Diukur", "pondPh": None, "pondDo": None, "pondTemp": None})
-    for item_fish in transfer['fish']:
-        # save fish log
-        data = {
-            "pond_id": pond.id,
-            "pond_activation_id": pond_activation.id,
-            "type_log": "activation",
-            "fish_type": item_fish['type'],
-            "fish_amount": item_fish['amount'],
-            "fish_total_weight": item_fish['weight']
-        }
-        fishlog = FishLog(**data).save()
+    if isFishLogUpdate:
+        for item_fish in transfer['fish']:
+            # save fish log
+            data = {
+                "pond_id": pond.id,
+                "pond_activation_id": pond_activation.id,
+                "type_log": "activation",
+                "fish_type": item_fish['type'],
+                "fish_amount": item_fish['amount'],
+                "fish_total_weight": item_fish['weight']
+            }
+            fishlog = FishLog(**data).save()
     return pond_activation
 
 def createFishOut(origin_activation, args, transfer, fishtransfer):
@@ -194,14 +195,14 @@ def createFishOut(origin_activation, args, transfer, fishtransfer):
         fishlog = FishLog(**data).save()
     return
 
-def createFishIn(destination_activation, args, transfer, fishtransfer):
+def createFishIn(destination_activation, args, transfer, fishtransfer, type_log):
     for item_fish in transfer['fish']:
         # save fish log
         data = {
             "pond_id": transfer['destination_pond_id'],
             "pond_activation_id": destination_activation.id,
             "fish_transfer_id": fishtransfer.id,
-            "type_log": "transfer_in",
+            "type_log": type_log,
             "fish_type": item_fish['type'],
             "fish_total_weight": int(item_fish['weight']),
             "fish_amount": int(item_fish['amount'])
@@ -209,13 +210,90 @@ def createFishIn(destination_activation, args, transfer, fishtransfer):
         fishlog = FishLog(**data).save()
     return
 
-def addfishdeath(args):
-    fish_death_str = args['fish_death']
-    if fish_death_str == None:
-        return
-    fish_deaths = json.loads(fish_death_str)
-    if len(fish_deaths) < 1:
-        return
+def transform_fish_data(fish_alive):
+    transformed_list = []
+
+    for entry in fish_alive:
+        transformed_entry = {
+            'type': entry['fish_type'],
+            'amount': entry['fish_amount'],
+            'weight': 0  # Isi weight dengan nilai default 0
+        }
+        transformed_list.append(transformed_entry)
+
+    return transformed_list
+
+def calculatedFish(transfer_list):
+    fish_summary = []
+
+    for transfer in transfer_list:
+        fish_data = transfer['fish']
+        for fish_entry in fish_data:
+            fish_type = fish_entry['type']
+            amount = fish_entry['amount']
+            weight = fish_entry['weight']
+
+            existing_fish = next((fish for fish in fish_summary if fish['type'] == fish_type), None)
+            if existing_fish:
+                existing_fish['amount'] += amount
+                existing_fish['weight'] += weight
+            else:
+                fish_summary.append({"type": fish_type, "amount": amount, "weight": weight})
+
+
+    return fish_summary
+
+def calculatedFishDeath(args, fish_transfer):
+    origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
+    fish_alive = []
+    fish_alive_obj = FishLog.objects.aggregate([{'$match': {
+                                '$expr': {'$and': [
+                                    {'$eq': ['$pond_activation_id',
+                                     {'$toObjectId': origin_activation.id}]},
+                                    {'$ne': ['$type_log', 'deactivation']},
+                                ]}
+                            }},
+                            {"$project": {
+                                "created_at": 0,
+                                "updated_at": 0,
+                            }},
+                            {"$group": {
+                                "_id": "$fish_type",
+                                "fish_type": {"$first": "$fish_type"},
+                                "fish_amount": {"$sum": "$fish_amount"}
+                            }},
+                            {"$sort": {"fish_type": -1}},
+                            {"$project": {
+                                "_id": 0,
+                            }},])
+    for fish in fish_alive_obj:
+        fish_alive.append(fish)
+    fish_alive = transform_fish_data(fish_alive=fish_alive)
+
+    # fish alive - fish transfer
+    fish_death = calculate_amount_difference(fish_alive, fish_transfer) 
+    return fish_death
+
+def calculate_amount_difference(fish_alive, fish_transfer):
+    result = []
+
+    for entry1, entry2 in zip(fish_alive, fish_transfer):
+        print("entry1")
+        print(entry1['amount'])
+        print("entry2")
+        print(entry2['amount'])
+
+        diff_amount = entry1['amount'] - entry2['amount']
+        result_entry = {
+            'type': entry1['type'],
+            'amount': diff_amount,
+            'weight': entry1['weight']
+        }
+        result.append(result_entry)
+
+    return result
+
+def addfishdeath(args, fish_death_summary):
     origin_pond = Pond.objects.get(id=args['origin_pond_id'])
     origin_pond_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
     fishdeath = FishDeath(**{
@@ -225,7 +303,7 @@ def addfishdeath(args):
         "diagnosis": "selisih saat sortir ikan",
         "death_at": datetime.datetime.now
     }).save()
-    for fish in fish_deaths:
+    for fish in fish_death_summary:
         # save fish log
         fishlog = FishLog(**{
             "pond_id": origin_pond.id,
@@ -255,12 +333,13 @@ def deactivationPond(args):
     pond = Pond.objects.get(id=args['origin_pond_id'])
     pond = pond.update(**{"isActive": False,
         "status": "Aktif",  "pondDoDesc": "Belum Diukur", "pondPhDesc": "Belum Diukur", "pondPh": None, "pondDo": None, "pondTemp": None})
+    # create fish log deactivation
+
     return pond_activation
 
 
 class FishSortsApi(Resource):
     def post(self):
-            print(inpt_json_transfer_kering)
         # try:
             parser = reqparse.RequestParser()
             parser.add_argument('origin_pond_id', type=str, required=True, location='form')
@@ -281,12 +360,19 @@ class FishSortsApi(Resource):
             # print("", location='form')
             args = parser.parse_args()
             print(args)
-            validation = _validationInput(args)
-            if (not validation):
-                raise Exception("Input gagal di validasi")
+            # validation = _validationInput(args)
+            # if (not validation):
+            #     raise Exception("Input gagal di validasi")
             # create dict of transfer_list
             transfer_list_str = args['transfer_list']
             transfer_list = json.loads(transfer_list_str)
+            # test
+            # print('disini')
+            # fish_transfer = calculatedFish(transfer_list=transfer_list)
+            # print('disini fish_transfer')
+            # print(fish_transfer)
+            # print('disini fish_Death')
+            # print(calculatedFishDeath(args, fish_transfer))
             # check if sort type
             if (args['fish_sort_type']== 'basah'):
                 # create fish transfer per transfer_list
@@ -301,7 +387,7 @@ class FishSortsApi(Resource):
                         # transfer out
                         createFishOut(origin_activation, args, transfer, fishtransfer)
                         # transfer in
-                        createFishIn(destination_activation, args, transfer, fishtransfer)
+                        createFishIn(destination_activation, args, transfer, fishtransfer,"transfer_in")
                     if (transfer['status'] == 'isNotActivated'):
                         # get origin activation
                         origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
@@ -323,23 +409,25 @@ class FishSortsApi(Resource):
                         destination_activation = PondActivation.objects(pond_id=transfer['destination_pond_id'], isFinish=False).order_by('-activated_at').first()
                         # create fishtransfer
                         fishtransfer = createFishTransfer(origin_activation, destination_activation, args, transfer)
-                        # transfer out
-                        createFishOut(origin_activation, args, transfer, fishtransfer)
                         # transfer in
-                        createFishIn(origin_activation, args, transfer, fishtransfer)
+                        createFishIn(origin_activation, args, transfer, fishtransfer,"transfer_in")
                     if (transfer['status'] == 'isNotActivated'):
                         # get origin activation
                         origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()
                         # activation pond destination
-                        destination_activation = activationPond(args, transfer)
+                        destination_activation = activationPond(args, transfer, isFishLogUpdate=False)
                         # create fishtransfer
                         fishtransfer = createFishTransfer(origin_activation, destination_activation, args, transfer)
-                        # transfer out
-                        createFishOut(origin_activation, args, transfer, fishtransfer)
-                    # add fish death
-                    addfishdeath(args)
-                    # deactivation origin pond
-                    deactivationPond(args)
+                        # transfer out for destination_activation
+                        createFishIn(destination_activation, args, transfer, fishtransfer, "activation")
+                # calculated fish all pond
+                fish_summary = calculatedFish(transfer_list)
+                # calculated fish death
+                fish_death_summary = calculatedFishDeath(args,fish_summary)
+                # add fish death
+                addfishdeath(args,fish_death_summary)
+                # deactivation origin pond
+                deactivationPond(args)
                 for transfer in transfer_list:
                     if (transfer['destination_pond_id'] == args['origin_pond_id']):
                         # get origin activation

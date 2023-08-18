@@ -126,8 +126,8 @@ class FishTransfer(db.Document):
     transfer_type = db.StringField(choices=transfer_type_option, default="")
     transfer_method = db.StringField(
         required=True, choices=transfer_method_option)
-    sample_weight = db.FloatField(required=True)
-    sample_long = db.FloatField(default=None)
+    sample_weight = db.FloatField(default=0)
+    sample_long = db.FloatField(default=0)
     transfer_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)

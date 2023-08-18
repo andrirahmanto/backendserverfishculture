@@ -50,8 +50,8 @@ class FishTransfersApi(Resource):
                             '$expr': {'$and': [
                                 {'$eq': ['$fish_transfer_id',
                                          '$$fish_transfer_id']},
-                                {'$eq': ['$type_log',
-                                         'transfer_out']},
+                                # {'$eq': ['$type_log',
+                                #          'transfer_out']},
                             ]}
                         }},
                         {"$project": {

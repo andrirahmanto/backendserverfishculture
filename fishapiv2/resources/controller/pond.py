@@ -76,7 +76,19 @@ class PondsApi(Resource):
                     ],
                     'as': 'pond_activation_list'
                 }},
+                {'$lookup': {
+                    'from': 'daily_water_quality',
+                    'let': {"pondid": "$_id"},
+                    'pipeline': [
+                        {'$match': {'$expr': {'$and': [
+                            {'$eq': ['$pond_id', '$$pondid']},
+                        ]}}},
+                        {"$sort": {"_id": -1}},
+                    ],
+                    'as': 'list_daily_water_quality'
+                }},
                 {"$addFields": {
+                    "last_daily_water_quality": {"$first": "$list_daily_water_quality"},
                     "area": {"$cond": {
                         "if": {"$eq": ["$shape", "persegi"]},
                         "then": {"$multiply": ["$length", "$width"]},
@@ -112,6 +124,16 @@ class PondsApi(Resource):
                     },
                 }},
                 {"$addFields": {
+                    "pondPh": {"$cond": {
+                        "if": {"$eq": [{ "$size": "$list_daily_water_quality" }, 0]},
+                        "then": 0,
+                        "else": "$last_daily_water_quality.ph",
+                    }},
+                    "pondDo": {"$cond": {
+                        "if": {"$eq": [{ "$size": "$list_daily_water_quality" }, 0]},
+                        "then": 0,
+                        "else": "$last_daily_water_quality.do",
+                    }},
                     "activation_date": "$last_activation.activated_at",
                     "water_level":"$last_activation.water_level",
                     "water_volume": {"$multiply": ["$area", "$last_activation.water_level", 1000]},
