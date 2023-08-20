@@ -1,4 +1,4 @@
-from flask import Response, request
+from flask import Response, request, current_app
 from fishapiv2.database.models import FishGrading, Pond, PondActivation
 from flask_restful import Resource
 import datetime
@@ -81,7 +81,7 @@ class FishGradingsApi(Resource):
                 "created_at": datetime.datetime.now(),
                 "grading_at": datetime.datetime.now(),
             }
-            fishgrading = FishGrading(**body).save()
+            fishgrading = FishGrading(**body).save(using=current_app.config['CONNECTION'])
             id = fishgrading.id
             return {'id': str(id)}, 200
         except Exception as e:
@@ -106,7 +106,7 @@ class FishGradingApi(Resource):
 
     def delete(self, id):
         try:
-            fishgrading = FishGrading.objects.get(id=id).delete()
+            fishgrading = FishGrading.objects.get(id=id).delete(using=current_app.config['CONNECTION'])
             response = {"message": "success delete fish grading"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)

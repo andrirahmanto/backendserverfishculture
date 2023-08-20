@@ -1,5 +1,5 @@
 from bson import ObjectId
-from flask import Response, jsonify, request
+from flask import Response, jsonify, request, current_app
 from fishapiv2.database.models import *
 from flask_restful import Resource
 from fishapiv2.database.db import db
@@ -543,7 +543,7 @@ class PondActivationApi(Resource):
             "water_level": water_level,
             "activated_at": activated_at
         }
-        pondActivation = PondActivation(**pond_activation_data).save()
+        pondActivation = PondActivation(**pond_activation_data).save(using=current_app.config['CONNECTION'])
         pondActivation_id = pondActivation.id
         if isWaterPreparation == True:
             carbohydrate = request.form.get("carbohydrate", None)
@@ -558,7 +558,7 @@ class PondActivationApi(Resource):
                 "calcium": calcium,
             }
             water_preparation = WaterPreparation(
-                **water_preparation_data).save()
+                **water_preparation_data).save(using=current_app.config['CONNECTION'])
         pond.update(**{"isActive": True,
         "status": "Aktif",  "pondDoDesc": "Belum Diukur", "pondPhDesc": "Belum Diukur", "pondPh": None, "pondDo": None, "pondTemp": None})
         for fish in fishes:
@@ -571,7 +571,7 @@ class PondActivationApi(Resource):
                 "fish_amount": fish['amount'],
                 "fish_total_weight": fish['weight']
             }
-            fishlog = FishLog(**data).save()
+            fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
         response = {"message": "success to activation pond"}
         response = json.dumps(response, default=str)
         return Response(response, mimetype="application/json", status=200)
@@ -610,7 +610,7 @@ class PondDeactivationApi(Resource):
             }
             # total_fish_harvested += fish['amount']
             # total_weight_harvested += fish['weight']
-            fishlog = FishLog(**data).save()
+            fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
             print(data)
         print(total_fish_harvested)
         print(total_weight_harvested)

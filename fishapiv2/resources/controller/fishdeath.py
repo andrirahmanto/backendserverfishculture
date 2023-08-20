@@ -136,7 +136,7 @@ class FishDeathsApi(Resource):
                 "diagnosis": request.form.get("diagnosis", None),
                 "death_at": datetime.datetime.now
             }
-            fishdeath = FishDeath(**body).save()
+            fishdeath = FishDeath(**body).save(using=current_app.config['CONNECTION'])
             id = fishdeath.id
             for fish in fish_death_amount:
                 # save fish log
@@ -148,7 +148,7 @@ class FishDeathsApi(Resource):
                     "fish_type": fish['type'],
                     "fish_amount": int(fish['amount']) * -1
                 }
-                fishlog = FishLog(**data).save()
+                fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
             response = {"message": "success add fishdeath"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
@@ -180,7 +180,7 @@ class FishDeathApi(Resource):
                                 current_app.config['UPLOAD_DIR'])
             os.remove(os.path.join(path, fishdeath['image_name']))
             # delete data
-            fishdeath.delete()
+            fishdeath.delete(using=current_app.config['CONNECTION'])
             response = {"message": "success delete pond"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)

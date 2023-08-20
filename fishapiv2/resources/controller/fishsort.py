@@ -143,7 +143,7 @@ def createFishTransfer(origin_activation, destination_activation, args, transfer
         "sample_weight": transfer['sample_weight'],
         "sample_long": transfer['sample_long'],
         "transfer_at": args['transfer_at']
-    }).save()
+    }).save(using=current_app.config['CONNECTION'])
 
 def activationPond(args,transfer, isFishLogUpdate=True):
     pond = Pond.objects.get(id=transfer['destination_pond_id'])
@@ -163,7 +163,7 @@ def activationPond(args,transfer, isFishLogUpdate=True):
         "isWaterPreparation": False,
         "water_level": args['water_level'],
         "activated_at": args['transfer_at']
-    }).save()
+    }).save(using=current_app.config['CONNECTION'])
     pond.update(**{"isActive": True,
     "status": "Aktif",  "pondDoDesc": "Belum Diukur", "pondPhDesc": "Belum Diukur", "pondPh": None, "pondDo": None, "pondTemp": None})
     if isFishLogUpdate:
@@ -177,7 +177,7 @@ def activationPond(args,transfer, isFishLogUpdate=True):
                 "fish_amount": item_fish['amount'],
                 "fish_total_weight": item_fish['weight']
             }
-            fishlog = FishLog(**data).save()
+            fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
     return pond_activation
 
 def createFishOut(origin_activation, args, transfer, fishtransfer):
@@ -192,7 +192,7 @@ def createFishOut(origin_activation, args, transfer, fishtransfer):
             "fish_total_weight": int(item_fish['weight']) * -1,
             "fish_amount": int(item_fish['amount']) * -1
         }
-        fishlog = FishLog(**data).save()
+        fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
     return
 
 def createFishIn(destination_activation, args, transfer, fishtransfer, type_log):
@@ -207,7 +207,7 @@ def createFishIn(destination_activation, args, transfer, fishtransfer, type_log)
             "fish_total_weight": int(item_fish['weight']),
             "fish_amount": int(item_fish['amount'])
         }
-        fishlog = FishLog(**data).save()
+        fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
     return
 
 def transform_fish_data(fish_alive):
@@ -302,7 +302,7 @@ def addfishdeath(args, fish_death_summary):
         "image_name": "default.jpg",
         "diagnosis": "selisih saat sortir ikan",
         "death_at": datetime.datetime.now
-    }).save()
+    }).save(using=current_app.config['CONNECTION'])
     for fish in fish_death_summary:
         # save fish log
         fishlog = FishLog(**{
@@ -312,7 +312,7 @@ def addfishdeath(args, fish_death_summary):
             "type_log": "death",
             "fish_type": fish['type'],
             "fish_amount": int(fish['amount']) * -1
-        }).save()
+        }).save(using=current_app.config['CONNECTION'])
     return
 
 def deactivationPond(args):

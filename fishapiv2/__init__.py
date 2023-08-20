@@ -20,7 +20,10 @@ def create_app(test_config=None):
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=365)
     app.config['JWT_BLACKLIST_ENABLED'] = True
     app.config['PROPAGATE_EXCEPTIONS'] = True
-    app.config['MONGODB_SETTINGS'] = {'db':'fishapiv2', 'alias':'default'}
+    app.config['MONGODB_SETTINGS'] = [{"db": "fishapiprod","alias": "default"},{"db": "fishapiprod","alias": "prod_connection"}]
+    app.config['CONNECTION'] = 'pord_connection'
+    # app.config['MONGODB_SETTINGS'] = {"db": "fishapiv2","alias": "default"}
+    # app.config['MONGODB_PROD_SETTINGS'] = {"db": "fishapiprod","alias": "prod_connection"}
     # app.config['MONGODB_SETTINGS'] = {'db':'fishapitest', 'alias':'default'}
     jwt = JWTManager(app)
     app.config.from_pyfile('settings.cfg', silent=False)
@@ -1020,7 +1023,7 @@ def create_app(test_config=None):
             "type": "pond/shape",
             "option": str(["bundar", "persegi"])
         }
-        optiontable_list = OptionTable(**body).save()
+        optiontable_list = OptionTable(**body).save(using=current_app.config['CONNECTION'])
         return
 
     @app.route('/dailywaterquality/', defaults={'date': datetime.today().strftime('%Y-%m')})

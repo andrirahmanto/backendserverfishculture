@@ -1,4 +1,4 @@
-from flask import Response, request
+from flask import Response, request, current_app
 from fishapiv2.database.models import FeedType
 from flask_restful import Resource
 import datetime
@@ -29,7 +29,7 @@ class FeedTypesApi(Resource):
             "carbohydrate": request.form.get("carbohydrate", None),
             "desc": request.form.get("desc", None)
         }
-        feedtype = FeedType(**body).save()
+        feedtype = FeedType(**body).save(using=current_app.config['CONNECTION'])
         id = feedtype.id
         return {'id': str(id)}, 200
 
@@ -48,7 +48,7 @@ class FeedTypeApi(Resource):
         return '', 200
 
     def delete(self, id):
-        feedtype = FeedType.objects.get(id=id).delete()
+        feedtype = FeedType.objects.get(id=id).delete(using=current_app.config['CONNECTION'])
         return '', 200
 
     def get(self, id):

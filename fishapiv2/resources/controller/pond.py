@@ -171,9 +171,10 @@ class PondsApi(Resource):
             response = {"message": str(e)}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=400)
+
     @jwt_required()
     def post(self):
-        try:
+        # try:
             current_user = get_jwt_identity()
             farm = str(current_user['farm_id'])
             farm_id = ObjectId(farm)
@@ -213,15 +214,15 @@ class PondsApi(Resource):
                     "height": request.form.get("height", None),
                     "build_at": request.form.get("build_at", None),
                 }    
-            pond = Pond(**body).save()
+            pond = Pond(**body).save(using=current_app.config['CONNECTION'])
             id = pond.id
             response = {"message": "success add pond", "id": checking_pond}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
-        except Exception as e:
-            response = {"message": str(e)}
-            response = json.dumps(response, default=str)
-            return Response(response, mimetype="application/json", status=400)
+        # except Exception as e:
+        #     response = {"message": str(e)}
+        #     response = json.dumps(response, default=str)
+        #     return Response(response, mimetype="application/json", status=400)
 
 
 class PondApi(Resource):
@@ -240,7 +241,7 @@ class PondApi(Resource):
 
     def delete(self, id):
         try:
-            pond = Pond.objects.get(id=id).delete()
+            pond = Pond.objects.get(id=id).delete(using=current_app.config['CONNECTION'])
             response = {"message": "success delete pond"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)

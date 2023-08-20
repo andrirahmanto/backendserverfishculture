@@ -47,7 +47,7 @@ class LoggingApi(Resource):
                 "duration": duration,
                 "feature_name": feature_name,
             }
-            logging = Logging(**data_log).save()
+            logging = Logging(**data_log).save(using=current_app.config['CONNECTION'])
             response = {"message": "success add logging"}
             return Response(response, mimetype="application/json", status=200)
         except Exception as e:

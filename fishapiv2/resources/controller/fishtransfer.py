@@ -111,7 +111,7 @@ class FishTransfersApi(Resource):
                     "water_level": water_level,
                     "activated_at": activated_at
                 }
-                destinationPondActivation = PondActivation(**pond_activation_data).save()
+                destinationPondActivation = PondActivation(**pond_activation_data).save(using=current_app.config['CONNECTION'])
                 destination_activations = destinationPondActivation.id
                 destination_activation_id = destination_activations
                 for fish in fishes_stock:
@@ -126,7 +126,7 @@ class FishTransfersApi(Resource):
                     }
                     # total_fish_harvested += fish['amount']
                     # total_weight_harvested += fish['weight']
-                fishlog = FishLog(**data_stock).save()
+                fishlog = FishLog(**data_stock).save(using=current_app.config['CONNECTION'])
                 destination_pond.update(**{"isActive": True,
         "status": "Aktif",  "pondDoDesc": "Belum Diukur", "pondPhDesc": "Belum Diukur", "pondPh": None, "pondDo": None, "pondTemp": None})
             # fish_grading_id = request.form.get("fish_grading_id", None)
@@ -159,7 +159,7 @@ class FishTransfersApi(Resource):
                     }
                     # total_fish_harvested += fish['amount']
                     # total_weight_harvested += fish['weight']
-                fishlog = FishLog(**data).save()
+                fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
                 pond_deactivation_data = {
                     "isFinish": True,
                     "total_fish_harvested": request.form.get("total_fish_harvested", None),
@@ -194,7 +194,7 @@ class FishTransfersApi(Resource):
                 "sample_long": sample_long,
                 "transfer_at": transfer_at
             }
-            fish_transfer = FishTransfer(**data).save()
+            fish_transfer = FishTransfer(**data).save(using=current_app.config['CONNECTION'])
             # transfer out
             for fish in fishes:
                 # save fish log
@@ -207,7 +207,7 @@ class FishTransfersApi(Resource):
                     "fish_total_weight": int(fish['weight']) * -1,
                     "fish_amount": int(fish['amount']) * -1
                 }
-                fishlog = FishLog(**data).save()
+                fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
             # transfer in
             for fish in fishes:
                 # save fish log
@@ -220,7 +220,7 @@ class FishTransfersApi(Resource):
                     "fish_total_weight": int(fish['weight']),
                     "fish_amount": int(fish['amount'])
                 }
-                fishlog = FishLog(**data).save()
+                fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
             response = {"message": "success add fishtransfer"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
@@ -253,9 +253,9 @@ class FishTransferApi(Resource):
             ])
             for fish in fishes:
                 fishlog = FishLog.objects.get(id=fish['_id'])
-                fishlog.delete()
+                fishlog.delete(using=current_app.config['CONNECTION'])
             # delete data
-            fishtransfer.delete()
+            fishtransfer.delete(using=current_app.config['CONNECTION'])
             response = {"message": "success delete fishtransfer"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)

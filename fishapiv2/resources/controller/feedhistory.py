@@ -1,4 +1,4 @@
-from flask import Response, request
+from flask import Response, request, current_app
 from fishapiv2.database.models import *
 from flask_restful import Resource
 from fishapiv2.database.db import db
@@ -98,7 +98,7 @@ class FeedHistorysApi(Resource):
                 "feed_dose": request.form.get("feed_dose", None),
                 "feed_history_time": feed_history_time
             }
-            feedhistory = FeedHistory(**body).save()
+            feedhistory = FeedHistory(**body).save(using=current_app.config['CONNECTION'])
             id = feedhistory.id
             return {'id': str(id), 'message': 'success input'}, 200
         except Exception as e:
@@ -122,7 +122,7 @@ class FeedHistoryApi(Resource):
 
     def delete(self, id):
         try:
-            feedhistory = FeedHistory.objects.get(id=id).delete()
+            feedhistory = FeedHistory.objects.get(id=id).delete(using=current_app.config['CONNECTION'])
             response = {"message": "success"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)

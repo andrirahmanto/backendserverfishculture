@@ -69,7 +69,7 @@ class Register(Resource):
                     "address": address,
                     "coordinate": coordinate
                 }
-                farm = Farm(**farm_body).save()
+                farm = Farm(**farm_body).save(using=current_app.config['CONNECTION'])
                 farm_id = farm.id
             if hasFarm == "Sudah":
                 farm_id = request.form.get('farm_id')
@@ -83,7 +83,7 @@ class Register(Resource):
                 "nik": nik,
                 "phone": phone
             }
-            breeder = Breeder(**body).save()
+            breeder = Breeder(**body).save(using=current_app.config['CONNECTION'])
             user = {
                 "id": str(breeder.id),
                 "farm_id": str(breeder.farm_id.id),

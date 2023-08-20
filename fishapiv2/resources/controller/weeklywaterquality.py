@@ -1,4 +1,4 @@
-from flask import Response, request
+from flask import Response, request, current_app
 from fishapiv2.database.models import WeeklyWaterQuality, Pond, PondActivation
 from flask_restful import Resource
 import datetime
@@ -234,7 +234,7 @@ class WeeklyWaterQualitysApi(Resource):
                 "week": request.form.get("week", None),
                 "weeklywater_at": request.form.get("weeklywater_at", datetime.datetime.now())
             }
-            weeklywaterquality = WeeklyWaterQuality(**body).save()
+            weeklywaterquality = WeeklyWaterQuality(**body).save(using=current_app.config['CONNECTION'])
             id = weeklywaterquality.id
             response = {
                 "message": "success add data weekly water quality", "id": id}
@@ -262,7 +262,7 @@ class WeeklyWaterQualityApi(Resource):
 
     def delete(self, id):
         try:
-            weeklywaterquality = WeeklyWaterQuality.objects.get(id=id).delete()
+            weeklywaterquality = WeeklyWaterQuality.objects.get(id=id).delete(using=current_app.config['CONNECTION'])
             response = {"message": "success delete weekly water quality"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)

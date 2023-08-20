@@ -39,7 +39,7 @@ def createFishIn(pond,pond_activation, fish_list, type_log):
             "fish_total_weight": int(fish['weight']) if type_log == 'add_fish' else 0,
             "fish_amount": int(fish['amount'])
         }
-        fishlog = FishLog(**data).save()
+        fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
     return
 
 class AddFishApi(Resource):

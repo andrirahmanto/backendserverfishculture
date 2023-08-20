@@ -1,4 +1,4 @@
-from flask import Response, request
+from flask import Response, request, current_app
 from fishapiv2.database.models import *
 from flask_restful import Resource
 import datetime
@@ -80,7 +80,7 @@ class PondTreatmentsApi(Resource):
                     "water_change": 100,
                     "description": request.form.get("description", None),
                 }
-                pondtreatment = PondTreatment(**body).save()
+                pondtreatment = PondTreatment(**body).save(using=current_app.config['CONNECTION'])
                 id = pondtreatment.id
                 # update activation and pond
                 pond_deactivation_data = {
@@ -106,7 +106,7 @@ class PondTreatmentsApi(Resource):
                     }
                     # total_fish_harvested += fish['amount']
                     # total_weight_harvested += fish['weight']
-                    fishlog = FishLog(**data).save()
+                    fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
                     print(data)
             elif treatment_type == "ringan":
                 body = {
@@ -121,7 +121,7 @@ class PondTreatmentsApi(Resource):
                     "carbohydrate_type": request.form.get("carbohydrate_type", None),
                     "treatment_at": request.form.get("treatment_at", datetime.datetime.now())
                 }
-                pondtreatment = PondTreatment(**body).save()
+                pondtreatment = PondTreatment(**body).save(using=current_app.config['CONNECTION'])
                 id = pondtreatment.id
             elif treatment_type == "pergantian air":
                 body = {
@@ -130,7 +130,7 @@ class PondTreatmentsApi(Resource):
                     "treatment_type": treatment_type,
                     "water_change": request.form.get("water_change", 0)
                 }
-                pondtreatment = PondTreatment(**body).save()
+                pondtreatment = PondTreatment(**body).save(using=current_app.config['CONNECTION'])
                 id = pondtreatment.id
             else:
                 response = {
@@ -163,7 +163,7 @@ class PondTreatmentApi(Resource):
 
     def delete(self, id):
         try:
-            pondtreatment = PondTreatment.objects.get(id=id).delete()
+            pondtreatment = PondTreatment.objects.get(id=id).delete(using=current_app.config['CONNECTION'])
             response = {"message": "success delete pond treatment"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)

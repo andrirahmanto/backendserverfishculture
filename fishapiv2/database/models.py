@@ -3,8 +3,11 @@ import datetime
 from bson import json_util
 from mongoengine import connect, disconnect
 
-disconnect()
+_meta = {
+    'db_alias' : 'prod_connection',
+}
 class Farm(db.Document):
+    meta = _meta
     farm_name = db.StringField(required=True)
     address = db.StringField(required=True)
     breeder = db.StringField(required=True)
@@ -12,6 +15,7 @@ class Farm(db.Document):
 
 
 class Breeder(db.Document):
+    meta = _meta
     farm_id = db.ReferenceField(Farm, required=True)
     username = db.StringField(required=True)
     password = db.StringField(required=True)
@@ -21,6 +25,7 @@ class Breeder(db.Document):
 
 
 class Pond(db.Document):
+    meta = _meta
     shape_option = ("bundar", "persegi")
 
     farm_id = db.ReferenceField(Farm, required=True)
@@ -47,6 +52,7 @@ class Pond(db.Document):
 
 
 class PondActivation(db.Document):
+    meta = _meta
     id_int = db.IntField(required=True)
     pond_id = db.ReferenceField(Pond, required=True)
     isFinish = db.BooleanField(required=True, default=False)
@@ -71,6 +77,7 @@ class PondActivation(db.Document):
 
 
 class WaterPreparation(db.Document):
+    meta = _meta
     carbohydrate_type_option = ("gula", "molase", "terigu", "tapioka")
 
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
@@ -82,6 +89,7 @@ class WaterPreparation(db.Document):
 
 
 class FeedType(db.Document):
+    meta = _meta
     feed_type_option = ("pelet", "sayuran")
 
     name = db.StringField(required=True)
@@ -94,6 +102,7 @@ class FeedType(db.Document):
 
 
 class FeedHistory(db.Document):
+    meta = _meta
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     feed_type_id = db.ReferenceField(FeedType, required=True)
@@ -104,6 +113,7 @@ class FeedHistory(db.Document):
 
 
 class FishDeath(db.Document):
+    meta = _meta
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     image_name = db.StringField(required=True)
@@ -114,6 +124,7 @@ class FishDeath(db.Document):
 
 
 class FishTransfer(db.Document):
+    meta = _meta
     transfer_method_option = ("basah", "kering")
     transfer_type_option = ("", "oversized_transfer", "undersized_transfer", "maintain_transfer")
 
@@ -134,6 +145,7 @@ class FishTransfer(db.Document):
 
 
 class FishLog(db.Document):
+    meta = _meta
     fish_type_option = ("nila hitam", "nila merah", "lele", "patin", "mas")
 
     pond_id = db.ReferenceField(Pond, required=True)
@@ -149,6 +161,7 @@ class FishLog(db.Document):
 
 
 class FishGrading(db.Document):
+    meta = _meta
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     isOversizeTransferred = db.BooleanField(required=True, default=False)
@@ -166,6 +179,7 @@ class FishGrading(db.Document):
 
 
 class DailyWaterQuality(db.Document):
+    meta = _meta
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     ph = db.FloatField(required=True)
@@ -178,7 +192,7 @@ class DailyWaterQuality(db.Document):
 
 
 class WeeklyWaterQuality(db.Document):
-
+    meta = _meta
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ReferenceField(PondActivation, required=True)
     floc = db.FloatField(required=True)
@@ -193,6 +207,7 @@ class WeeklyWaterQuality(db.Document):
 
 
 class PondTreatment(db.Document):
+    meta = _meta
     treatment_type_option = ("ringan", "berat", "pergantian air")
     carbohydrate_type_option = ("", "gula", "molase", "terigu", "tapioka")
 
@@ -213,12 +228,14 @@ class PondTreatment(db.Document):
 
 
 class OptionTable(db.Document):
+    meta = _meta
     type = db.StringField(required=True)
     option = db.StringField(required=True)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
 class Logging(db.Document):
+    meta = _meta
     farm_id = db.ReferenceField(Farm)
     breeder_id = db.ReferenceField(Breeder)
     farm_name = db.StringField()

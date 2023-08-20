@@ -1,4 +1,4 @@
-from flask import Response, request
+from flask import Response, request, current_app
 from fishapiv2.database.models import DailyWaterQuality, Pond, PondActivation
 from flask_restful import Resource
 import datetime
@@ -130,7 +130,7 @@ class DailyWaterQualitysApi(Resource):
             else:
                 pond.update(**{"pondDoDesc": "normal", "pondDo": float(request.form.get("do"))})
             pond.update(**{"pondTemp": float(request.form.get("temperature"))})
-            dailywaterquality = DailyWaterQuality(**body).save()
+            dailywaterquality = DailyWaterQuality(**body).save(using=current_app.config['CONNECTION'])
             id = dailywaterquality.id
             response = {
                 "message": "success add data daily water quality", "id": id}
@@ -158,7 +158,7 @@ class DailyWaterQualityApi(Resource):
 
     def delete(self, id):
         try:
-            dailywaterquality = DailyWaterQuality.objects.get(id=id).delete()
+            dailywaterquality = DailyWaterQuality.objects.get(id=id).delete(using=current_app.config['CONNECTION'])
             response = {"message": "success delete daily water quality"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
