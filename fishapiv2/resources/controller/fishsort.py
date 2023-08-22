@@ -410,7 +410,7 @@ class FishSortsApi(Resource):
                         # create fishtransfer
                         fishtransfer = createFishTransfer(origin_activation, destination_activation, args, transfer)
                         # transfer in
-                        createFishIn(origin_activation, args, transfer, fishtransfer,"transfer_in")
+                        createFishIn(destination_activation, args, transfer, fishtransfer,"transfer_in")
                     if (transfer['status'] == 'isNotActivated'):
                         # get origin activation
                         origin_activation = PondActivation.objects(pond_id=args['origin_pond_id'], isFinish=False).order_by('-activated_at').first()

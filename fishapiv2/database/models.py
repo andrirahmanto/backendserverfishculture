@@ -90,7 +90,7 @@ class WaterPreparation(db.Document):
 
 class FeedType(db.Document):
     meta = _meta
-    feed_type_option = ("pelet", "sayuran")
+    feed_type_option = ("pelet", "alternatif")
 
     name = db.StringField(required=True)
     feed_type = db.StringField(required=True, choices=feed_type_option)
