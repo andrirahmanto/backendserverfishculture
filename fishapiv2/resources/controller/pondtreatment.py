@@ -119,6 +119,7 @@ class PondTreatmentsApi(Resource):
                     "probiotic_culture": request.form.get("probiotic_culture", None),
                     "carbohydrate": request.form.get("carbohydrate", None),
                     "carbohydrate_type": request.form.get("carbohydrate_type", None),
+                    "calcium": request.form.get("carbohydrate_type", 0),
                     "treatment_at": request.form.get("treatment_at", datetime.datetime.now())
                 }
                 pondtreatment = PondTreatment(**body).save(using=current_app.config['CONNECTION'])

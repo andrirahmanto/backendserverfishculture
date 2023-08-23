@@ -221,6 +221,7 @@ class PondTreatment(db.Document):
     carbohydrate = db.FloatField()
     carbohydrate_type = db.StringField(
         required=True, choices=carbohydrate_type_option, default="")
+    calcium = db.FloatField(default=0)
     description = db.StringField(default="")
     treatment_at = db.DateTimeField(default=datetime.datetime.now)
     created_at = db.DateTimeField(default=datetime.datetime.now)
