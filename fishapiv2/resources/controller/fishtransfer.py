@@ -12,6 +12,7 @@ class FishTransfersApi(Resource):
     def get(self):
         try:
             pipeline = [
+                {"$sort":{"_id":-1}},
                 {'$lookup': {
                     'from': 'pond',
                     'let': {"pondid": "$origin_pond_id"},
