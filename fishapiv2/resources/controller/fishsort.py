@@ -397,6 +397,11 @@ class FishSortsApi(Resource):
                         fishtransfer = createFishTransfer(origin_activation, destination_activation, args, transfer)
                         # transfer out
                         createFishOut(destination_activation, args, transfer, fishtransfer)
+                # ke inventrory
+                    # jumlah ikan sekarang
+                    # jumlah ikan yg di transfer
+                    # calkulasi selisih ikannya
+                    # catet di inventory
             if (args['fish_sort_type']== 'kering'):
                 # create fish transfer per transfer_list
                 for transfer in transfer_list:
