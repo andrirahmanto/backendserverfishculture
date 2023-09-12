@@ -13,6 +13,7 @@ class FishDeathsApi(Resource):
         try:
             url = url_for('fishdeathimageapidummy', _external=True)
             pipeline = [
+                {"$sort":{"_id":-1}},
                 {'$lookup': {
                     'from': 'pond_activation',
                     'let': {"pondid": "$_id"},
