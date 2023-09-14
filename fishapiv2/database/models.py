@@ -4,7 +4,7 @@ from bson import json_util
 from mongoengine import connect, disconnect
 
 _meta = {
-    'db_alias' : 'prod_connection',
+    'db_alias' : 'new_connection',
 }
 class Farm(db.Document):
     meta = _meta
@@ -56,22 +56,22 @@ class PondActivation(db.Document):
     id_int = db.IntField(required=True)
     pond_id = db.ReferenceField(Pond, required=True)
     isFinish = db.BooleanField(required=True, default=False)
-    isWaterPreparation = db.BooleanField(required=True, default=False)
+    # isWaterPreparation = db.BooleanField(required=True, default=False)
     water_level = db.FloatField(required=True, default=0)
-    total_fish_harvested = db.IntField(required=True, default=0)
-    total_weight_harvested = db.FloatField(required=True, default=0)
+    # total_fish_harvested = db.IntField(required=True, default=0)
+    # total_weight_harvested = db.FloatField(required=True, default=0)
     # fish_harvested = db.ArrayField(default=None)
     activated_at = db.DateTimeField(default=datetime.datetime.now)
     deactivated_at = db.DateTimeField(default=None)
-    deactivated_description = db.StringField(default=None)
-    amount_normal_fish = db.IntField(default=None)
-    amount_oversize_fish = db.IntField(default=None)
-    amount_undersize_fish = db.IntField(default=None)
-    sample_amount = db.IntField(default=None)
-    sample_weight = db.FloatField(default=None)
-    sample_long = db.FloatField(default=None)
-    constanta_oversize = db.FloatField(required=True, default=1.3)
-    constanta_undersize = db.FloatField(required=True, default=0.7)
+    # deactivated_description = db.StringField(default=None)
+    # amount_normal_fish = db.IntField(default=None)
+    # amount_oversize_fish = db.IntField(default=None)
+    # amount_undersize_fish = db.IntField(default=None)
+    # sample_amount = db.IntField(default=None)
+    # sample_weight = db.FloatField(default=None)
+    # sample_long = db.FloatField(default=None)
+    # constanta_oversize = db.FloatField(required=True, default=1.3)
+    # constanta_undersize = db.FloatField(required=True, default=0.7)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
@@ -146,16 +146,13 @@ class FishTransfer(db.Document):
 
 class FishLog(db.Document):
     meta = _meta
-    fish_type_option = ("nila hitam", "nila merah", "lele", "patin", "mas")
+    type_log = ('ACTIVATION', 'DEACTIVATION', 'TRANSFER_IN', 'TRANSFER_OUT', 'DEATH')
 
     pond_id = db.ReferenceField(Pond, required=True)
     pond_activation_id = db.ObjectIdField(required=False, default=None)
-    fish_death_id = db.ObjectIdField(required=False, default=None)
-    fish_transfer_id = db.ObjectIdField(required=False, default=None)
+    event_id = GenericReferenceField()
     type_log = db.StringField(required=True)
-    fish_type = db.StringField(required=True, choices=fish_type_option)
-    fish_amount = db.IntField(required=True)
-    fish_total_weight = db.FloatField(default=None)
+    fish = db.StringField(required=True, choices=fish_type_option)
     created_at = db.DateTimeField(default=datetime.datetime.now)
     updated_at = db.DateTimeField(default=datetime.datetime.now)
 
