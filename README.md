@@ -14,7 +14,5 @@ Web Service dalam bentuk REST Api untuk Backend Aqua Breeding
 
 ## :wrench: Dokumentasi API
 
-<details>
-<summary><b>[GET]</b> Get Similarity Overall Ranking</summary>
-
-- **URL**: `/api/v1.0/overall_ranking/similarity?keyword=barcelona&sort=similarity&start=0&length=10`
+- [Dokumentasi Api Aqua Breeding][(https://documenter.getpostman.com/view/11714934/UVysybzY#intro)https://documenter.getpostman.com/view/11714934/UVysybzY#intro)
+](https://documenter.getpostman.com/view/11714934/UVysybzY#intro)https://documenter.getpostman.com/view/11714934/UVysybzY#intro
