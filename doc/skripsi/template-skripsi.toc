@@ -1,0 +1,75 @@
+\babel@toc {bahasa}{}
+\babel@toc {bahasa}{}
+\contentsline {chapter}{LEMBAR PERSETUJUAN HASIL SIDANG SKRIPSI}{ii}{figure.caption.2}%
+\contentsline {chapter}{LEMBAR PERNYATAAN}{iii}{chapter*.3}%
+\contentsline {chapter}{LEMBAR PERSEMBAHAN}{iv}{chapter*.4}%
+\contentsline {chapter}{ABSTRAK}{v}{chapter*.5}%
+\contentsline {chapter}{ABSTRACT}{vi}{chapter*.6}%
+\contentsline {chapter}{KATA PENGANTAR}{viii}{Item.8}%
+\contentsline {chapter}{DAFTAR ISI}{xi}{chapter*.8}%
+\contentsline {chapter}{DAFTAR GAMBAR}{xiii}{chapter*.9}%
+\contentsline {chapter}{DAFTAR TABEL}{xv}{chapter*.10}%
+\babel@toc {bahasa}{}
+\contentsline {chapter}{\numberline {I}PENDAHULUAN}{1}{chapter.1}%
+\contentsline {section}{\numberline {A.}Latar Belakang Masalah}{1}{section.1.1}%
+\contentsline {section}{\numberline {B.}Rumusan Masalah}{4}{section.1.2}%
+\contentsline {section}{\numberline {C.}Pembatasan Masalah}{5}{section.1.3}%
+\contentsline {section}{\numberline {D.}Tujuan Penelitian}{5}{section.1.4}%
+\contentsline {section}{\numberline {E.}Manfaat Penelitian}{5}{section.1.5}%
+\babel@toc {bahasa}{}
+\contentsline {chapter}{\numberline {II}KAJIAN PUSTAKA}{7}{chapter.2}%
+\contentsline {section}{\numberline {A.}Perikanan modern}{7}{section.2.1}%
+\contentsline {section}{\numberline {B.}Sistem backend yang bertanggung jawab untuk melayani transaksi query}{7}{section.2.2}%
+\contentsline {section}{\numberline {C.}\emph {Scrum}}{8}{section.2.3}%
+\contentsline {subsection}{\numberline {1.}Tim Scrum}{9}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.}Aktivitas-aktivitas Scrum (Scrum Events)}{12}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {3.}Komponen \emph {Scrum} (\emph {Scrum Artifacts})}{16}{subsection.2.3.3}%
+\contentsline {section}{\numberline {D.}REST}{18}{section.2.4}%
+\contentsline {subsection}{\numberline {1.}URL Design}{19}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.}HTTP Verbs}{19}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {3.}HTTP Response Code}{20}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {4.}Format Response}{20}{subsection.2.4.4}%
+\contentsline {section}{\numberline {E.}MongoDB}{20}{section.2.5}%
+\contentsline {section}{\numberline {F.}Flask Framework}{24}{section.2.6}%
+\contentsline {subsection}{\numberline {1.}Flask routing}{24}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.}Dependencies}{26}{subsection.2.6.2}%
+\contentsline {section}{\numberline {G.}Apache}{28}{section.2.7}%
+\contentsline {subsection}{\numberline {1.}Konfigurasi httpd.conf}{29}{subsection.2.7.1}%
+\contentsline {section}{\numberline {H.}Unit Testing}{30}{section.2.8}%
+\contentsline {section}{\numberline {I.}User Acceptance Test (UAT)}{31}{section.2.9}%
+\contentsline {section}{\numberline {J.}Black box testing}{31}{section.2.10}%
+\contentsline {chapter}{\numberline {III}Metodologi Penelitian}{33}{chapter.3}%
+\contentsline {section}{\numberline {A.}Pengumpulan Data}{34}{section.3.1}%
+\contentsline {section}{\numberline {B.}Analisa Sistem}{34}{section.3.2}%
+\contentsline {section}{\numberline {C.}Analisa Kebutuhan}{36}{section.3.3}%
+\contentsline {section}{\numberline {D.}Perancangan Sistem}{37}{section.3.4}%
+\contentsline {subsection}{\numberline {1.}Produk Backlog}{39}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {2.}Sprint Backlog}{41}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.}Daily Scrum}{42}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {4.}Sprint Review dan Sprint Retrospective}{42}{subsection.3.4.4}%
+\contentsline {section}{\numberline {E.}Pengujian}{43}{section.3.5}%
+\contentsline {chapter}{\numberline {IV}Hasil Dan Pembahasan}{49}{chapter.4}%
+\contentsline {section}{\numberline {A.}Perancangan Sistem}{49}{section.4.1}%
+\contentsline {subsection}{\numberline {1.}Sprint 1 Report}{50}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {2.}Sprint 2 Report}{61}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {3.}Sprint 3 Report}{62}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.}Sprint 4 Report}{75}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {5.}Sprint 5 Report}{98}{subsection.4.1.5}%
+\contentsline {subsection}{\numberline {6.}Sprint 6 Report}{107}{subsection.4.1.6}%
+\contentsline {subsection}{\numberline {7.}Sprint 7 Report}{114}{subsection.4.1.7}%
+\contentsline {subsection}{\numberline {8.}Sprint 8 Report}{140}{subsection.4.1.8}%
+\contentsline {subsection}{\numberline {9.}Sprint 9 Report}{158}{subsection.4.1.9}%
+\contentsline {subsection}{\numberline {10.}Sprint 10 Report}{205}{subsection.4.1.10}%
+\contentsline {section}{\numberline {B.}Uji Sistem}{228}{section.4.2}%
+\contentsline {subsection}{\numberline {1.}Unit Testing}{228}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {2.}Pengujian Web Service}{233}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {3.}Pengujian UAT (User Acceptance Test)}{234}{subsection.4.2.3}%
+\contentsline {chapter}{\numberline {V}KESIMPULAN DAN SARAN}{236}{chapter.5}%
+\contentsline {section}{\numberline {A.}Kesimpulan}{236}{section.5.1}%
+\contentsline {section}{\numberline {B.}Saran}{236}{section.5.2}%
+\contentsline {chapter}{DAFTAR PUSTAKA}{240}{chapter*.52}%
+\contentsline {chapter}{\numberline {A}LAMPIRAN}{241}{appendix.A}%
+\contentsline {section}{\numberline {A.}Transkrip Percakapan}{241}{section.A.1}%
+\contentsline {section}{\numberline {B.}Transkrip Percakapan Final Testing Web Service}{242}{section.A.2}%
+\contentsline {section}{\numberline {C.}Transkrip Percakapan UAT}{244}{section.A.3}%
+\contentsline {chapter}{\numberline {B}DAFTAR RIWAYAT HIDUP}{246}{appendix.B}%

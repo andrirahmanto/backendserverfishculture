@@ -1,0 +1,249 @@
+%-------------------------------------------------------------------------------
+%                      Template Naskah Skripsi
+%               	Berdasarkan format JTETI FT UGM
+% 						(c) @gunturdputra 2014
+%-------------------------------------------------------------------------------
+
+%Template pembuatan naskah skripsi.
+\documentclass{jtetiskripsi}
+
+\renewcommand \thesection{\Alph{section}.}
+\renewcommand \thesubsection{\arabic{subsection}.}
+
+%Untuk prefiks pada daftar gambar dan tabel
+\usepackage[titles]{tocloft}
+\renewcommand\cftfigpresnum{Gambar\  }
+\renewcommand\cfttabpresnum{Tabel\   }
+
+%Untuk hyperlink dan table of content
+\usepackage[hidelinks]{hyperref}
+\newlength{\mylenf}
+\settowidth{\mylenf}{\cftfigpresnum}
+\setlength{\cftfignumwidth}{\dimexpr\mylenf+2em}
+\setlength{\cfttabnumwidth}{\dimexpr\mylenf+2em}
+
+%Untuk Bold Face pada Keterangan Gambar
+\usepackage[labelfont=bf]{caption}
+
+%Untuk caption dan subcaption
+\usepackage{caption}
+\usepackage{subcaption}
+\newcommand*{\captionsource}[2]{%
+  \captionsetup{justification=centering}
+  \caption[{#1}]{%
+    #1%
+    \hspace{\linewidth}%
+    \textbf{Sumber:} #2%
+  }%
+}
+
+%pdf
+\usepackage{pdfpages}
+
+%table
+\usepackage{graphics}
+
+\usepackage{wrapfig}
+
+\usepackage{longtable}
+
+\usepackage{tabu}
+
+\usepackage{tabularx}
+
+%bibliography
+\usepackage{natbib}
+
+% bbding for checkmark
+\usepackage{bbding}
+
+%equation
+\usepackage{amsmath}
+
+%algoritma
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%listing
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codegraywhite}{rgb}{0.90196, 0.90196, 0.90196}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{1,1,1}
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{white},   
+    commentstyle=\color{black},
+    keywordstyle=\color{black},
+    numberstyle=\tiny\color{black},
+    stringstyle=\color{black},
+    basicstyle=\ttfamily\scriptsize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=7pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single
+}
+
+\usepackage[edges]{forest}
+\definecolor{folderbg}{RGB}{124,166,198}
+\definecolor{folderborder}{RGB}{110,144,169}
+\newlength\Size
+\setlength\Size{4pt}
+\tikzset{%
+  folder/.pic={%
+    \filldraw [draw=folderborder, top color=folderbg!50, bottom color=folderbg] (-1.05*\Size,0.2\Size+5pt) rectangle ++(.75*\Size,-0.2\Size-5pt);
+    \filldraw [draw=folderborder, top color=folderbg!50, bottom color=folderbg] (-1.15*\Size,-\Size) rectangle (1.15*\Size,\Size);
+  },
+  file/.pic={%
+    \filldraw [draw=folderborder, top color=folderbg!5, bottom color=folderbg!10] (-\Size,.4*\Size+5pt) coordinate (a) |- (\Size,-1.2*\Size) coordinate (b) -- ++(0,1.6*\Size) coordinate (c) -- ++(-5pt,5pt) coordinate (d) -- cycle (d) |- (c) ;
+  },
+}
+\forestset{%
+  declare autowrapped toks={pic me}{},
+  pic dir tree/.style={%
+    for tree={%
+      folder,
+      font=\tiny\ttfamily,
+      grow'=0,
+    },
+    before typesetting nodes={%
+      for tree={%
+        edge label+/.option={pic me},
+      },
+    },
+  },
+  pic me set/.code n args=2{%
+    \forestset{%
+      #1/.style={%
+        inner xsep=2\Size,
+        pic me={pic {#2}},
+      }
+    }
+  },
+  pic me set={directory}{folder},
+  pic me set={file}{file},
+ }
+%-----------------------------------------------------------------
+%Disini awal masukan untuk data proposal skripsi
+%-----------------------------------------------------------------
+\titleind{Perancangan Arsitektur Aplikasi Budidaya Perikanan Modern pada Backend yang Bertanggung Jawab dalam Melayani Transaksi Query Webservice}
+
+\fullname{Andri Rahmanto}
+
+\idnum{1313618007}
+
+%\approvaldate{12 Februari 2019}
+%\approvaldate{1 Januari 2023}
+%\approvaldate{26 Juli 2023}
+
+\degree{Sarjana Ilmu Komputer}
+
+\yearsubmit{2023}
+
+\program{Ilmu Komputer}
+
+\dept{Ilmu Komputer}
+
+\firstsupervisor{Muhammad Eka Suryana, M. Kom.}
+\firstnip{198512232012121002}
+
+\secondsupervisor{Med Irzal, M. Kom.}
+\secondnip{197706152003121001}
+
+%-----------------------------------------------------------------
+%Disini akhir masukan untuk data proposal skripsi
+%-----------------------------------------------------------------
+
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\begin{document}
+
+\cover
+%-----------------------------------------------------------------
+
+%-----------------------------------------------------------------
+%Disini akhir masukan untuk muka skripsi
+%-----------------------------------------------------------------
+
+\newpage
+\pagenumbering{roman}
+
+\include{persetujuan-hasil-sidang}
+\addcontentsline{toc}{chapter}{LEMBAR PERSETUJUAN HASIL SIDANG SKRIPSI}
+
+\include{lembar-pernyataan}
+\addcontentsline{toc}{chapter}{LEMBAR PERNYATAAN}
+
+\include{halaman-persembahan}
+\addcontentsline{toc}{chapter}{LEMBAR PERSEMBAHAN}
+
+\include{abstrak}
+\addcontentsline{toc}{chapter}{ABSTRAK}
+
+\include{abstract}
+\addcontentsline{toc}{chapter}{ABSTRACT}
+
+\include{kata-pengantar}
+\addcontentsline{toc}{chapter}{KATA PENGANTAR}
+\clearpage
+\tableofcontents 
+\addcontentsline{toc}{chapter}{DAFTAR ISI}
+\listoffigures
+\addcontentsline{toc}{chapter}{DAFTAR GAMBAR}
+\listoftables
+\addcontentsline{toc}{chapter}{DAFTAR TABEL}
+
+\begin{counterpage}
+\end{counterpage}
+%Disini awal masukan untuk Bab
+%-----------------------------------------------------------------
+\include{bab1}
+\include{bab2}
+\include{bab3}
+\include{bab4}
+\include{bab5}
+
+%-----------------------------------------------------------------
+%Disini akhir masukan Bab
+%-----------------------------------------------------------------
+
+
+%-----------------------------------------------------------------
+% Disini awal masukan untuk Daftar Pustaka
+% - Daftar pustaka diambil dari file .bib yang ada pada folder ini
+%   juga.
+% - Untuk memudahkan dalam memanajemen dan menggenerate file .bib
+%   gunakan reference manager seperti Mendeley, Zotero, EndNote,
+%   dll.
+%-----------------------------------------------------------------
+\bibliography{daftar-pustaka}
+\bibliographystyle{myapalike}
+\addcontentsline{toc}{chapter}{DAFTAR PUSTAKA}
+%-----------------------------------------------------------------
+%Disini akhir masukan Daftar Pustaka
+%-----------------------------------------------------------------
+\include{transkrip-pertannyaan}
+\include{transkrip-testing-webservice}
+\include{transkrip-test-uat}
+
+\include{daftar-riwayat-hidup}
+\addcontentsline{toc}{chapter}{DAFTAR RIWAYAT HIDUP}
+
+
+
+\end{document}

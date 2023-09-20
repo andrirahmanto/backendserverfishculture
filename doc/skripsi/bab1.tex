@@ -1,0 +1,69 @@
+%!TEX root = ./template-skripsi.tex
+%-------------------------------------------------------------------------------
+% 								BAB I
+% 							LATAR BELAKANG
+%-------------------------------------------------------------------------------
+
+\chapter{PENDAHULUAN}
+
+\section{Latar Belakang Masalah}
+Indonesia memiliki beberapa sumber perikanan salah satunya adalah budidaya ikan air tawar. Budidaya ikan air tawar memerlukan beberapa modal yaitu lahan, prasarana kolam, Pakan, dan Pengetahuan atau skill dalam berbudidaya ikan. Umumnya budidaya ikan air tawar memelihara banyak jenis ikan atau yang disebut pemeliharaan campuran hal ini disebabkan karena terdapatnya berbagai macam makanan untuk berbagai jenis ikan air tawar, walaupun lebih baik memperhatikan mana jenis ikan yang akan dijadikan peliharaan pokok dan mana yang akan dijadikan peliharaan sampingan \citep{infishta2019web}.
+
+%Budidaya ikan air adalah bentuk dari pembudidayaan yang berfokus pada ikan, baik di kolam maupun di tempat lainnya yang bertujuan untuk menghasilkan bahan pangan, ikan hias, maupun rekreasi \citep{infishta2019web}. Salah satu jenis budidayanya adalah budidaya ikan air tawar. Umumnya budidaya ikan air tawar memelihara banyak jenis ikan atau yang di sebut pemeliharaan campuran hal ini disebabkan karena terdapatnya berbagai macam makanan untuk berbagai jenis ikan air tawar, walaupun lebih baik memperhatikan mana jenis ikan yang akan dijadikan peliharaan pokok dan mana yang akan dijadikan peliharaan sampingan. 
+
+Dalam pembudidayaan ikan air tawar diperlukannya pencatatan beberapa indikator yang berguna untuk menilai kelayakan habitat, memantau perkembangan ikan, dan memantau pemberian pakan sehingga bisa memutuskan treatment apa yang akan dilakukan kedepannya untuk mencapai panen yang baik. Beberapa indikator yang perlu di perhatikan adalah kadar oksigen dalam air, pengukuran kadar ph dalam air, DO (Dissolved Oxygen), Suhu, dan Ammonia. Indikator air tersebut berpengaruh terhadap kelayakan habitat ikan air tawar \citep{pramleonita2018parameter}. Di sisi lain pencatatan terhadap kolam, perlakuan kolam, penaburan ikan dan pemberian pakan juga merupakan faktor yang penting untuk dicatat. Perlunya pencatatan terhadap banyak indikator secara berulang dan intensif menjadi faktor diperlukannya sistem modern yang membantu mempermudah pekerjaan tersebut.
+
+Di Indonesia terdapat beberapa penelitian sistem modern terkait perikanan yang berkontribusi pada budidaya perikanan oleh \citep{supriyati2018sakemkm} melakukan penelitian yang menghasilkan sistem akuntansi budidaya perikanan berbasis android. Penelitian ini dilakukan untuk memecahkan suatu masalah pada pencatatan secara tradisional yang dilakukan oleh petani perikanan yang menyebabkan kurang maksimalnya income yang didapat. Sistem yang dibuat akan digunakan oleh beberapa stakeholders diantaranya adalah: Ketua dari perikanan tersebut, Sekertaris, Bendahara, Seksi sarana produksi, Seksi pengadaan, dan Seksi pemasaran. Sistem ini menerapkan beberapa fitur yaitu Transaksi jual-beli, kas keluar-masuk, dan pembukuan. \citep{Widhiastika2021foklik} melakukan penelitian yang berjudul "Perancangan Aplikasi Jual Beli Produk Perikanan Berbasis Mobile Android". Aplikasi tersebut memungkinkan pengguna dalam melakukan transaksi jual beli perikanan. Aplikasi juga menyediakan wadah untuk diskusi dan informasi gizi dari suatu produk perikanan. Dari dua penelitian sebelumnya didapatkan sistem yang dibuat membantu petani perikanan dalam kegiatan pembukuan transaksi, namun tidak dengan kegiatan aktivitas budidaya.
+
+Penelitian pada sektor IoT pemantauan kualitas air secara real-time dilakukan oleh \citep{Yunior2019MonitoringKualitasAir} yang mana menghasilkan IoT monitoring kualitas air terintegrasi oleh database server. Indikator yang dicatat adalah Ph, Dissolved Oxygen (DO), Suhu, dan Turbidity. IoT dibuat menggunakan microcontroller Arduino, yang mana perannya adalah mengirim data dari sensor dengan protokol GSM ke database server. Pada server juga terdapat halaman yang menampilkan monitoring data berdasarkan database. Penelitian \citep{Rifai2021IoTNodeRed} menghasilkan IoT untuk Pemantauan dan Kontrol otomatis kualitas air berbasis IoT menggunakan Node-Red untuk budidaya udang. Dalam penerapannya indikator yang diukur sama dengan apa yang diukur dalam penelitian \citep{Yunior2019MonitoringKualitasAir} namun dengan tambahan pengukuran ketinggian air. Nantinya setiap sensor terhubung dengan microcontroller arduino, namun pada penelitian \citep{Rifai2021IoTNodeRed} memilih menggunakan NodeMCU (modul wifi) untuk terhubung ke internet. Server yang dibangun menggunakan Node-Red yang merupakan tools yang mempermudah membangun sistem berbasis IoT. Saat pengiriman data ke server arduino menggunakan protokol MQTT yang menerapkan konsep publish dan subscribe. Pada alat kontrol aktuator terdiri dari NodeMCU dan relay dan berguna sebagai pengontrol pompa air dan aerator. Dari dua penelitian diatas terdapat beberapa masalah terkait device IoT terutama pada sensor Ph dan DO. Keakuratan sensor Ph dan DO didasarkan pada grade sensor, semakin tinggi grade sensor semakin mahal sensor tersebut. Sensor Ph dan Do juga mengalami penurunan kualitas seiring waktu berjalan, maka dari itu diperlukannya replacement berkala selambat-lambatnya 1 bulan sekali.
+
+Penelitian IoT pemberian pakan otomatis dilakukan oleh \citep{Setiawan2022IoTSekolahVokasi} yang menghasilkan suatu alat pemberian pakan otomatis. Alat pemberian pakan dapat bekerja secara otomatis berdasarkan waktu yang telah di jadwalkan. IoT yang diterapkan menggunakan NodeMCU sebagai modul yang bisa mengakses jaringan wifi dan blynk sebagai middleware untuk memonitoring pemberian pakan, persediaan pakan,pengaturan jadwal dan takaran pakan. Dalam kasus IoT pemberian pakan otomatis terdapat beberapa kendala yaitu resiko tidak meratanya pemberian pakan karena terbatasnya jangkauan pelemparan pakan. Selanjutnya adalah pelemparan pakan otomatis pada praktiknya ditetapkan oleh jadwal sedangkan dosis pakan bisa berubah tergantung dengan keadaan di lapangan.
+
+
+% Pengembangan sistem ini dilakukan berdasarkan kebutuhan pengecekan dan pencatatan bebrapa indikator untuk budidaya ikan air tawar yaitu pengecekan kadar ph, DO (Dissolved Oxygen), suhu, pencatatan tebar ikan dan pemberian pakan. Pengembangan sistem yang akan dilakukan yaitu Pengembangan web service berbentuk REST API, yang mana memungkinkan web service tersebut untuk menerima, menyimpan, serta monitoring data melalu user device.
+
+% Web services adalah mekanisme komunikasi dua aplikasi atau mesin yang tidak terikat pada  arsitektur dan teknologi yang dipakai antar dua mesin tersebut \citep{reinert2019web}. Metode web service ada dua macam yaitu SOAP dan REST. SOAP (Simple Object Access Protocol) adalah standar untuk bertukar pesan-pesan berbasis XML melalui jaringan komputer atau sebuah jalan untuk program yang berjalan pada suatu sistem operasi (OS) untuk berkomunikasi dengan program pada OS yang sama maupun berbeda dengan menggunakan HTTP dan XML sebagai mekanisme untuk pertukaran data, maka SOAP dapat berkomunikasi dengan berbagai aplikasi meskipun terdapat perbedaan sistem operasi, teknologi, dan bahasa pemrogramannya \citep{feridi2016web}. REST(REpresentational State Transfer) merupakan standar arsitektur komunikasi berbasis web yang sering diterapkan dalam pengembangan layanan berbasis web. Umumnya menggunakan HTTP(Hypertext Transfer Protocol) sebagai protocol untuk komunikasi data. REST pertama kali diperkenalkan oleh Roy Fielding pada tahun 2000 \citep{feridi2019web}.
+
+Dari beberapa penelitian diatas, penelitian ini bertujuan untuk memberikan solusi dari setiap permasalahan yang ada pada perikanan modern. Fokus penelitian ini adalah membangun arsitektur aplikasi budidaya perikanan modern pada backend yang dapat melayani transaksi query dari berbagai platform. Penelitian ini selanjutnya akan terus dikembangkan dari berbagai sisi antara lain adalah frontend, AI, dll. Berikut beberapa penelitian yang telah dilakukan untuk berkontribusi pada perikanan modern ini.
+
+Penelitian yang terkait dalam penelitian ini adalah penelitian bidang Monitoring data sensing pada budidaya ikan air tawar sudah dilakukan oleh Fadhilah Perwira Hadi dalam penelitian yang berjudul "Rancang Bangun Web Service dan Website sebagai Storage Engine dan Monitoring Data Sensing". Penelitian tersebut menghasilkan suatu sistem web service yang dapat menerima dan memonitoring data yang dikirimkan oleh embedded device, dengan menerapkan konsep IoT \citep{fadhilah2021skripsi}. Pada dasarnya web service yang dirancang oleh \citep{fadhilah2021skripsi} dikhususkan untuk tersambung kepada embedded device IoT. Embedded device sebagai perangkat sensor terhadap beberapa data-data indikator unsur dalam kolam serta mengirim data tersebut ke web service. Penelitian lainnya yang terkait adalah penelitian yang dilakukan oleh \citep{nugraha2022ekstrasiLatarDepan} yang berjudul "Ekstraksi Latar Depan pada Citra Ikan dengan Metode GrabCut yang Diautomasi Menggunakan Saliency Map" yang bertujuan untuk membangun sistem yang memisahkan antara latar depan dan latar belakang pada citra ikan. Penelitian selanjutnya adalah penelitian dengan judul "Fish Movement Tracking dengan Menggunakan Metode GMM dan Kalman Filter" yang dilakukan oleh \citep{alim2022fishmovement} yang bertujuan untuk membangun sebuah sistem yang dapat melakukan pelacakan pergerakan ikan yang diharapkan nantinya dapat dikembangkan kembali untuk sistem penghitungan ikan. Ke 3 penelitian tersebut merupakan kontribusi yang kedepannya akan diterapkan bersamaan dalam penelitian ini kedalam sistem induk.
+
+%yang terkait dengan penelitian ini memiliki kontribusi pada sektor yang sama, yaitu perikanan modern. Dan fokus kontribusi penelitian ini adalah memberikan solusi terhadap beberapa kendala Embedded device IoT serta mengembangakan serta meningkatkan sistem yang sudah ada yang dikembangkan oleh Fadhilah Perwira Hadi, dimana pengembangan berfokus pada web service untuk penerimaan, penyimpanan, dan monitoring data dari user device seperti smartphone, computer, dan tablet.
+
+
+\section{Rumusan Masalah}
+Berdasarkan latar belakang penelitian ini, maka perumusan masalah pada penelitian ini adalah “Bagaimana merancang Arsitektur Aplikasi Budidaya Perikanan Modern pada Backend yang Bertanggung Jawab dalam Melayani Transaksi Query Webservice”.
+
+\section{Pembatasan Masalah}
+Adapun beberapa pembatasan masalah yang bertujuan agar penelitian ini lebih terarah dan sesuai dengan tujuan penelitian:
+\begin{enumerate}
+	\item Sistem yang akan dibangun adalah web service atau biasa disebut backend.
+	\item Webservice dikembangkan khusus untuk 1 mitra, dalam hal ini UD JFarm Teknologi. Hanya untuk 1 user.
+\end{enumerate}
+
+\section{Tujuan Penelitian}
+Penelitian yang dilakukan bertujuan untuk merancang arsitektur aplikasi budidaya perikanan modern pada backend yang bertanggung jawab dalam melayani transaksi query webservice.
+
+\section{Manfaat Penelitian}
+\begin{enumerate}
+	\item Bagi sektor perikanan
+	
+	Hasil perancangan arsitektur backend server ini dapat memberikan kontribusi terhadap sistem perikanan modern dalam bentuk web service yang dapat terhubung dengan multi platform.
+	
+	\item Bagi penulis
+		
+	Menambah pengetahuan dibidang pengembangan web service khususnya pengembangan Arsitektur BackEnd REST API, mengasah kemampuan \emph{programming}, dan memperoleh gelar sarjana dibidang Ilmu Komputer. Selain itu, penulisan ini juga merupakan media bagi penulis untuk mengaplikasikan ilmu yang didapat di kampus ke kehidupan masyarakat.
+		
+	\item Bagi Universitas Negeri Jakarta 
+	 	
+	Menjadi pertimbangan dan evaluasi akademik khususnya Program Studi Ilmu Komputer dalam penyusunan skripsi sehingga dapat meningkatkan kualitas akademik di program studi Ilmu Komputer Universitas Negeri Jakarta serta meningkatkan kualitas lulusannya.
+	 			
+\end{enumerate} 
+
+
+% Baris ini digunakan untuk membantu dalam melakukan sitasi
+% Karena diapit dengan comment, maka baris ini akan diabaikan
+% oleh compiler LaTeX.
+\begin{comment}
+\bibliography{daftar-pustaka}
+\end{comment}
