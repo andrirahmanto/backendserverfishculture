@@ -1,8 +1,9 @@
 from flask import Response, request, current_app
-from fishapiv2.database.models import FishGrading, Pond, PondActivation
-from flask_restful import Resource
+from fishapiv2.database.models import FishGrading, Pond, PondActivation, FeedHistory
+from flask_restful import Resource, reqparse
 import datetime
 import json
+from fishapiv2.resources.helper import *
 
 
 class FishGradingsApi(Resource):
@@ -60,30 +61,85 @@ class FishGradingsApi(Resource):
 
     def post(self):
         try:
-            pond_id = request.form.get("pond_id", None)
-            pond = Pond.objects.get(id=pond_id)
-            if pond['isActive'] == False:
-                response = {"message": "pond is not active"}
-                response = json.dumps(response, default=str)
-                return Response(response, mimetype="application/json", status=400)
-            pond_activation = PondActivation.objects(
-                pond_id=pond_id, isFinish=False).order_by('-activated_at').first()
-            body = {
-                "pond_id": pond.id,
-                "pond_activation_id": pond_activation.id,
-                "fish_type": request.form.get("fish_type", None),
-                "sampling_amount": request.form.get("sampling_amount", None),
-                "avg_fish_weight": request.form.get("avg_fish_weight", None),
-                "avg_fish_long": request.form.get("avg_fish_long", 0),
-                "amount_normal_fish": request.form.get("amount_normal_fish", 0),
-                "amount_oversize_fish": request.form.get("amount_oversize_fish", 0),
-                "amount_undersize_fish": request.form.get("amount_undersize_fish", 0),
-                "created_at": datetime.datetime.now(),
-                "grading_at": datetime.datetime.now(),
-            }
-            fishgrading = FishGrading(**body).save(using=current_app.config['CONNECTION'])
-            id = fishgrading.id
-            return {'id': str(id)}, 200
+
+            def _gradingValidation(args):
+                # pond id validation
+                if (args['pond_id'] == None):
+                    raise Exception('Pond_id Tidak boleh kosong')
+                pond = Pond.objects(id=args['pond_id']).first()
+                if (not pond):
+                    raise Exception('Pond_id Tidak ditemukan')
+                if (pond.isActive == False):
+                    raise Exception('Pond Tidak dalam keadaan aktif')
+                # get last activation
+                last_pond_activation = PondActivation.objects(
+                pond_id=pond.id, isFinish=False).order_by('-activated_at').first()
+                if (not last_pond_activation):
+                    raise Exception('Masa budidaya tidak ditemukan')
+                return
+            
+            def _getTotalWeightFromListFishLastGrading(listFish):
+                totalWeight = 0
+                for fish in listFish:
+                    weight = fish['amount']*fish['weight']
+                    totalWeight += weight
+                return totalWeight
+
+            def _getTotalWeightFromListFishNow(listFish, avg_weight):
+                totalWeight = 0
+                for fish in listFish:
+                    weight = fish['amount'] * avg_weight
+                    totalWeight += weight
+                return totalWeight
+
+            def _getNewListFish(listFish, avg_weight):
+                new_list_fish = []
+                for fish in listFish:
+                    fish['weight'] = avg_weight
+                    new_list_fish.append(fish)
+                return new_list_fish
+
+            parser = reqparse.RequestParser()
+            parser.add_argument('pond_id', type=str, required=True, location='form')
+            parser.add_argument('avg_weight', type=float, required=True, location='form')
+            parser.add_argument('sample_amount', type=int, default=0, location='form')
+            parser.add_argument('sample_weight', type=float, default=0, location='form')
+            parser.add_argument('sample_long', type=float, default=0, location='form')
+            args = parser.parse_args()
+            validation = _gradingValidation(args=args)
+            pond = Pond.objects(id=args['pond_id']).first()
+            last_pond_activation = PondActivation.objects(pond_id=pond.id, isFinish=False).order_by('-activated_at').first()
+            last_grading_activation = FishGrading.objects(pond_activation_id=last_pond_activation.id).order_by('-grading_at').first()
+            date_last_grading_activation = last_grading_activation.grading_at
+            date_now = datetime.datetime.now()
+            total_feed_dose_before_last_grading = FeedHistory.objects(
+                pond_activation_id=last_pond_activation.id,
+                feed_history_time__lt=date_last_grading_activation
+            ).sum('feed_dose')
+            total_feed_dose_before_now = FeedHistory.objects(
+                pond_activation_id=last_pond_activation.id,
+                feed_history_time__lt=date_now
+            ).sum('feed_dose')
+            diff_feed_dose = total_feed_dose_before_now-total_feed_dose_before_last_grading
+            total_fish_weight_last_grading = _getTotalWeightFromListFishLastGrading(list(last_grading_activation.fish))
+            total_fish_weight_now = _getTotalWeightFromListFishNow(list(last_grading_activation.fish), args['avg_weight'])
+            diff_fish_weight = total_fish_weight_now - total_fish_weight_last_grading
+            fcr = diff_feed_dose / diff_fish_weight
+            fishGradingNew = FishGrading(
+                pond_id = pond.id,
+                pond_activation_id = last_pond_activation.id,
+                event_desc = 'GRADING',
+                fish = _getNewListFish(list(last_grading_activation.fish), args['avg_weight']),
+                fcr = fcr,
+                sample_amount = args['sample_amount'],
+                sample_weight = args['sample_weight'],
+                sample_long = args['sample_long'],
+            )
+            fishGradingNew.save(using=current_app.config['CONNECTION'])
+
+            response = {"message": "Berhasil add grading"}
+            response = json.dumps(response, default=str)
+            return Response(response, mimetype="application/json", status=200)
         except Exception as e:
             response = {"message": str(e)}
             response = json.dumps(response, default=str)
@@ -170,130 +226,72 @@ class FishGradingApi(Resource):
 
 
 class FishGradingGraphApi(Resource):
-    def get(self):
-        # setup months
-        year = datetime.datetime.today().year
-        months = ["01", "02", "03", "04", "05",
-                  "06", "07", "08", "09", "10", "11", "12"]
-        for i in range(len(months)):
-            months[i] = str(year) + "-" + months[i]
+    def get(self, activationOrPondId):
 
-        # set empty list
-        nilamerah = []
-        nilahitam = []
-        lele = []
-        mas = []
-        patin = []
+        def _getTotalWeightFromListFishLastGrading(listFish):
+                totalWeight = 0
+                for fish in listFish:
+                    weight = fish['amount']*fish['weight']
+                    totalWeight += weight
+                return totalWeight
 
-        # get weight fish in this month
-        # nila hitam
-        for i in range(len(months)):
-            grading_nilahitam = FishGrading.objects.aggregate([
-                {'$match': {'$expr': {'$and': [
-                    {'$eq': [months[i], {'$dateToString': {
-                            'format': '%Y-%m', 'date': "$created_at"}}]},
-                    {'$eq': ['$fish_type', 'nila hitam']}
-                ]
-                }}},
-            ])
-            grading_nilahitam = list(grading_nilahitam)
-            if len(grading_nilahitam) < 1:
-                nilahitam.append(0)
-                continue
-            weight_nilahitam = 0
-            for grd_nilahitam in grading_nilahitam:
-                weight_nilahitam += grd_nilahitam["avg_fish_weight"]
-            nilahitam.append(weight_nilahitam/len(grading_nilahitam))
-
-        # nila merah
-        for i in range(len(months)):
-            grading_nilamerah = FishGrading.objects.aggregate([
-                {'$match': {'$expr': {'$and': [
-                    {'$eq': [months[i], {'$dateToString': {
-                            'format': '%Y-%m', 'date': "$created_at"}}]},
-                    {'$eq': ['$fish_type', 'nila merah']}
-                ]
-                }}},
-            ])
-            grading_nilamerah = list(grading_nilamerah)
-            if len(grading_nilamerah) < 1:
-                nilamerah.append(0)
-                continue
-            weight_nilamerah = 0
-            for grd_nilamerah in grading_nilamerah:
-                weight_nilamerah += grd_nilamerah["avg_fish_weight"]
-            nilamerah.append(weight_nilamerah/len(grading_nilamerah))
-
-        # lele
-        for i in range(len(months)):
-            grading_lele = FishGrading.objects.aggregate([
-                {'$match': {'$expr': {'$and': [
-                    {'$eq': [months[i], {'$dateToString': {
-                            'format': '%Y-%m', 'date': "$created_at"}}]},
-                    {'$eq': ['$fish_type', 'lele']}
-                ]
-                }}},
-            ])
-            grading_lele = list(grading_lele)
-            if len(grading_lele) < 1:
-                lele.append(0)
-                continue
-            weight_lele = 0
-            for grd_lele in grading_lele:
-                weight_lele += grd_lele["avg_fish_weight"]
-            lele.append(weight_lele/len(grading_lele))
-
-        # mas
-        for i in range(len(months)):
-            grading_mas = FishGrading.objects.aggregate([
-                {'$match': {'$expr': {'$and': [
-                    {'$eq': [months[i], {'$dateToString': {
-                            'format': '%Y-%m', 'date': "$created_at"}}]},
-                    {'$eq': ['$fish_type', 'mas']}
-                ]
-                }}},
-            ])
-            grading_mas = list(grading_mas)
-            if len(grading_mas) < 1:
-                mas.append(0)
-                continue
-            weight_mas = 0
-            for grd_mas in grading_mas:
-                weight_mas += grd_mas["avg_fish_weight"]
-            mas.append(weight_mas/len(grading_mas))
-
-        # patin
-        for i in range(len(months)):
-            grading_patin = FishGrading.objects.aggregate([
-                {'$match': {'$expr': {'$and': [
-                    {'$eq': [months[i], {'$dateToString': {
-                            'format': '%Y-%m', 'date': "$created_at"}}]},
-                    {'$eq': ['$fish_type', 'patin']}
-                ]
-                }}},
-            ])
-            grading_patin = list(grading_patin)
-            if len(grading_patin) < 1:
-                patin.append(0)
-                continue
-            weight_patin = 0
-            for grd_patin in grading_patin:
-                weight_patin += grd_patin["avg_fish_weight"]
-            patin.append(weight_patin/len(grading_patin))
+        def _getActivationByActivationOrPondId(activationOrPondId):
+            # pond id and pond activation id cant be null at the same time
+            if (activationOrPondId == None or activationOrPondId==''):
+                raise Exception('id tidak boleh kosong')
+            pond_activation = PondActivation.objects(id=activationOrPondId).first()
+            if (pond_activation):
+                return pond_activation
+            pond = Pond.objects(id=activationOrPondId).first()
+            if (pond):
+                last_pond_activation = PondActivation.objects(
+                pond_id=pond.id, isFinish=False).order_by('-activated_at').first()
+                return last_pond_activation
+            raise Exception('activationOrPondId tidak valid')
+            return
+        print(activationOrPondId)
+        list_fish_weight = []
+        list_fish_feed_history = []
+        pond_activation = _getActivationByActivationOrPondId(activationOrPondId)
+        # get date activation
+        date_activation = pond_activation.activated_at.replace(hour=23, minute=59, second=59)
+        date_before_activation = date_activation - timedelta(days=1)
+        list_fish_weight.append({'date' : date_before_activation,'total_weight_fish' : 0,})
+        list_fish_feed_history.append({'date' : date_before_activation,'total_feed_dose' : 0,})
+        # get date now
+        date_now = datetime.datetime.now().replace(hour=23, minute=59, second=59)
+        # get day beetween date
+        day_beetween_date = getListDateBettwenDate(dateA=date_activation, dateB=date_now)
+        # get fish weight per day
+        for day in day_beetween_date:
+            item_fish = {
+                'date' : datetime.datetime.now(),
+                'total_weight_fish' : 0,
+            }
+            item_feed = {
+                'date' : datetime.datetime.now(),
+                'total_feed_dose' : 0,
+            }
+            fish_grading = FishGrading.objects(
+                pond_activation_id=pond_activation.id,
+                grading_at__lt=day,
+            ).order_by('-grading_at').first()
+            total_weight_fish = _getTotalWeightFromListFishLastGrading(fish_grading.fish)
+            item_fish['date'] = day
+            item_fish['total_weight_fish'] = total_weight_fish
+            list_feed_dose = FeedHistory.objects(
+                pond_activation_id=pond_activation.id,
+                feed_history_time__lt=day,
+            )
+            total_feed_dose = list_feed_dose.sum('feed_dose')
+            item_feed['date'] = day
+            item_feed['total_feed_dose'] = total_feed_dose
+            list_fish_weight.append(item_fish)
+            list_fish_feed_history.append(item_feed)
 
         response = {
-            "nila merah": nilamerah,
-            "nila hitam": nilahitam,
-            "lele": lele,
-            "mas": mas,
-            "patin": patin,
-        }
-        response = {
-            "nila merah": [0.4, 1.1, 2, 2.1, 3.2, 3.4, 4, 4.3],
-            "nila hitam": [0.4, 0.6, 3, 3.1, 3.8, 4, 4.3, 4.6],
-            "lele": [1, 1.5, 2.1, 2.3, 2.6, 3.1, 4, 4.2],
-            "mas": [0.1, 0.4, 0.8, 1.2, 3, 4, 5, 5.5],
-            "patin": [0, 0, 0, 0, 0, 0, 0, 0],
+            "list_fish_weight": list_fish_weight,
+            "list_fish_feed_history": list_fish_feed_history,
         }
         response = json.dumps(response, default=str)
         return Response(response, mimetype="application/json", status=200)
@@ -305,24 +303,6 @@ class FishGradingApiByActivation(Resource):
             pipeline = [
                 {'$match': {
                     '$expr': {'$eq': ['$pond_activation_id', {'$toObjectId': activation_id}]}}},
-                {'$lookup': {
-                    'from': 'pond_activation',
-                    'let': {"activationid": "$pond_activation_id"},
-                    'pipeline': [
-                        {'$match': {
-                            '$expr': {'$eq': ['$_id', '$$activationid']}}},
-                    ],
-                    'as': 'pond_activation'
-                }},
-                {"$addFields": {
-                    "constanta_oversize": {"$first": "$pond_activation.constanta_oversize"},
-                    "constanta_undersize": {"$first": "$pond_activation.constanta_undersize"},
-                }},
-                {"$project": {
-                    "pond_activation": 0,
-                    "updated_at": 0,
-                    "created_at": 0,
-                }},
                 {"$sort": {"grading_at": -1}}
             ]
             fishgrading = FishGrading.objects.aggregate(pipeline)

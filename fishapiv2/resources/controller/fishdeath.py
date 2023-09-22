@@ -97,6 +97,20 @@ class FishDeathsApi(Resource):
             return Response(response, mimetype="application/json", status=400)
 
     def post(self):
+        def subtract_lists(list1, list2):
+            result = []
+
+            for item1, item2 in zip(list1, list2):
+                # Memeriksa apakah kedua item memiliki kunci yang sama ('type' dan 'amount')
+                if 'type' in item1 and 'type' in item2 and 'amount' in item1 and 'amount' in item2:
+                    if item1['type'] == item2['type']:
+                        # Melakukan pengurangan pada 'amount'
+                        new_amount = item1['amount'] - item2['amount']
+                        if new_amount >= 0:
+                            item1['amount'] = new_amount
+                            result.append(item1)
+                
+            return result
         try:
             pond_id = request.form.get("pond_id", None)
             pond = Pond.objects.get(id=pond_id)
@@ -130,26 +144,27 @@ class FishDeathsApi(Resource):
                 response = {"message": "There is no fish"}
                 response = json.dumps(response, default=str)
                 return Response(response, mimetype="application/json", status=400)
-            body = {
-                "pond_id": pond.id,
-                "pond_activation_id": pond_activation.id,
-                "image_name": filename,
-                "diagnosis": request.form.get("diagnosis", None),
-                "death_at": datetime.datetime.now
-            }
-            fishdeath = FishDeath(**body).save(using=current_app.config['CONNECTION'])
-            id = fishdeath.id
-            for fish in fish_death_amount:
-                # save fish log
-                data = {
-                    "pond_id": pond_id,
-                    "pond_activation_id": pond_activation.id,
-                    "fish_death_id": id,
-                    "type_log": "death",
-                    "fish_type": fish['type'],
-                    "fish_amount": int(fish['amount']) * -1
-                }
-                fishlog = FishLog(**data).save(using=current_app.config['CONNECTION'])
+            # get last grading
+            last_grading_activation = FishGrading.objects(pond_activation_id=pond_activation.id).order_by('-grading_at').first()
+            calculatedFish = subtract_lists(last_grading_activation.fish, fish_death_amount)
+            # save fish death
+            fishdeath = FishDeath(
+                pond_id = pond.id,
+                pond_activation_id = pond_activation.id,
+                image_name = filename,
+                fish = fish_death_amount,
+                diagnosis = request.form.get("diagnosis", None),
+                death_at = datetime.datetime.now
+            ).save(using=current_app.config['CONNECTION'])
+            # create fish grading
+            fish_grading = FishGrading(
+                pond_id = pond.id,
+                pond_activation_id = pond_activation.id,
+                event = fishdeath,
+                event_desc = 'DEATH',
+                fish = calculatedFish,
+                fcr = last_grading_activation.fcr,
+            ).save(using=current_app.config['CONNECTION'])
             response = {"message": "success add fishdeath"}
             response = json.dumps(response, default=str)
             return Response(response, mimetype="application/json", status=200)
@@ -215,25 +230,25 @@ class FishDeathsApiByActivation(Resource):
                     {'$eq': ['$pond_activation_id',
                              {"$toObjectId": activation_id}]},
                 ]}}},
-                {'$lookup': {
-                    'from': 'fish_log',
-                    'let': {"fish_death_id": "$_id"},
-                    'pipeline': [
-                        {'$match': {
-                            '$expr': {'$and': [
-                                {'$eq': ['$fish_death_id',
-                                         '$$fish_death_id']},
-                                {'$eq': ['$type_log',
-                                         'death']},
-                            ]}
-                        }},
-                        {"$project": {
-                            "created_at": 0,
-                            "updated_at": 0,
-                        }}
-                    ],
-                    'as': 'fish'
-                }},
+                # {'$lookup': {
+                #     'from': 'fish_log',
+                #     'let': {"fish_death_id": "$_id"},
+                #     'pipeline': [
+                #         {'$match': {
+                #             '$expr': {'$and': [
+                #                 {'$eq': ['$fish_death_id',
+                #                          '$$fish_death_id']},
+                #                 {'$eq': ['$type_log',
+                #                          'death']},
+                #             ]}
+                #         }},
+                #         {"$project": {
+                #             "created_at": 0,
+                #             "updated_at": 0,
+                #         }}
+                #     ],
+                #     'as': 'fish'
+                # }},
                 {"$unwind": "$fish"},
                 {"$sort": {"death_at": -1}}
             ]

@@ -34,40 +34,34 @@ class PondsApi(Resource):
                         ]}}},
                         {"$sort": {"activated_at": -1}},
                         {'$lookup': {
-                            'from': 'fish_log',
+                            'from': 'fish_grading',
                             'let': {"pond_activation_id": "$_id"},
                             'pipeline': [
                                 {'$match': {
-                                    '$expr': {'$and': [
-                                        {'$eq': ['$pond_activation_id',
-                                                 '$$pond_activation_id']},
-                                    ]}
+                                    '$expr': {'$eq': ['$pond_activation_id',
+                                        '$$pond_activation_id']}
                                 }},
-                                {"$project": {
-                                    "created_at": 0,
-                                    "updated_at": 0,
-                                }},
-                                {"$group": {
-                                    "_id": "$fish_type",
-                                    "fish_type": {"$first": "$fish_type"},
-                                    "fish_amount": {"$sum": "$fish_amount"}
-                                }},
-                                {"$sort": {"fish_type": -1}},
-                                {"$project": {
-                                    "_id": 0,
-                                }},
+                                {"$sort": {"_id": -1}},
                             ],
-                            'as': 'fish_alive'
+                            'as': 'list_grading'
                         }},
                         {"$addFields": {
+                            "last_fish_grading": {"$first": "$list_grading"},
                             "activated_at": {'$dateToString': {
                                 'format': "%d-%m-%Y", 'date': "$activated_at"}},
                             "activated_at_iso": "$activated_at",
                             "deactivated_at": {'$dateToString': {
                                 'format': "%d-%m-%Y", 'date': "$deactivated_at"}},
-                            "total_fish_alive": {"$sum": "$fish_alive.fish_amount"}
+                        }},
+                        {"$addFields": {
+                            "fish_alive": "$last_fish_grading.fish",
+                        }},
+                        {"$addFields": {
+                            "total_fish_alive": {"$sum": "$fish_alive.amount"},
                         }},
                         {"$project": {
+                            "list_grading":0,
+                            "last_fish_grading":0,
                             "pond_id": 0,
                             "feed_type_id": 0,
                             "created_at": 0,
@@ -138,7 +132,6 @@ class PondsApi(Resource):
                     "water_level":"$last_activation.water_level",
                     "water_volume": {"$multiply": ["$area", "$last_activation.water_level", 1000]},
                     "activation_date_iso": "$last_activation.activated_at_iso",
-                    "fish_alive": "$last_activation.total_fish_alive",
                 }},
                 {"$project": {
                     "pond_id": 0,
@@ -146,7 +139,7 @@ class PondsApi(Resource):
                     "created_at": 0,
                     "updated_at": 0,
                     "pond_activation_list": 0,
-                    "last_activation": 0,
+                    # "last_activation": 0,
                 }},
                 # {"$match": {"status": "Tidak Aktif"}},
                 # {"$sort": {"alias": 1}},
@@ -196,7 +189,6 @@ class PondsApi(Resource):
                     "location": request.form.get("location", None),
                     "shape": request.form.get("shape", None),
                     "material": request.form.get("material", None),
-                    "status": 'Tidak Aktif',
                     "diameter": request.form.get("diameter", None),
                     "height": request.form.get("height", None),
                     "build_at": request.form.get("build_at", None),
@@ -210,7 +202,6 @@ class PondsApi(Resource):
                     "material": request.form.get("material", None),
                     "length": request.form.get("length", None),
                     "width": request.form.get("width", None),
-                    "status": 'Tidak Aktif',
                     "height": request.form.get("height", None),
                     "build_at": request.form.get("build_at", None),
                 }    
